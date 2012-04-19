@@ -1,0 +1,14 @@
+{
+  "name": "NodeAssets.Test",
+  "description": "Test dependencies for MVCClient Side",
+  "private": true,
+  "author": { "name": "Felix Jorkowski (http://jorkowski.com)" },
+  "version": "1.0.0",
+  "dependencies": {
+    "coffee-script": "*",
+	"stylus": "*",
+	"nib": "*",
+	"uglify-js": "*",
+	"csso": "*"
+  }
+}

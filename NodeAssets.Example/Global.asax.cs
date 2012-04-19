@@ -24,8 +24,8 @@ namespace NodeAssets.Example
             routes.MapRoute(
                 "Default", // Route name
                 "{controller}/{action}/{id}", // URL with parameters
-                new { controller = "Home", action = "Index", id = UrlParameter.Optional } // Parameter defaults
-            );
+                new {controller = "Home", action = "Index", id = UrlParameter.Optional} // Parameter defaults
+                );
 
         }
 
@@ -41,24 +41,28 @@ namespace NodeAssets.Example
 
             Assets
                 .Initialise(config => config
-                    .ConfigureCompilers(compilers => compilers.WithDefaultConfiguration(Server.MapPath("~/Node")))
-                    .ConfigureSourceManager(source => source.UseDefaultConfiguration(Server.MapPath("~/built"), isProd))
-                    .Cache(isProd)
-                    .Compress(isProd)
-                    .LiveCss(!isProd))
+                                          .ConfigureCompilers(
+                                              compilers => compilers.WithDefaultConfiguration(Server.MapPath("~/Node")))
+                                          .ConfigureSourceManager(
+                                              source =>
+                                              source.UseDefaultConfiguration(Server.MapPath("~/built"), isProd))
+                                          .Cache(isProd)
+                                          .Compress(isProd)
+                                          .LiveCss(!isProd))
                 .SetupCssPile(pile => pile
-                    .AddFile(Server.MapPath("~/Content/Site.css")))
+                                          .AddFile(Server.MapPath("~/Content/Site.css")))
                 .SetupJavascriptPile(pile =>
-                {
-                    pile.AddFile(Server.MapPath("~/Scripts/jquery-1.6.4.js"));
+                                         {
+                                             pile.AddFile(Server.MapPath("~/Scripts/jquery-1.6.4.js"));
 
-                    if (!isProd)
-                    {
-                        pile.AddFile(Server.MapPath("~/Scripts/jquery.signalR.js"));
-                    }
+                                             if (!isProd)
+                                             {
+                                                 pile.AddFile(Server.MapPath("~/Scripts/jquery.signalR.js"));
+                                             }
 
-                    return pile;
-                });
+                                             return pile;
+                                         })
+                .PrepareRoutes(RouteTable.Routes);
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);

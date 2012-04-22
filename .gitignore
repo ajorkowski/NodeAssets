@@ -3,3 +3,4 @@ obj/
 packages/
 node_modules/
 _ReSharper.NodeAssets/
+*.suo

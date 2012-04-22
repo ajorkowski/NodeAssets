@@ -17,8 +17,6 @@ namespace NodeAssets.Example
 
         public void RegisterRoutes(RouteCollection routes)
         {
-            Assets.SetupRoutes(routes);
-
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(

@@ -24,8 +24,8 @@ namespace NodeAssets.Example
             routes.MapRoute(
                 "Default", // Route name
                 "{controller}/{action}/{id}", // URL with parameters
-                new { controller = "Home", action = "Index", id = UrlParameter.Optional } // Parameter defaults
-            );
+                new {controller = "Home", action = "Index", id = UrlParameter.Optional} // Parameter defaults
+                );
 
         }
 
@@ -41,8 +41,11 @@ namespace NodeAssets.Example
 
             Assets
                 .Initialise(config => config
-                    .ConfigureCompilers(compilers => compilers.WithDefaultConfiguration(Server.MapPath("~/Node")))
-                    .ConfigureSourceManager(source => source.UseDefaultConfiguration(Server.MapPath("~/built"), isProd))
+                    .ConfigureCompilers(
+                        compilers => compilers.WithDefaultConfiguration(Server.MapPath("~/Node")))
+                    .ConfigureSourceManager(
+                        source =>
+                        source.UseDefaultConfiguration(Server.MapPath("~/built"), isProd))
                     .Cache(isProd)
                     .Compress(isProd)
                     .LiveCss(!isProd))
@@ -58,7 +61,8 @@ namespace NodeAssets.Example
                     }
 
                     return pile;
-                });
+                })
+                .PrepareRoutes(RouteTable.Routes);
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);

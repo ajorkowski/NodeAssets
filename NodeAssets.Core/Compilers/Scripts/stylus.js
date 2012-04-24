@@ -1,6 +1,13 @@
 ﻿var stylus = require('stylus');
 
 var useNib = {0};
+var workingDir = '{1}';
+
+var opt = {};
+if(workingDir != '')
+{
+    opt.filename = workingDir;
+}
 
 var stdin = process.openStdin();
 stdin.setEncoding('utf8');
@@ -11,7 +18,7 @@ stdin.on('data', function (chunk) {
 });
 
 stdin.on('end', function () {
-    var working = stylus(styl);
+    var working = stylus(styl, opt);
 
     if(useNib) {
         working.use(require('nib')());

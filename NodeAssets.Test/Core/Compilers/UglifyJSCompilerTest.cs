@@ -24,7 +24,7 @@ namespace NodeAssets.Test.Core.Compilers
         {
             try
             {
-                var output = _compiler.Compile(File.ReadAllText("../../Data/invalidJS.js")).Result;
+                var output = _compiler.Compile(File.ReadAllText("../../Data/invalidJS.js"), null).Result;
             }
             catch (AggregateException e)
             {
@@ -37,9 +37,9 @@ namespace NodeAssets.Test.Core.Compilers
         {
             var js = File.ReadAllText("../../Data/normalJavascript.js");
 
-            var output = _compiler.Compile(js).Result;
+            var output = _compiler.Compile(js, null).Result;
 
-            Assert.AreEqual("var helloWorld=function(){console.log(\"Hello World\")};helloWorld()\n", output);
+            Assert.AreEqual("var helloWorld=function(){console.log(\"Hello World\")};helloWorld();\n", output);
         }
 
         [Test]
@@ -47,7 +47,7 @@ namespace NodeAssets.Test.Core.Compilers
         {
             var js = File.ReadAllText("../../Data/jquery-1.6.4.js");
 
-            var output = _compiler.Compile(js).Result;
+            var output = _compiler.Compile(js, null).Result;
 
             Assert.AreNotEqual(string.Empty, output);
         }

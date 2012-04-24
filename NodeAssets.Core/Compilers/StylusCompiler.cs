@@ -20,11 +20,15 @@ namespace NodeAssets.Core.Compilers
             _executeScript = ScriptFinder.GetScript(ScriptLocation);
         }
 
-        public Task<string> Compile(string initial)
+        public Task<string> Compile(string initial, FileInfo originalFile)
         {
             initial = initial ?? string.Empty;
 
-            var command = _executor.ExecuteJsScript(_executeScript.Replace("{0}", _useNib ? "true" : "false"));
+            var script = _executeScript
+                .Replace("{0}", _useNib ? "true" : "false")
+                .Replace("{1}", originalFile != null ? originalFile.FullName : string.Empty);
+
+            var command = _executor.ExecuteJsScript(script);
             command.StdIn.Write(initial);
             command.StdIn.Flush();
             command.StdIn.Close();

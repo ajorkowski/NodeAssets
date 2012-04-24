@@ -22,7 +22,7 @@ namespace NodeAssets.Test.Core.Compilers
         {
             var css = File.ReadAllText("../../Data/exampleCss.css");
 
-            var result = _compiler.Compile(css).Result;
+            var result = _compiler.Compile(css, null).Result;
 
             Assert.AreEqual(".test{color:#fff}\n", result);
         }

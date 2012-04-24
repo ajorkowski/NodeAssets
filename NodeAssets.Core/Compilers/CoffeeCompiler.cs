@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.IO;
+using System.Threading.Tasks;
 using NodeAssets.Core.Commands;
 
 namespace NodeAssets.Core.Compilers
@@ -12,8 +13,10 @@ namespace NodeAssets.Core.Compilers
             _executor = executor;
         }
 
-        public Task<string> Compile(string initial)
+        public Task<string> Compile(string initial, FileInfo originalFile)
         {
+            // Do not use the original file
+
             var command = _executor.ExecuteCoffeeCommand("-c -e \"" + initial.Replace("\"", "\\\"") + "\"");
 
             return Task.Factory.StartNew(() => _executor.RunCommand(command));

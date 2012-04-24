@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NodeAssets.Core.Helpers;
+using System.Threading;
 
 namespace NodeAssets.Core
 {
@@ -94,11 +95,16 @@ namespace NodeAssets.Core
             try
             {
                 fsw.EnableRaisingEvents = false;
-                _fileHashes[info.FullName] = Hash.GetHash(File.ReadAllText(info.FullName), Hash.HashType.SHA1);
+                var text = AttemptRead(info.FullName);
 
-                if (_fileUpdated != null)
+                if (text != null)
                 {
-                    _fileUpdated(this, new FileChangedEvent(pile, info));
+                    _fileHashes[info.FullName] = Hash.GetHash(text, Hash.HashType.SHA1);
+
+                    if (_fileUpdated != null)
+                    {
+                        _fileUpdated(this, new FileChangedEvent(pile, info));
+                    }
                 }
             }
             catch
@@ -116,11 +122,17 @@ namespace NodeAssets.Core
             try
             {
                 fsw.EnableRaisingEvents = false;
-                _fileHashes[info.FullName] = Hash.GetHash(File.ReadAllText(info.FullName), Hash.HashType.SHA1);
 
-                if (_fileCreated != null)
+                var text = AttemptRead(info.FullName);
+
+                if (text != null)
                 {
-                    _fileCreated(this, new FileChangedEvent(pile, info));
+                    _fileHashes[info.FullName] = Hash.GetHash(text, Hash.HashType.SHA1);
+
+                    if (_fileCreated != null)
+                    {
+                        _fileCreated(this, new FileChangedEvent(pile, info));
+                    }
                 }
             }
             catch
@@ -287,6 +299,29 @@ namespace NodeAssets.Core
 
             _urls[pile].Add(uri);
             return this;
+        }
+
+        private string AttemptRead(string path)
+        {
+            var numTries = 0;
+            string result = null;
+
+            // This is crap but apparently the only consistent way to wait for a lock on a file
+            while (numTries < 10)
+            {
+                try
+                {
+                    result = File.ReadAllText(path);
+                    numTries = 11;
+                }
+                catch (IOException)
+                {
+                    Thread.Sleep(500);
+                    numTries++;
+                }
+            }
+
+            return result;
         }
     }
 }

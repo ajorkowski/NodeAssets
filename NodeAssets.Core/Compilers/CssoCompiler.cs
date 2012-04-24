@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using NodeAssets.Core.Commands;
 
@@ -17,7 +18,7 @@ namespace NodeAssets.Core.Compilers
             _executeScript = ScriptFinder.GetScript(ScriptLocation);
         }
 
-        public Task<string> Compile(string initial)
+        public Task<string> Compile(string initial, FileInfo originalFile)
         {
             initial = initial ?? string.Empty;
 

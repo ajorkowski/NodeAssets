@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using NodeAssets.Core.Compilers;
 
@@ -42,17 +43,14 @@ namespace NodeAssets.Core.SourceManager
             _compilerManager = compilerManager;
             _pile = pile;
 
-            // Make sure subdirectories exist
-            if (_combine)
+            // Make sure compilation global directory exists
+            foreach (var innerPile in _pile.FindAllPiles())
             {
-                foreach (var innerPile in _pile.FindAllPiles())
+                var dirPath = Path.Combine(_compilationDirectory.FullName, innerPile);
+                if (!Directory.Exists(dirPath))
                 {
-                    var dirPath = Path.Combine(_compilationDirectory.FullName, innerPile);
-                    if (!Directory.Exists(dirPath))
-                    {
-                        Directory.CreateDirectory(dirPath);
-                    }   
-                }
+                    Directory.CreateDirectory(dirPath);
+                }   
             }
 
             if (_pile.IsWatchingFiles)
@@ -142,7 +140,7 @@ namespace NodeAssets.Core.SourceManager
             var filePath = Path.Combine(dirPath, Path.GetFileNameWithoutExtension(file.Name) + _compileExtension);
 
             // Compile/minimise and write to file
-            CompileFile(file).ContinueWith(task => File.WriteAllText(filePath, task.Result)).Wait();
+            CompileFile(file).ContinueWith(task => AttemptWrite(filePath, task.Result));
         }
 
         private void CompilePile(string pile)
@@ -162,8 +160,28 @@ namespace NodeAssets.Core.SourceManager
                     builder.Append(task.Result);
                 }
 
-                File.WriteAllText(filePath, builder.ToString());
-            }).Wait();
+                AttemptWrite(filePath, builder.ToString());
+            });
+        }
+
+        private void AttemptWrite(string path, string text)
+        {
+            var numTries = 0;
+
+            // This is crap but apparently the only consistent way to wait for a lock on a file
+            while (numTries < 10)
+            {
+                try
+                {
+                    File.WriteAllText(path, text);
+                    numTries = 11;
+                }
+                catch (IOException)
+                {
+                    Thread.Sleep(500);
+                    numTries++;
+                }
+            }
         }
 
         private Task<string> CompileFile(FileInfo info)
@@ -191,7 +209,7 @@ namespace NodeAssets.Core.SourceManager
                 var result = string.Empty;
                 if(!string.IsNullOrEmpty(task.Result))
                 {
-                    result = compiler.Compile(task.Result).Result;
+                    result = compiler.Compile(task.Result, info).Result;
                 }
                 return result;
             }).ContinueWith(task =>
@@ -200,7 +218,7 @@ namespace NodeAssets.Core.SourceManager
                 var result = task.Result;
                 if(_minimise && !string.IsNullOrEmpty(result))
                 {
-                    result = minCompiler.Compile(result).Result;
+                    result = minCompiler.Compile(result, null).Result;
                 }
 
                 return result;

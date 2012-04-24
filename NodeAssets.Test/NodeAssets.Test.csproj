@@ -66,6 +66,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Data\exampleStylImport.styl" />
+    <None Include="Data\exampleStylusWithImport.styl" />
     <None Include="Data\exampleStylusWithNib.styl" />
     <None Include="Data\exampleStylus.styl" />
     <None Include="Data\invalidCoffee.coffee" />

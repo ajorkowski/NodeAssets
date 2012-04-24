@@ -1,9 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.IO;
+using System.Threading.Tasks;
 
 namespace NodeAssets.Core.Compilers
 {
     public interface ICompiler
     {
-        Task<string> Compile(string initial);
+        Task<string> Compile(string initial, FileInfo originalFile);
     }
 }

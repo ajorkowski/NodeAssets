@@ -48,7 +48,7 @@ namespace NodeAssets.Example
                     .Compress(isProd)
                     .LiveCss(!isProd))
                 .SetupCssPile(pile => pile
-                    .AddFile(Server.MapPath("~/Content/Site.css")))
+                    .AddFile(Server.MapPath("~/Content/Site.styl")))
                 .SetupJavascriptPile(pile =>
                 {
                     pile.AddFile(Server.MapPath("~/Scripts/jquery-1.6.4.js"));

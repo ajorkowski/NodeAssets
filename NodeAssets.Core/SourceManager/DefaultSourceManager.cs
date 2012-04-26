@@ -209,7 +209,14 @@ namespace NodeAssets.Core.SourceManager
                 var result = string.Empty;
                 if(!string.IsNullOrEmpty(task.Result))
                 {
-                    result = compiler.Compile(task.Result, info).Result;
+                    try
+                    {
+                        result = compiler.Compile(task.Result, info).Result;
+                    }
+                    catch
+                    {
+                        // Eat compiler exceptions
+                    }
                 }
                 return result;
             }).ContinueWith(task =>
@@ -218,7 +225,15 @@ namespace NodeAssets.Core.SourceManager
                 var result = task.Result;
                 if(_minimise && !string.IsNullOrEmpty(result))
                 {
-                    result = minCompiler.Compile(result, null).Result;
+                    try
+                    {
+                        result = minCompiler.Compile(result, null).Result;
+                    }
+                    catch
+                    {
+                        // Eat compiler exceptions
+                    }
+                    
                 }
 
                 return result;

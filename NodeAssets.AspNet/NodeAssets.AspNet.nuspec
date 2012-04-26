@@ -10,7 +10,6 @@
     <projectUrl>https://github.com/ajorkowski/NodeAssets</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>First release!</releaseNotes>
     <copyright>Copyright 2012</copyright>
     <tags>Nodejs Asset Manager</tags>
   </metadata>

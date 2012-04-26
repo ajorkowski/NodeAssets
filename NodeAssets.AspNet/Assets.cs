@@ -296,8 +296,8 @@ namespace NodeAssets.AspNet
 
         private void CssOnFileUpdated(object sender, FileChangedEvent fileChangedEvent)
         {
-            var path = FindFilePath(_cssPile, fileChangedEvent.Pile, fileChangedEvent.File, true);
-            var id = path.Replace("/", "-");
+            var path = FindFilePath(_cssPile, fileChangedEvent.Pile, fileChangedEvent.File);
+            var id = FindFilePath(_cssPile, fileChangedEvent.Pile, fileChangedEvent.File, true).Replace("/", "-");
             BroadcastCssChange(id, path);
         }
 

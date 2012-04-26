@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Nodeassets : Provides a complete assest manager solution including compilation from coffee/stylus, minification, combination, compression, caching, and also a refresh-on-change css live updater" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Nodeassets</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/ajorkowski/NodeAssets">Fork Me on GitHub</a>
+
+          <h1 id="project_title">Nodeassets</h1>
+          <h2 id="project_tagline">Provides a complete assest manager solution including compilation from coffee/stylus, minification, combination, compression, caching, and also a refresh-on-change css live updater</h2>
+
+          <section id="downloads">
+            <a class="zip_download_link" href="https://github.com/ajorkowski/NodeAssets/zipball/master">Download this project as a .zip file</a>
+            <a class="tar_download_link" href="https://github.com/ajorkowski/NodeAssets/tarball/master">Download this project as a tar.gz file</a>
+          </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h2>Get it using Nuget</h2>
+
+<p>Currently supports Asp.Net/Asp.Net MVC sites.</p>
+
+<pre><code>Install-Package NodeAssets.AspNet
+</code></pre>
+
+<h2>Piles</h2>
+
+<p>In NodeAssets you group your assets into Piles where each pile is a logical grouping of your assets in a page. By default there is a global pile, but you can add any number of additional piles. Lets have a look at the pile configuration for a simple web site that has an admin area</p>
+
+<pre><code>piles
+    .AddFile(Server.MapPath("~/Scripts/jquery-1.6.4.js"))
+    .AddFile(Server.MapPath("~/Scripts/jquery.signalR.js"))
+    .AddDirectory("Home", Server.MapPath("~/Scripts/Home"), false)
+    .AddFile("Admin", Server.MapPath("~/Scripts/Admin/admin.coffee"))
+</code></pre>
+
+<p>Now you can replace your script tabs on your layout page with</p>
+
+<pre><code>// Razor - We will include the global JS libs and the Admin libs
+@Html.Raw(Assets.Js(true, "Admin"))
+</code></pre>
+
+<h2>Compilation/Minification</h2>
+
+<p>NodeAssets uses each file's extension to decide how to compile it. For example by default a .coffee file will be compiled by the inbuilt nodejs coffee compiler. It is simple to change your compilers, for example if you don't want to use Node you can configure your own set of compilers.</p>
+
+<pre><code>compilerConfig
+    .CompilerFor(".coffee", new CoffeeCompiler()) // Use your own coffee compiler
+    .CompilerFor(".css", new PassthroughCompiler())
+    .CompilerFor(".js", new PassthroughCompiler())
+    .CompilerFor(".js.min", new JSMinifyCompilter()) // Add the .min extension for minification
+</code></pre>
+
+<p>Minification is turned on/off depending on the source configuration</p>
+
+<pre><code>sourceConfig.Minimise(true)
+</code></pre>
+
+<h3>(Optional) Compilation using NodeJS</h3>
+
+<p>Right now the only out of the box compilers that come with NodeAssets are built on top of NodeJS, and are included in the default compiler configuration.</p>
+
+<ul>
+<li>
+<a href="http://coffeescript.org">Coffeescript</a> (.coffee)</li>
+<li>
+<a href="http://learnboost.github.com/stylus">Stylus</a> (.styl)</li>
+<li>
+<a href="https://github.com/mishoo/UglifyJS">UglifyJS</a> (minifies .js files)</li>
+<li>
+<a href="https://github.com/css/csso">Csso</a> (minifies .css files)</li>
+</ul><p>When you install the nuget package a Node folder is added to your project, make sure to install the latest NodeJS for windows from <a href="http://nodejs.org/#download">here</a>. After this in the command line browse to your Node folder and run</p>
+
+<pre><code>npm install
+</code></pre>
+
+<p>This will grab all the required modules and enable them in your builds!</p>
+
+<p>Remember that these components are <strong>optional</strong> - Just implement your own ICompiler to leverage other libraries or keep your stuff in .NET land. Stay tuned for a blog post in the near future that will use the .NET 4.5 JSMinify/CSSMinify classes to do compilation.</p>
+
+<h2>Combination</h2>
+
+<p>If the combination setting is turned on each pile will be combined into one file to be served up to your web application. Note that the compilation and minification occurs before this step. Recommended for production environments to reduce the number of requests that a browser has to make. Compilation is turned on/off via the source configuration</p>
+
+<pre><code>sourceConfig.Combine(true)
+</code></pre>
+
+<h2>Compression</h2>
+
+<p>If compression is enabled NodeAssets will compress the response stream using gzip/deflate. The behavior is standards compliant, so it depends on the Accept-Encoding header sent by a browser. This is great for production environments as the bottleneck with websites is usually bandwidth. Compression is turned on/off via the assets configuration</p>
+
+<pre><code>assetsConfig.Compress(true)
+</code></pre>
+
+<h2>Caching</h2>
+
+<p>If caching is enabled NodeAssets uses an aggressive caching mechanism. Assets are versioned using a SHA-1 hash and set to be cached for the maximum time of a year. This is perfect for production environments as browsers will not even make a request for an asset that is has loaded before which means a MUCH faster site. However if your files have changed then the hash will change and browsers will be forced to grab the latest version of the asset. Your tags in your production environment will look a lot like</p>
+
+<pre><code>&lt;link href="assets/global/global.css?v=1e0479d3ee71d58c33f82ebf68e1669653b8eb9e" rel="stylesheet" type="text/css" /&gt;
+&lt;script type="text/javascript" src="assets/global/global.js?v=b1dda81e543867fba59c07e0fb48f31529e01f81"&gt;&lt;/script&gt;
+</code></pre>
+
+<p>Caching is turned on/off via the assets configuration</p>
+
+<pre><code>assetsConfig.Cache(true)
+</code></pre>
+
+<h2>Live CSS</h2>
+
+<p>This feature is extremely useful in development environments as it uses SignalR to force css updates on your page as you change them. No longer do you need to refresh your browser to see the css changes you make to your site. </p>
+
+
+
+
+<p>There is a dependence on the SignalR client side libraries in this case so make sure to add them in by getting the SignalR nuget package</p>
+
+<pre><code>Install-Package SignalR
+</code></pre>
+
+<p>And add the added javascript file to your assets.</p>
+
+<p>Live CSS is turned on/off via the assets configuration</p>
+
+<pre><code>assetsConfig.LiveCss(true, "signalRNamespace")
+</code></pre>
+
+<h2>Put it all together</h2>
+
+<pre><code>#if DEBUG
+    bool isProd = false;
+#else
+    bool isProd = true;
+#endif
+
+    Assets
+        .Initialise(assetsConfig =&gt; assetsConfig
+            .ConfigureCompilers(compilerConfig =&gt; 
+                compilerConfig.WithDefaultConfiguration(Server.MapPath("~/Node")))
+            .ConfigureSourceManager(sourceConfig =&gt; 
+                sourceConfig.UseDefaultConfiguration(Server.MapPath("~/built"), isProd))
+            .Cache(isProd)
+            .Compress(isProd)
+            .LiveCss(!isProd))
+        .SetupCssPile(pile =&gt; pile
+            .AddFile(Server.MapPath("~/Content/Site.css")))
+        .SetupJavascriptPile(pile =&gt;
+        {
+            pile.AddFile(Server.MapPath("~/Scripts/jquery-1.6.4.js"));
+
+            if (!isProd)
+            {
+                pile.AddFile(Server.MapPath("~/Scripts/jquery.signalR.js"));
+            }
+
+            return pile;
+        })
+        .PrepareRoutes(RouteTable.Routes);
+</code></pre>
+
+<h2>More info?</h2>
+
+<p><a href="http://blogs.planetsoftware.com.au/felix/archive/2012/04/19/node-assets-released.aspx">Get Started Guide</a></p>
+
+<h2>Thanks</h2>
+
+<p>The work here was very much inspired by the <a href="https://github.com/epeli/piler">piler</a> project for nodejs. I highly recommend this module if you are building nodejs websites in Express.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Nodeassets maintained by <a href="https://github.com/ajorkowski">ajorkowski</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-30118497-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+
+  </body>
+</html>

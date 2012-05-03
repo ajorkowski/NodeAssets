@@ -2,5 +2,8 @@ bin/
 obj/
 packages/
 node_modules/
+Backup/
 _ReSharper.NodeAssets/
+_UpgradeReport_Files/
+UpgradeLog.XML
 *.suo

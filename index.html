@@ -165,7 +165,7 @@
     Assets
         .Initialise(assetsConfig =&gt; assetsConfig
             .ConfigureCompilers(compilerConfig =&gt; 
-                compilerConfig.WithDefaultConfiguration(Server.MapPath("~/Node")))
+                compilerConfig.WithDefaultNodeConfiguration(Server.MapPath("~/Node")))
             .ConfigureSourceManager(sourceConfig =&gt; 
                 sourceConfig.UseDefaultConfiguration(Server.MapPath("~/built"), isProd))
             .Cache(isProd)

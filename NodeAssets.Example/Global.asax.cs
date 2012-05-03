@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using NodeAssets.AspNet;
+using NodeAssets;
 
 namespace NodeAssets.Example
 {
@@ -32,7 +32,7 @@ namespace NodeAssets.Example
             AreaRegistration.RegisterAllAreas();
 
 #if DEBUG
-            bool isProd = false;
+            bool isProd = true;
 #else
             bool isProd = true;
 #endif
@@ -40,7 +40,7 @@ namespace NodeAssets.Example
             Assets
                 .Initialise(config => config
                     .ConfigureCompilers(
-                        compilers => compilers.WithDefaultConfiguration(Server.MapPath("~/Node")))
+                        compilers => compilers.WithDefaultNodeConfiguration(Server.MapPath("~/Node")))
                     .ConfigureSourceManager(
                         source =>
                         source.UseDefaultConfiguration(Server.MapPath("~/built"), isProd))

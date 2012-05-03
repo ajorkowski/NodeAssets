@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web.Routing;
+using NodeAssets.AspNet;
 using NodeAssets.AspNet.Routes;
 using NodeAssets.AspNet.Scripts;
 using NodeAssets.Core;
@@ -13,7 +14,7 @@ using SignalR.Hosting.AspNet;
 using SignalR.Hosting.AspNet.Routing;
 using SignalR.Infrastructure;
 
-namespace NodeAssets.AspNet
+namespace NodeAssets
 {
     public class Assets : IAssets
     {

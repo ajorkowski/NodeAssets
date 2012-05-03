@@ -186,7 +186,7 @@ namespace NodeAssets.Core.SourceManager
 
         private Task<string> CompileFile(FileInfo info)
         {
-            var compiler = _compilerManager.GetCompiler(info.Extension);
+            var compiler = _compilerManager.GetCompiler(info.Name);
             if (compiler == null)
             {
                 throw new InvalidOperationException("Compiler could not be found for '" + info.Extension + "' type file");
@@ -195,10 +195,10 @@ namespace NodeAssets.Core.SourceManager
             ICompiler minCompiler = null;
             if(_minimise)
             {
-                minCompiler = _compilerManager.GetCompiler(info.Extension + ".min");
+                minCompiler = _compilerManager.GetCompiler(_compileExtension + ".min");
                 if (minCompiler == null)
                 {
-                    throw new InvalidOperationException("Minimising compiler could not be found for '" + info.Extension + "' type file");
+                    throw new InvalidOperationException("Minimising compiler could not be found for '" + _compileExtension + "' type file");
                 }
             }
 

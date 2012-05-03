@@ -2,7 +2,7 @@
 using System.Web.Routing;
 using NodeAssets.Core;
 
-namespace NodeAssets.AspNet
+namespace NodeAssets
 {
     public interface IAssets
     {

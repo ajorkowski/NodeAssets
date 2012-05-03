@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="NodeAssets">
+</Property><Property Name="Solution File" Value="C:\GitProjects\NodeAssets\NodeAssets.sln">
+</Property><Property Name="User Options File" Value="C:\GitProjects\NodeAssets\NodeAssets.v11.suo">
+</Property><Property Name="Date" Value="Thursday, 3 May 2012">
+</Property><Property Name="Time" Value="18:20 PM">
+</Property></Properties><Event ErrorLevel="3" Project="" Source="NodeAssets.sln" Description="SafeUpgrade">
+</Event><Event ErrorLevel="0" Project="" Source="NodeAssets.sln" Description="File successfully backed up as C:\GitProjects\NodeAssets\Backup\NodeAssets.sln">
+</Event><Event ErrorLevel="0" Project="" Source="NodeAssets.v11.suo" Description="File successfully backed up as C:\GitProjects\NodeAssets\Backup\NodeAssets.v11.suo">
+</Event><Event ErrorLevel="3" Project="NodeAssets.Example" Source="NodeAssets.Example\NodeAssets.Example.csproj" Description="SafeUpgrade">
+</Event><Event ErrorLevel="0" Project="NodeAssets.Example" Source="NodeAssets.Example\NodeAssets.Example.csproj" Description="Project file successfully backed up as C:\GitProjects\NodeAssets\Backup\NodeAssets.Example\NodeAssets.Example.csproj">
+</Event><Event ErrorLevel="0" Project="NodeAssets.Example" Source="NodeAssets.Example\NodeAssets.Example.csproj.user" Description="Project user file successfully backed up as C:\GitProjects\NodeAssets\Backup\NodeAssets.Example\NodeAssets.Example.csproj.user">
+</Event><Event ErrorLevel="0" Project="NodeAssets.Example" Source="NodeAssets.Example\Controllers\AccountController.cs" Description="File successfully backed up as C:\GitProjects\NodeAssets\Backup\NodeAssets.Example\Controllers\AccountController.cs">
+</Event><Event ErrorLevel="0" Project="NodeAssets.Example" Source="NodeAssets.Example\Controllers\HomeController.cs" Description="File successfully backed up as C:\GitProjects\NodeAssets\Backup\NodeAssets.Example\Controllers\HomeController.cs">
+</Event><Event ErrorLevel="0" Project="NodeAssets.Example" Source="NodeAssets.Example\Global.asax.cs" Description="File successfully backed up as C:\GitProjects\NodeAssets\Backup\NodeAssets.Example\Global.asax.cs">
+</Event><Event ErrorLevel="0" Project="NodeAssets.Example" Source="NodeAssets.Example\Models\AccountModels.cs" Description="File successfully backed up as C:\GitProjects\NodeAssets\Backup\NodeAssets.Example\Models\AccountModels.cs">
+</Event><Event ErrorLevel="0" Project="NodeAssets.Example" Source="NodeAssets.Example\Properties\AssemblyInfo.cs" Description="File successfully backed up as C:\GitProjects\NodeAssets\Backup\NodeAssets.Example\Properties\AssemblyInfo.cs">
+</Event><Event ErrorLevel="0" Project="NodeAssets.Example" Source="NodeAssets.Example\Content\Site.styl" Description="File successfully backed up as C:\GitProjects\NodeAssets\Backup\NodeAssets.Example\Content\Site.styl">
+</Event><Event ErrorLevel="0" Project="NodeAssets.Example" Source="NodeAssets.Example\Node\package.json" Description="File successfully backed up as C:\GitProjects\NodeAssets\Backup\NodeAssets.Example\Node\package.json">
+</Event><Event ErrorLevel="0" Project="NodeAssets.Example" Source="NodeAssets.Example\Global.asax" Description="File successfully backed up as C:\GitProjects\NodeAssets\Backup\NodeAssets.Example\Global.asax">
+</Event><Event ErrorLevel="0" Project="NodeAssets.Example" Source="NodeAssets.Example\Scripts\jquery-1.6.4-vsdoc.js" Description="File successfully backed up as C:\GitProjects\NodeAssets\Backup\NodeAssets.Example\Scripts\jquery-1.6.4-vsdoc.js">
+</Event><Event ErrorLevel="0" Project="NodeAssets.Example" Source="NodeAssets.Example\Scripts\jquery-1.6.4.js" Description="File successfully backed up as C:\GitProjects\NodeAssets\Backup\NodeAssets.Example\Scripts\jquery-1.6.4.js">
+</Event><Event ErrorLevel="0" Project="NodeAssets.Example" Source="NodeAssets.Example\Scripts\jquery-1.6.4.min.js" Description="File successfully backed up as C:\GitProjects\NodeAssets\Backup\NodeAssets.Example\Scripts\jquery-1.6.4.min.js">
+</Event><Event ErrorLevel="0" Project="NodeAssets.Example" Source="NodeAssets.Example\Scripts\jquery.signalR.js" Description="File successfully backed up as C:\GitProjects\NodeAssets\Backup\NodeAssets.Example\Scripts\jquery.signalR.js">
+</Event><Event ErrorLevel="0" Project="NodeAssets.Example" Source="NodeAssets.Example\Scripts\jquery.signalR.min.js" Description="File successfully backed up as C:\GitProjects\NodeAssets\Backup\NodeAssets.Example\Scripts\jquery.signalR.min.js">
+</Event><Event ErrorLevel="0" Project="NodeAssets.Example" Source="NodeAssets.Example\Web.config" Description="File successfully backed up as C:\GitProjects\NodeAssets\Backup\NodeAssets.Example\Web.config">
+</Event><Event ErrorLevel="0" Project="NodeAssets.Example" Source="NodeAssets.Example\Web.Debug.config" Description="File successfully backed up as C:\GitProjects\NodeAssets\Backup\NodeAssets.Example\Web.Debug.config">
+</Event><Event ErrorLevel="0" Project="NodeAssets.Example" Source="NodeAssets.Example\Web.Release.config" Description="File successfully backed up as C:\GitProjects\NodeAssets\Backup\NodeAssets.Example\Web.Release.config">
+</Event><Event ErrorLevel="0" Project="NodeAssets.Example" Source="NodeAssets.Example\Views\_ViewStart.cshtml" Description="File successfully backed up as C:\GitProjects\NodeAssets\Backup\NodeAssets.Example\Views\_ViewStart.cshtml">
+</Event><Event ErrorLevel="0" Project="NodeAssets.Example" Source="NodeAssets.Example\Views\Account\ChangePassword.cshtml" Description="File successfully backed up as C:\GitProjects\NodeAssets\Backup\NodeAssets.Example\Views\Account\ChangePassword.cshtml">
+</Event><Event ErrorLevel="0" Project="NodeAssets.Example" Source="NodeAssets.Example\Views\Account\ChangePasswordSuccess.cshtml" Description="File successfully backed up as C:\GitProjects\NodeAssets\Backup\NodeAssets.Example\Views\Account\ChangePasswordSuccess.cshtml">
+</Event><Event ErrorLevel="0" Project="NodeAssets.Example" Source="NodeAssets.Example\Views\Account\LogOn.cshtml" Description="File successfully backed up as C:\GitProjects\NodeAssets\Backup\NodeAssets.Example\Views\Account\LogOn.cshtml">
+</Event><Event ErrorLevel="0" Project="NodeAssets.Example" Source="NodeAssets.Example\Views\Account\Register.cshtml" Description="File successfully backed up as C:\GitProjects\NodeAssets\Backup\NodeAssets.Example\Views\Account\Register.cshtml">
+</Event><Event ErrorLevel="0" Project="NodeAssets.Example" Source="NodeAssets.Example\Views\Home\About.cshtml" Description="File successfully backed up as C:\GitProjects\NodeAssets\Backup\NodeAssets.Example\Views\Home\About.cshtml">
+</Event><Event ErrorLevel="0" Project="NodeAssets.Example" Source="NodeAssets.Example\Views\Home\Index.cshtml" Description="File successfully backed up as C:\GitProjects\NodeAssets\Backup\NodeAssets.Example\Views\Home\Index.cshtml">
+</Event><Event ErrorLevel="0" Project="NodeAssets.Example" Source="NodeAssets.Example\Views\Shared\Error.cshtml" Description="File successfully backed up as C:\GitProjects\NodeAssets\Backup\NodeAssets.Example\Views\Shared\Error.cshtml">
+</Event><Event ErrorLevel="0" Project="NodeAssets.Example" Source="NodeAssets.Example\Views\Shared\_LogOnPartial.cshtml" Description="File successfully backed up as C:\GitProjects\NodeAssets\Backup\NodeAssets.Example\Views\Shared\_LogOnPartial.cshtml">
+</Event><Event ErrorLevel="0" Project="NodeAssets.Example" Source="NodeAssets.Example\Views\Shared\_Layout.cshtml" Description="File successfully backed up as C:\GitProjects\NodeAssets\Backup\NodeAssets.Example\Views\Shared\_Layout.cshtml">
+</Event><Event ErrorLevel="0" Project="NodeAssets.Example" Source="NodeAssets.Example\Views\Web.config" Description="File successfully backed up as C:\GitProjects\NodeAssets\Backup\NodeAssets.Example\Views\Web.config">
+</Event><Event ErrorLevel="0" Project="NodeAssets.Example" Source="NodeAssets.Example\packages.config" Description="File successfully backed up as C:\GitProjects\NodeAssets\Backup\NodeAssets.Example\packages.config">
+</Event><Event ErrorLevel="0" Project="NodeAssets.Example" Source="NodeAssets.Example\NodeAssets.Example.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="NodeAssets.Example" Source="NodeAssets.Example\NodeAssets.Example.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="" Source="NodeAssets.sln" Description="Solution converted successfully">
+</Event><Event ErrorLevel="3" Project="" Source="NodeAssets.sln" Description="Converted">
+</Event><Event ErrorLevel="0" Project="NodeAssets.Example" Source="NodeAssets.Example\NodeAssets.Example.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event></UpgradeLog>

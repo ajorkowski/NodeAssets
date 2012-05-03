@@ -10,7 +10,8 @@
     <projectUrl>https://github.com/ajorkowski/NodeAssets</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
+    <releaseNotes>Added pure .NET compilers for coffee, sass, css/js minification</releaseNotes>
     <copyright>Copyright 2012</copyright>
-    <tags>Nodejs Asset Manager</tags>
+    <tags>Asset Manager .NET MVC3 MVC4 NodeJS</tags>
   </metadata>
 </package>

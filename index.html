@@ -4,7 +4,7 @@
   <head>
     <meta charset='utf-8' />
     <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Nodeassets : Provides a complete assest manager solution including compilation from coffee/stylus, minification, combination, compression, caching, and also a refresh-on-change css live updater" />
+    <meta name="description" content="Nodeassets : Provides a complete assest manager solution including compilation from coffee/stylus/sass, minification, combination, compression, caching, and also a refresh-on-change css live updater" />
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
@@ -57,7 +57,7 @@
 
 <h2>Compilation/Minification</h2>
 
-<p>NodeAssets uses each file's extension to decide how to compile it. For example by default a .coffee file will be compiled by the inbuilt nodejs coffee compiler. It is simple to change your compilers, for example if you don't want to use Node you can configure your own set of compilers.</p>
+<p>NodeAssets uses each file's extension to decide how to compile it. Here is an example of an example config: </p>
 
 <pre><code>compilerConfig
     .CompilerFor(".coffee", new CoffeeCompiler()) // Use your own coffee compiler
@@ -66,14 +66,31 @@
     .CompilerFor(".js.min", new JSMinifyCompilter()) // Add the .min extension for minification
 </code></pre>
 
+<p>Currently there are two flavours of defaults in NodeAssets, see the 'more info' section for details</p>
+
 <p>Minification is turned on/off depending on the source configuration</p>
 
 <pre><code>sourceConfig.Minimise(true)
 </code></pre>
 
-<h3>(Optional) Compilation using NodeJS</h3>
+<h3>Compilation using .NET</h3>
 
-<p>Right now the only out of the box compilers that come with NodeAssets are built on top of NodeJS, and are included in the default compiler configuration.</p>
+<p>As of v0.0.4 the core library wraps a number of packages available on nuget so you can get your awesome asset management without having to include NodeJS</p>
+
+<ul>
+<li>
+<a href="http://tomlokhorst.github.com/CoffeeSharp/">Coffeesharp</a> (.coffee)</li>
+<li>
+<a href="https://github.com/xpaulbettsx/SassAndCoffee">SassAndCoffee.Ruby</a> (.sass/.scss)</li>
+<li>
+<a href="http://www.nuget.org/packages/Microsoft.Web.Optimization">JsMinify</a> (minifies .js files)</li>
+<li>
+<a href="http://www.nuget.org/packages/Microsoft.Web.Optimization">CssMinify</a> (minifies .css files)</li>
+</ul>
+
+<h3>Compilation using NodeJS</h3>
+
+<p>On top of the NET compilers there are also compilers backed by NodeJS if you want to go down that route (remember these are optional!): </p>
 
 <ul>
 <li>
@@ -89,9 +106,7 @@
 <pre><code>npm install
 </code></pre>
 
-<p>This will grab all the required modules and enable them in your builds!</p>
-
-<p>Remember that these components are <strong>optional</strong> - Just implement your own ICompiler to leverage other libraries or keep your stuff in .NET land. Stay tuned for a blog post in the near future that will use the .NET 4.5 JSMinify/CSSMinify classes to do compilation.</p>
+<p>This will grab all the required modules and enable them in your nodejs backed builds!</p>
 
 <h2>Combination</h2>
 
@@ -175,6 +190,7 @@
 <h2>More info?</h2>
 
 <p><a href="http://blogs.planetsoftware.com.au/felix/archive/2012/04/19/node-assets-released.aspx">Get Started Guide</a></p>
+<p><a href="http://blogs.planetsoftware.com.au/felix/archive/2012/05/03/net-compilers-for-nodeassets.aspx">Default NET/Node compilers</a></p>
 
 <h2>Thanks</h2>
 

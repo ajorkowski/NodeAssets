@@ -10,14 +10,15 @@ namespace NodeAssets.Core.SourceManager
 {
     public sealed class DefaultSourceManager : ISourceManager, IDisposable
     {
-        private IPile _pile;
-        private ICompilerConfiguration _compilerManager;
         private readonly DirectoryInfo _compilationDirectory;
         private readonly string _compileExtension;
-        private readonly bool _minimise;
         private readonly bool _combine;
+        private readonly ISourceCompiler _compiler;
 
-        public DefaultSourceManager(bool minimise, bool combine, string compileExtension, string compilationDirectory)
+        private IPile _pile;
+        private ICompilerConfiguration _compilerManager;
+
+        public DefaultSourceManager(bool combine, string compileExtension, string compilationDirectory, ISourceCompiler compiler)
         {
             _compilationDirectory = new DirectoryInfo(compilationDirectory);
             if(!_compilationDirectory.Exists)
@@ -26,8 +27,8 @@ namespace NodeAssets.Core.SourceManager
             }
 
             _compileExtension = compileExtension;
-            _minimise = minimise;
             _combine = combine;
+            _compiler = compiler;
         }
 
         public void SetPileAsSource(IPile pile, ICompilerConfiguration compilerManager)
@@ -140,7 +141,7 @@ namespace NodeAssets.Core.SourceManager
             var filePath = Path.Combine(dirPath, Path.GetFileNameWithoutExtension(file.Name) + _compileExtension);
 
             // Compile/minimise and write to file
-            CompileFile(file).ContinueWith(task => AttemptWrite(filePath, task.Result));
+            _compiler.CompileFile(file, _compilerManager).ContinueWith(task => AttemptWrite(filePath, task.Result));
         }
 
         private void CompilePile(string pile)
@@ -149,7 +150,7 @@ namespace NodeAssets.Core.SourceManager
             // If one file in a pile changes... all the rest have to too
             var filePath = Path.Combine(_compilationDirectory.FullName, pile + _compileExtension);
 
-            var tasks = _pile.FindFiles(pile).Select(CompileFile).ToArray();
+            var tasks = _pile.FindFiles(pile).Select(file => _compiler.CompileFile(file, _compilerManager)).ToArray();
 
             Task.Factory.ContinueWhenAll(tasks, t =>
             {
@@ -178,66 +179,10 @@ namespace NodeAssets.Core.SourceManager
                 }
                 catch (IOException)
                 {
-                    Thread.Sleep(500);
+                    Thread.Sleep(300);
                     numTries++;
                 }
             }
-        }
-
-        private Task<string> CompileFile(FileInfo info)
-        {
-            var compiler = _compilerManager.GetCompiler(info.Name);
-            if (compiler == null)
-            {
-                throw new InvalidOperationException("Compiler could not be found for '" + info.Extension + "' type file");
-            }
-
-            ICompiler minCompiler = null;
-            if(_minimise)
-            {
-                minCompiler = _compilerManager.GetCompiler(_compileExtension + ".min");
-                if (minCompiler == null)
-                {
-                    throw new InvalidOperationException("Minimising compiler could not be found for '" + _compileExtension + "' type file");
-                }
-            }
-
-            // First step is grab the file contents, then continue
-            return Task.Factory.StartNew(() => info != null && info.Exists ? File.ReadAllText(info.FullName) : null).ContinueWith(task =>
-            {
-                // Do the initial compile
-                var result = string.Empty;
-                if(!string.IsNullOrEmpty(task.Result))
-                {
-                    try
-                    {
-                        result = compiler.Compile(task.Result, info).Result;
-                    }
-                    catch
-                    {
-                        // Eat compiler exceptions
-                    }
-                }
-                return result;
-            }).ContinueWith(task =>
-            {
-                // Do the minimisation if it has been selected
-                var result = task.Result;
-                if(_minimise && !string.IsNullOrEmpty(result))
-                {
-                    try
-                    {
-                        result = minCompiler.Compile(result, null).Result;
-                    }
-                    catch
-                    {
-                        // Eat compiler exceptions
-                    }
-                    
-                }
-
-                return result;
-            });
         }
 
         public void Dispose()

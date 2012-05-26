@@ -32,7 +32,7 @@ namespace NodeAssets.Example
             AreaRegistration.RegisterAllAreas();
 
 #if DEBUG
-            bool isProd = true;
+            bool isProd = false;
 #else
             bool isProd = true;
 #endif
@@ -51,11 +51,11 @@ namespace NodeAssets.Example
                     .AddFile(Server.MapPath("~/Content/Site.styl")))
                 .SetupJavascriptPile(pile =>
                 {
-                    pile.AddFile(Server.MapPath("~/Scripts/jquery-1.6.4.js"));
+                    pile.AddFile(Server.MapPath("~/Scripts/jquery-1.7.2.js"));
 
                     if (!isProd)
                     {
-                        pile.AddFile(Server.MapPath("~/Scripts/jquery.signalR.js"));
+                        pile.AddFile(Server.MapPath("~/Scripts/jquery.signalR-0.5.0.js"));
                     }
 
                     return pile;

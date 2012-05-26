@@ -66,6 +66,9 @@
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
     </Reference>
+    <Reference Include="NSubstitute">
+      <HintPath>..\packages\NSubstitute.1.4.0.0\lib\NET40\NSubstitute.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.0.12054\lib\nunit.framework.dll</HintPath>
     </Reference>
@@ -96,6 +99,7 @@
     <Compile Include="Core\Compilers\CssoCompilerTest.cs" />
     <Compile Include="Core\Compilers\UglifyJSCompilerTest.cs" />
     <Compile Include="Core\Compilers\StylusCompilerTest.cs" />
+    <Compile Include="Core\SourceManager\DefaultSourceCompilerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -120,6 +124,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Data\emptyJS.min.js" />
+    <Content Include="Data\emptyJS.js" />
     <Content Include="Data\exampleCss.css" />
     <Content Include="Data\invalidCss.css" />
     <Content Include="Data\invalidJS.js" />
@@ -127,8 +133,13 @@
     <Content Include="Data\normalJavascript.js" />
     <Content Include="readme.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

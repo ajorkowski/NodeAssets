@@ -10,9 +10,6 @@ using NodeAssets.AspNet.Scripts;
 using NodeAssets.Core;
 using NodeAssets.Core.SourceManager;
 using SignalR;
-using SignalR.Hosting.AspNet;
-using SignalR.Hosting.AspNet.Routing;
-using SignalR.Infrastructure;
 
 namespace NodeAssets
 {
@@ -304,8 +301,8 @@ namespace NodeAssets
 
         private static void BroadcastCssChange(string id, string css)
         {
-            var connectonManager = AspNetHost.DependencyResolver.Resolve<IConnectionManager>();
-            var connection = connectonManager.GetConnection<LiveCssConnection>();
+            var connectonManager = GlobalHost.ConnectionManager;
+            var connection = connectonManager.GetConnectionContext<LiveCssConnection>().Connection;
 
             connection.Broadcast(new {id, css});
         }

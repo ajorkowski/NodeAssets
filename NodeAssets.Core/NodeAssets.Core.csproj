@@ -91,6 +91,8 @@
     <Compile Include="Helpers\Hash.cs" />
     <Compile Include="ISourceManagerConfiguration.cs" />
     <Compile Include="SourceManagerConfiguration.cs" />
+    <Compile Include="SourceManager\DefaultSourceCompiler.cs" />
+    <Compile Include="SourceManager\ISourceCompiler.cs" />
     <Compile Include="SourceManager\ISourceManager.cs" />
     <Compile Include="Pile.cs" />
     <Compile Include="CompilerConfiguration.cs" />

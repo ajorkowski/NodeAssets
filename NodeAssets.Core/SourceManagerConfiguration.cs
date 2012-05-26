@@ -37,7 +37,7 @@ namespace NodeAssets.Core
 
         public ISourceManager GetSourceManager(string extension)
         {
-            return new DefaultSourceManager(_minimise, _combine, extension, _outputDir);
+            return new DefaultSourceManager(_combine, extension, _outputDir, new DefaultSourceCompiler(_minimise, extension));
         }
     }
 }

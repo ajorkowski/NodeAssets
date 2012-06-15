@@ -55,7 +55,7 @@ namespace NodeAssets.Example
 
                     if (!isProd)
                     {
-                        pile.AddFile(Server.MapPath("~/Scripts/jquery.signalR-0.5.0.js"));
+                        pile.AddFile(Server.MapPath("~/Scripts/jquery.signalR-0.5.1.js"));
                     }
 
                     return pile;

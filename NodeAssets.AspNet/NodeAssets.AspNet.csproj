@@ -69,7 +69,7 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.4.5.5\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.4.5.7\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NodeAssets.Core, Version=0.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -81,16 +81,17 @@
     <Reference Include="SassAndCoffee.Ruby">
       <HintPath>..\packages\SassAndCoffee.Ruby.2.0.2.0\lib\net40-Client\SassAndCoffee.Ruby.dll</HintPath>
     </Reference>
-    <Reference Include="SignalR, Version=0.5.96.10509, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SignalR, Version=0.5.1.10610, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SignalR.Server.0.5.0\lib\net40\SignalR.dll</HintPath>
+      <HintPath>..\packages\SignalR.Server.0.5.1\lib\net40\SignalR.dll</HintPath>
     </Reference>
-    <Reference Include="SignalR.Hosting.AspNet, Version=0.5.96.10509, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SignalR.Hosting.AspNet, Version=0.5.1.10610, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SignalR.Hosting.AspNet.0.5.0\lib\net40\SignalR.Hosting.AspNet.dll</HintPath>
+      <HintPath>..\packages\SignalR.Hosting.AspNet.0.5.1\lib\net40\SignalR.Hosting.AspNet.dll</HintPath>
     </Reference>
-    <Reference Include="SignalR.Hosting.Common">
-      <HintPath>..\packages\SignalR.Hosting.Common.0.5.0\lib\net40\SignalR.Hosting.Common.dll</HintPath>
+    <Reference Include="SignalR.Hosting.Common, Version=0.5.1.10610, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\SignalR.Hosting.Common.0.5.1\lib\net40\SignalR.Hosting.Common.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

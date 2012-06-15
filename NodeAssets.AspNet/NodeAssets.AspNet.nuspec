@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/ajorkowski/NodeAssets</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Updated to work with SignalR 0.5.0</releaseNotes>
+    <releaseNotes>Updated to work with latest NodeAssets.Core and SignalR 5.1.0</releaseNotes>
     <copyright>Copyright 2012</copyright>
     <tags>Asset Manager .NET MVC3 MVC4 NodeJS</tags>
   </metadata>

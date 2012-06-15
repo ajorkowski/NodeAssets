@@ -71,9 +71,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.4.5.7\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="NodeAssets.Core, Version=0.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="NodeAssets.Core, Version=0.0.6.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NodeAssets.Core.0.0.5.0\lib\net40\NodeAssets.Core.dll</HintPath>
+      <HintPath>..\packages\NodeAssets.Core.0.0.6.0\lib\net40\NodeAssets.Core.dll</HintPath>
     </Reference>
     <Reference Include="SassAndCoffee.Core">
       <HintPath>..\packages\SassAndCoffee.Core.2.0.2.0\lib\net40-Client\SassAndCoffee.Core.dll</HintPath>

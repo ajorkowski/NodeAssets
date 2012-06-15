@@ -316,7 +316,7 @@ namespace NodeAssets.Core
                 }
                 catch (IOException)
                 {
-                    Thread.Sleep(500);
+                    Thread.Sleep(300);
                     numTries++;
                 }
             }

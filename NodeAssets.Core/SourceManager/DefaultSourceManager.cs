@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -31,7 +32,7 @@ namespace NodeAssets.Core.SourceManager
             _compiler = compiler;
         }
 
-        public void SetPileAsSource(IPile pile, ICompilerConfiguration compilerManager)
+        public Task SetPileAsSource(IPile pile, ICompilerConfiguration compilerManager)
         {
             if (pile == null) { throw new ArgumentNullException("pile"); }
             if (compilerManager == null) { throw new ArgumentNullException("compilerManager"); }
@@ -61,12 +62,17 @@ namespace NodeAssets.Core.SourceManager
                 _pile.FileUpdated += PileOnFileUpdated;
             }
 
-            CompileAll();
+            return CompileAll();
         }
 
         private IPile _dest;
         public IPile FindDestinationPile()
         {
+            if (_pile == null)
+            {
+                throw new InvalidOperationException("You must first set the pile source via SetPileAsSource");
+            }
+
             if (_dest == null)
             {
                 var newPile = new Pile(_pile.IsWatchingFiles);
@@ -115,25 +121,37 @@ namespace NodeAssets.Core.SourceManager
             }
         }
 
-        private void CompileAll()
+        private Task CompileAll()
         {
+            var tasks = new List<Task>();
+
             foreach (var pile in _pile.FindAllPiles())
             {
                 if (_combine)
                 {
-                    CompilePile(pile);
+                    tasks.Add(CompilePile(pile));
                 }
                 else
                 {
                     foreach (var file in _pile.FindFiles(pile))
                     {
-                        CompileFile(pile, file);
+                        tasks.Add(CompileFile(pile, file));
                     }
                 }
             }
+
+            // We just create a task as a hook so that you can do things when a compile finishes
+            if (tasks.Any())
+            {
+                return Task.Factory.ContinueWhenAll(tasks.ToArray(), (taskList) => { });
+            }
+            else
+            {
+                return Task.Factory.StartNew(() => { });
+            }
         }
 
-        private void CompileFile(string pile, FileInfo file)
+        private Task CompileFile(string pile, FileInfo file)
         {
             // Here we are keeping the files seperate... so just compile the single file
             // However the file will live in a subDirectory
@@ -141,10 +159,10 @@ namespace NodeAssets.Core.SourceManager
             var filePath = Path.Combine(dirPath, Path.GetFileNameWithoutExtension(file.Name) + _compileExtension);
 
             // Compile/minimise and write to file
-            _compiler.CompileFile(file, _compilerManager).ContinueWith(task => AttemptWrite(filePath, task.Result));
+            return _compiler.CompileFile(file, _compilerManager).ContinueWith(task => AttemptWrite(filePath, task.Result));
         }
 
-        private void CompilePile(string pile)
+        private Task CompilePile(string pile)
         {
             // Here we are combining all files
             // If one file in a pile changes... all the rest have to too
@@ -152,7 +170,7 @@ namespace NodeAssets.Core.SourceManager
 
             var tasks = _pile.FindFiles(pile).Select(file => _compiler.CompileFile(file, _compilerManager)).ToArray();
 
-            Task.Factory.ContinueWhenAll(tasks, t =>
+            return Task.Factory.ContinueWhenAll(tasks, t =>
             {
                 var builder = new StringBuilder();
 

@@ -99,6 +99,7 @@
     <Compile Include="Core\Compilers\CssoCompilerTest.cs" />
     <Compile Include="Core\Compilers\UglifyJSCompilerTest.cs" />
     <Compile Include="Core\Compilers\StylusCompilerTest.cs" />
+    <Compile Include="Core\SourceManager\DefaultSourceManagerTest.cs" />
     <Compile Include="Core\SourceManager\DefaultSourceCompilerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

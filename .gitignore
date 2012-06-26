@@ -5,6 +5,9 @@ node_modules/
 Backup/
 _ReSharper.NodeAssets/
 _UpgradeReport_Files/
+_NCrunch_NodeAssets/
 TestResults/
 UpgradeLog.XML
 *.suo
+*.ncrunchproject
+*.ncrunchsolution

@@ -170,17 +170,24 @@ namespace NodeAssets.Core.SourceManager
 
             var tasks = _pile.FindFiles(pile).Select(file => _compiler.CompileFile(file, _compilerManager)).ToArray();
 
-            return Task.Factory.ContinueWhenAll(tasks, t =>
+            if (tasks.Any())
             {
-                var builder = new StringBuilder();
-
-                foreach (var task in t)
+                return Task.Factory.ContinueWhenAll(tasks, t =>
                 {
-                    builder.Append(task.Result);
-                }
+                    var builder = new StringBuilder();
 
-                AttemptWrite(filePath, builder.ToString());
-            });
+                    foreach (var task in t)
+                    {
+                        builder.Append(task.Result);
+                    }
+
+                    AttemptWrite(filePath, builder.ToString());
+                });
+            }
+            else
+            {
+                return Task.Factory.StartNew(() => { });
+            }
         }
 
         private void AttemptWrite(string path, string text)

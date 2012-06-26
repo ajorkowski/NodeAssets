@@ -224,7 +224,8 @@ namespace NodeAssets
                     foreach (var file in files)
                     {
                         // multiple routes for the same pile
-                        yield return FindFilePath(piles, Global, file);
+                        // Add the '/' at the start to make it absolute
+                        yield return "/" + FindFilePath(piles, Global, file);
                     }
                 }
             }
@@ -239,7 +240,7 @@ namespace NodeAssets
                     foreach (var file in files)
                     {
                         // multiple routes for the same pile
-                        yield return FindFilePath(piles, pile, file);
+                        yield return "/" + FindFilePath(piles, pile, file);
                     }
                 }
             }
@@ -294,7 +295,8 @@ namespace NodeAssets
 
         private void CssOnFileUpdated(object sender, FileChangedEvent fileChangedEvent)
         {
-            var path = FindFilePath(_cssPile, fileChangedEvent.Pile, fileChangedEvent.File);
+            // Need to add the / at the start to make it absolute
+            var path = "/" + FindFilePath(_cssPile, fileChangedEvent.Pile, fileChangedEvent.File);
             var id = FindFilePath(_cssPile, fileChangedEvent.Pile, fileChangedEvent.File, true).Replace("/", "-");
             BroadcastCssChange(id, path);
         }

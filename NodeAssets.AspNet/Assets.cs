@@ -266,7 +266,7 @@ namespace NodeAssets
                 foreach (var file in files)
                 {
                     // multiple routes for the same pile
-                    routes.Add(new Route(FindFilePath(destPile, pile, file, true), _routeHandler(pile, file)));
+                    routes.Add(new MvcIgnoredRoute(FindFilePath(destPile, pile, file, true), _routeHandler(pile, file)));
                 }
             }
         }

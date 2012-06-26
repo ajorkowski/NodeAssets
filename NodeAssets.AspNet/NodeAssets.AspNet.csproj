@@ -112,6 +112,7 @@
     <Compile Include="Routes\DefaultHttpHandler.cs" />
     <Compile Include="Routes\DefaultRouteHandler.cs" />
     <Compile Include="Routes\EncodingHelper.cs" />
+    <Compile Include="Routes\MvcIgnoredRoute.cs" />
     <Compile Include="Routes\QValue.cs" />
     <Compile Include="Scripts\ScriptFinder.cs" />
   </ItemGroup>

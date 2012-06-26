@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/ajorkowski/NodeAssets</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Fixed absolute url references and updated to use SignalR 5.1.1</releaseNotes>
+    <releaseNotes>Fixed the routing so that in MVC apps they will be invisible to Url.Action methods</releaseNotes>
     <copyright>Copyright 2012</copyright>
     <tags>Asset Manager .NET MVC3 MVC4 NodeJS</tags>
   </metadata>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -32,7 +33,7 @@ namespace NodeAssets.Example
             AreaRegistration.RegisterAllAreas();
 
 #if DEBUG
-            bool isProd = false;
+            bool isProd = true;
 #else
             bool isProd = true;
 #endif
@@ -48,7 +49,9 @@ namespace NodeAssets.Example
                     .Compress(isProd)
                     .LiveCss(!isProd))
                 .SetupCssPile(pile => pile
-                    .AddFile(Server.MapPath("~/Content/Site.styl")))
+                    // An Example regex where you will add files ending in .styl
+                    // but NOT files ending in .min.styl
+                    .AddDirectory("Styles", Server.MapPath("~/Content"), false, new Regex("(?<!.min).styl$")))
                 .SetupJavascriptPile(pile =>
                 {
                     pile.AddFile(Server.MapPath("~/Scripts/jquery-1.7.2.js"));

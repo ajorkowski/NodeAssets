@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using NodeAssets.Core.Helpers;
 using System.Threading;
+using System.Text.RegularExpressions;
 
 namespace NodeAssets.Core
 {
@@ -152,26 +153,39 @@ namespace NodeAssets.Core
 
         public IEnumerable<Uri> FindUrls(string pile)
         {
-            var uri = new List<Uri>();
+            List<Uri> uri;
             _urls.TryGetValue(pile, out uri);
+            uri = uri ?? new List<Uri>();
             return uri;
         }
 
         public IEnumerable<FileInfo> FindFiles(string pile)
         {
-            var files = new List<FileInfo>();
+            List<FileInfo> files;
             _files.TryGetValue(pile, out files);
+            files = files ?? new List<FileInfo>();
             return files;
         }
 
         public IPile AddDirectory(string directory, bool recursive)
         {
-            AddDirectory(Global, directory, recursive);
+            AddDirectory(Global, directory, recursive, null);
+            return this;
+        }
 
+        public IPile AddDirectory(string directory, bool recursive, Regex allowedFilePattern)
+        {
+            AddDirectory(Global, directory, recursive, allowedFilePattern);
             return this;
         }
 
         public IPile AddDirectory(string pile, string directory, bool recursive)
+        {
+            AddDirectory(pile, directory, recursive, null);
+            return this;
+        }
+
+        public IPile AddDirectory(string pile, string directory, bool recursive, Regex allowedFilePattern)
         {
             if (pile == null)
             {
@@ -184,7 +198,7 @@ namespace NodeAssets.Core
                 throw new DirectoryNotFoundException("The directory '" + directory + "' was not found.");
             }
 
-            AddDirectory(pile, info, recursive);
+            AddDirectory(pile, info, recursive, allowedFilePattern);
 
             return this;
         }
@@ -207,18 +221,21 @@ namespace NodeAssets.Core
             return hash;
         }
 
-        private void AddDirectory(string pile, DirectoryInfo info, bool recursive)
+        private void AddDirectory(string pile, DirectoryInfo info, bool recursive, Regex filePattern)
         {
             foreach (var fileInfo in info.EnumerateFiles())
             {
-                AddFile(pile, fileInfo);
+                if (filePattern == null || filePattern.IsMatch(fileInfo.FullName))
+                {
+                    AddFile(pile, fileInfo);
+                }
             }
 
             if(recursive)
             {
                 foreach (var directoryInfo in info.EnumerateDirectories())
                 {
-                    AddDirectory(pile, directoryInfo, true);
+                    AddDirectory(pile, directoryInfo, true, filePattern);
                 }
             }
         }

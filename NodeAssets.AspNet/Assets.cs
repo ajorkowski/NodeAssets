@@ -77,8 +77,9 @@ namespace NodeAssets
         {
             if (_jsPile != null) { throw new InvalidOperationException("The javascript pile has already been initialised"); }
 
-            // No need to watch js files (for now!)
-            _jsPile = pileFunc(new Pile(false));
+            // Watch JS files only so that we can just press 'refresh' on the browser
+            // whenever we make a js change
+            _jsPile = pileFunc(new Pile(_config.IsLiveCss));
             if (_jsPile != null)
             {
                 _jsManager.SetPileAsSource(_jsPile, _config.CompilerConfiguration);
@@ -159,12 +160,13 @@ namespace NodeAssets
             foreach (var url in CombineUrls(destPile, includeGlobal, otherAssets))
             {
                 builder.Append(WrapInCssTag(url, "url" + count));
+                count++;
             }
 
             // Then files
             foreach (var file in CombineFiles(destPile, includeGlobal, otherAssets))
             {
-                builder.Append(WrapInCssTag(file, file.Replace("/","-")));
+                builder.Append(WrapInCssTag(file, file.Replace("/","-").Trim('-')));
             }
 
             return builder.ToString();

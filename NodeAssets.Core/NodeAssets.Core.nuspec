@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/ajorkowski/NodeAssets</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Updated to work with latest dependencies, added a number of tests</releaseNotes>
+    <releaseNotes>Added regex expressions when adding directories, so that you can add only specific files</releaseNotes>
     <copyright>Copyright 2012</copyright>
     <tags>Asset Manager .NET MVC3 MVC4 NodeJS</tags>
   </metadata>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace NodeAssets.Core
 {
@@ -13,7 +14,9 @@ namespace NodeAssets.Core
         event EventHandler<FileChangedEvent> FileCreated;
 
         IPile AddDirectory(string directory, bool recursive);
+        IPile AddDirectory(string directory, bool recursive, Regex allowedFilePattern);
         IPile AddDirectory(string pile, string directory, bool recursive);
+        IPile AddDirectory(string pile, string directory, bool recursive, Regex allowedFilePattern);
 
         IPile AddFile(string fileName);
         IPile AddFile(string pile, string fileName);

@@ -3,6 +3,7 @@ obj/
 packages/
 node_modules/
 Backup/
+built/
 _ReSharper.NodeAssets/
 _UpgradeReport_Files/
 _NCrunch_NodeAssets/

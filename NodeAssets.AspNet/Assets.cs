@@ -133,7 +133,7 @@ namespace NodeAssets
             }
 
             // Insert Css live script if applicable
-            if (_config.IsLiveCss && _cssManager != null && _cssPile != null)
+            if (includeGlobal && _config.IsLiveCss && _cssManager != null && _cssPile != null)
             {
                 string script = GetCssLiveScript();
 

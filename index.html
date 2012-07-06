@@ -47,6 +47,9 @@
     .AddFile(Server.MapPath("~/Scripts/jquery.signalR.js"))
     .AddDirectory("Home", Server.MapPath("~/Scripts/Home"), false)
     .AddFile("Admin", Server.MapPath("~/Scripts/Admin/admin.coffee"))
+    // NEW: Use regexs to narrow down when adding from directory
+    // in this example, add .js files but not .min.js files
+    .AddDirectory(Server.MapPath("~/Scripts/Mixed"), true, new Regex("(?&lt;!.min).js"))
 </code></pre>
 
 <p>Now you can replace your script tabs on your layout page with</p>
@@ -153,6 +156,11 @@
 
 <pre><code>assetsConfig.LiveCss(true, "signalRNamespace")
 </code></pre>
+
+<p>
+NEW: When this option is selected your javascript files are now also watched, this means if you change 
+your javascript all you have to do is manually reset the browser to instantly see your changes.  
+</p>
 
 <h2>Put it all together</h2>
 

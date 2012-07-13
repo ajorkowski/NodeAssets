@@ -77,6 +77,7 @@
     <Compile Include="Commands\INodeExecutor.cs" />
     <Compile Include="Compilers\CompilerConfigurationExtensions.cs" />
     <Compile Include="Compilers\CoffeeSharpCompiler.cs" />
+    <Compile Include="Compilers\LessCompiler.cs" />
     <Compile Include="Compilers\SassCompiler.cs" />
     <Compile Include="Compilers\CssMinifyCompiler.cs" />
     <Compile Include="Compilers\JsMinifyCompiler.cs" />
@@ -115,6 +116,9 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Compilers\Scripts\less.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

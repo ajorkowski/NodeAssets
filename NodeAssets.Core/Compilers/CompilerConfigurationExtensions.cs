@@ -40,6 +40,7 @@ namespace NodeAssets
                 .CompilerFor(".coffee", new CoffeeCompiler(executor))
                 .CompilerFor(".js", passthrough)
                 .CompilerFor(".styl", new StylusCompiler(executor, true))
+                .CompilerFor(".less", new LessCompiler(executor))
                 .CompilerFor(".css", passthrough)
                 .CompilerFor(".min.js.min", passthrough) // ignore .min.js files (they are already minified or want to ignore)
                 .CompilerFor(".min.css.min", passthrough) // ignore .min.css files (they are already minified or want to ignore)

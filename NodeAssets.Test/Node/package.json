@@ -9,6 +9,7 @@
 	"stylus": "*",
 	"nib": "*",
 	"uglify-js": "*",
-	"csso": "*"
+	"csso": "*",
+	"less": "*"
   }
 }

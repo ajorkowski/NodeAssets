@@ -93,6 +93,7 @@
     <Compile Include="Core\Commands\NodeExecutorTest.cs" />
     <Compile Include="Core\Compilers\CoffeeCompilerTest.cs" />
     <Compile Include="Core\Compilers\CoffeeSharpCompilerTest.cs" />
+    <Compile Include="Core\Compilers\LessCompilerTest.cs" />
     <Compile Include="Core\Compilers\SassCompilerTest.cs" />
     <Compile Include="Core\Compilers\CssMinifyCompilerTest.cs" />
     <Compile Include="Core\Compilers\JsMinifyCompilerTest.cs" />
@@ -110,6 +111,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Data\invalidLess.less" />
+    <None Include="Data\exampleLess.less" />
     <None Include="Data\invalidSass.sass" />
     <None Include="Data\exampleSassImport.sass" />
     <None Include="Data\exampleSass.sass" />

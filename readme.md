@@ -1,6 +1,6 @@
 # Node Assets
 
-Provides a complete assest manager solution including compilation from coffee/styles, minification, combination, compression, and also a refresh-on-change css live updater
+Provides a complete asset manager solution including compilation from coffee/styles, minification, combination, compression, and also a refresh-on-change css live updater
 
 ## Get it using Nuget
 

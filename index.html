@@ -4,7 +4,7 @@
   <head>
     <meta charset='utf-8' />
     <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Nodeassets : Provides a complete assest manager solution including compilation from coffee/stylus/sass, minification, combination, compression, caching, and also a refresh-on-change css live updater" />
+    <meta name="description" content="Nodeassets : Provides a complete asset manager solution including compilation from coffee/stylus/sass, minification, combination, compression, caching, and also a refresh-on-change css live updater" />
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
@@ -66,7 +66,7 @@
     .CompilerFor(".coffee", new CoffeeCompiler()) // Use your own coffee compiler
     .CompilerFor(".css", new PassthroughCompiler())
     .CompilerFor(".js", new PassthroughCompiler())
-    .CompilerFor(".js.min", new JSMinifyCompilter()) // Add the .min extension for minification
+    .CompilerFor(".js.min", new JSMinifyCompiler()) // Add the .min extension for minification
 </code></pre>
 
 <p>Currently there are two flavours of defaults in NodeAssets, see the 'more info' section for details</p>
@@ -100,6 +100,8 @@
 <a href="http://coffeescript.org">Coffeescript</a> (.coffee)</li>
 <li>
 <a href="http://learnboost.github.com/stylus">Stylus</a> (.styl)</li>
+<li>
+<a href="http://lesscss.org">Less</a> (.less)</li>
 <li>
 <a href="https://github.com/mishoo/UglifyJS">UglifyJS</a> (minifies .js files)</li>
 <li>

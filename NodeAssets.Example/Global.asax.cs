@@ -33,7 +33,7 @@ namespace NodeAssets.Example
             AreaRegistration.RegisterAllAreas();
 
 #if DEBUG
-            bool isProd = true;
+            bool isProd = false;
 #else
             bool isProd = true;
 #endif

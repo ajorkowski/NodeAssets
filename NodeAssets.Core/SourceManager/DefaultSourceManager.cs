@@ -88,8 +88,12 @@ namespace NodeAssets.Core.SourceManager
                     // Get New Files
                     if (_combine)
                     {
-                        var filePath = Path.Combine(_compilationDirectory.FullName, pile + _compileExtension);
-                        newPile.AddFile(pile, filePath);
+                        // Only add the pile global file if the file actually has anything
+                        if (_pile.FindFiles(pile).Any())
+                        {
+                            var filePath = Path.Combine(_compilationDirectory.FullName, pile + _compileExtension);
+                            newPile.AddFile(pile, filePath);
+                        }
                     }
                     else
                     {

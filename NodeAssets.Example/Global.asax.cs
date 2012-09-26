@@ -49,9 +49,9 @@ namespace NodeAssets.Example
                     .Compress(isProd)
                     .LiveCss(!isProd))
                 .SetupCssPile(pile => pile
-                    // An Example regex where you will add files ending in .styl
-                    // but NOT files ending in .min.styl
-                    .AddDirectory("Styles", Server.MapPath("~/Content"), false, new Regex("(?<!.min).styl$")))
+                    // An Example regex where you will add files ending in .css
+                    // but NOT files ending in .min.css
+                    .AddDirectory("Styles", Server.MapPath("~/Content"), false, new Regex("(?<!.min).css$")))
                 .SetupJavascriptPile(pile =>
                 {
                     pile.AddFile(Server.MapPath("~/Scripts/jquery-1.7.2.js"));

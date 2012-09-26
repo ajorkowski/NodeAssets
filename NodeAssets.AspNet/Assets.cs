@@ -1,15 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Web.Routing;
-using NodeAssets.AspNet;
+﻿using NodeAssets.AspNet;
 using NodeAssets.AspNet.Routes;
 using NodeAssets.AspNet.Scripts;
 using NodeAssets.Core;
 using NodeAssets.Core.SourceManager;
 using SignalR;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Web;
+using System.Web.Routing;
 
 namespace NodeAssets
 {
@@ -227,7 +228,7 @@ namespace NodeAssets
                     {
                         // multiple routes for the same pile
                         // Add the '/' at the start to make it absolute
-                        yield return "/" + FindFilePath(piles, Global, file);
+                        yield return VirtualPathUtility.ToAbsolute("~/") + FindFilePath(piles, Global, file);
                     }
                 }
             }
@@ -242,7 +243,7 @@ namespace NodeAssets
                     foreach (var file in files)
                     {
                         // multiple routes for the same pile
-                        yield return "/" + FindFilePath(piles, pile, file);
+                        yield return VirtualPathUtility.ToAbsolute("~/") + FindFilePath(piles, pile, file);
                     }
                 }
             }
@@ -276,7 +277,7 @@ namespace NodeAssets
         private string _cssLiveScript;
         private string GetCssLiveScript()
         {
-            return _cssLiveScript ?? (_cssLiveScript = ScriptFinder.GetScript("NodeAssets.AspNet.Scripts.cssLive.js").Replace("{0}", _config.Namespace));
+            return _cssLiveScript ?? (_cssLiveScript = ScriptFinder.GetScript("NodeAssets.AspNet.Scripts.cssLive.js").Replace("{0}", VirtualPathUtility.ToAbsolute("~/").TrimStart('/') + _config.Namespace));
         }
 
         private string FindFilePath(IPile destPile, string pile, FileInfo file, bool excludeVersion = false)
@@ -298,8 +299,8 @@ namespace NodeAssets
         private void CssOnFileUpdated(object sender, FileChangedEvent fileChangedEvent)
         {
             // Need to add the / at the start to make it absolute
-            var path = "/" + FindFilePath(_cssPile, fileChangedEvent.Pile, fileChangedEvent.File);
-            var id = FindFilePath(_cssPile, fileChangedEvent.Pile, fileChangedEvent.File, true).Replace("/", "-");
+            var path = VirtualPathUtility.ToAbsolute("~/") + FindFilePath(_cssPile, fileChangedEvent.Pile, fileChangedEvent.File);
+            var id = path.Replace("/", "-").Trim('-');
             BroadcastCssChange(id, path);
         }
 

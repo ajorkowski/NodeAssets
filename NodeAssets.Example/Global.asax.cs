@@ -51,7 +51,7 @@ namespace NodeAssets.Example
                 .SetupCssPile(pile => pile
                     // An Example regex where you will add files ending in .css
                     // but NOT files ending in .min.css
-                    .AddDirectory("Styles", Server.MapPath("~/Content"), false, new Regex("(?<!.min).css$")))
+                    .AddDirectory("Styles", Server.MapPath("~/Content"), true, new Regex("(?<!.min).css$")))
                 .SetupJavascriptPile(pile =>
                 {
                     pile.AddFile(Server.MapPath("~/Scripts/jquery-1.7.2.js"));

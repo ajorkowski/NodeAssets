@@ -97,12 +97,15 @@ namespace NodeAssets.Core.SourceManager
                     }
                     else
                     {
+                        // We have to add the count in this version to avoid clashes with names...
+                        int count = 0;
                         foreach (var file in _pile.FindFiles(pile))
                         {
                             var dirPath = Path.Combine(_compilationDirectory.FullName, pile);
-                            var filePath = Path.Combine(dirPath, Path.GetFileNameWithoutExtension(file.Name) + _compileExtension);
+                            var filePath = Path.Combine(dirPath, Path.GetFileNameWithoutExtension(file.Name) + count.ToString() + _compileExtension);
 
                             newPile.AddFile(pile, filePath);
+                            count++;
                         }
                     }
                 }
@@ -121,7 +124,16 @@ namespace NodeAssets.Core.SourceManager
             }
             else
             {
-                CompileFile(fileChangedEvent.Pile, fileChangedEvent.File);
+                int count = 0;
+                foreach (var file in _pile.FindFiles(fileChangedEvent.Pile))
+                {
+                    if (file.FullName == fileChangedEvent.File.FullName)
+                    {
+                        break;
+                    }
+                    count++;
+                }
+                CompileFile(fileChangedEvent.Pile, fileChangedEvent.File, count);
             }
         }
 
@@ -137,9 +149,11 @@ namespace NodeAssets.Core.SourceManager
                 }
                 else
                 {
+                    int count = 0;
                     foreach (var file in _pile.FindFiles(pile))
                     {
-                        tasks.Add(CompileFile(pile, file));
+                        tasks.Add(CompileFile(pile, file, count));
+                        count++;
                     }
                 }
             }
@@ -155,12 +169,12 @@ namespace NodeAssets.Core.SourceManager
             }
         }
 
-        private Task CompileFile(string pile, FileInfo file)
+        private Task CompileFile(string pile, FileInfo file, int count)
         {
             // Here we are keeping the files seperate... so just compile the single file
             // However the file will live in a subDirectory
             var dirPath = Path.Combine(_compilationDirectory.FullName, pile);
-            var filePath = Path.Combine(dirPath, Path.GetFileNameWithoutExtension(file.Name) + _compileExtension);
+            var filePath = Path.Combine(dirPath, Path.GetFileNameWithoutExtension(file.Name) + count.ToString() + _compileExtension);
 
             // Compile/minimise and write to file
             return _compiler.CompileFile(file, _compilerManager).ContinueWith(task => AttemptWrite(filePath, task.Result));

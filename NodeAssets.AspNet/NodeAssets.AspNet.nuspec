@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/ajorkowski/NodeAssets</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Updated to use latest NodeAssets.Core and SignalR libs, also have made javascript libs watch changes</releaseNotes>
+    <releaseNotes>Added support for non-domain based pages</releaseNotes>
     <copyright>Copyright 2012</copyright>
     <tags>Asset Manager .NET MVC3 MVC4 NodeJS</tags>
   </metadata>

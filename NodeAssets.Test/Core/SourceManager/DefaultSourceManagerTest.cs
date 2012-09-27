@@ -84,8 +84,8 @@ namespace NodeAssets.Test.Core.SourceManager
 
             _manager.SetPileAsSource(pile, compiler).Wait();
 
-            Assert.That(File.ReadAllText("testCompile/global/normalJavascript.js"), Is.EqualTo("Saved"));
-            Assert.That(File.ReadAllText("testCompile/coffee/exampleCoffee.js"), Is.EqualTo("Saved"));
+            Assert.That(File.ReadAllText("testCompile/global/normalJavascript0.js"), Is.EqualTo("Saved"));
+            Assert.That(File.ReadAllText("testCompile/coffee/exampleCoffee0.js"), Is.EqualTo("Saved"));
         }
 
         [Test]
@@ -119,7 +119,7 @@ namespace NodeAssets.Test.Core.SourceManager
             var dest = _manager.FindDestinationPile();
 
             Assert.That(dest.FindFiles("global").Count(), Is.EqualTo(2));
-            Assert.That(dest.FindFiles("global").Any(f => f.Name == "exampleCoffee.js"));
+            Assert.That(dest.FindFiles("global").Any(f => f.Name == "exampleCoffee1.js"));
         }
 
         [Test]

@@ -300,7 +300,7 @@ namespace NodeAssets
         {
             // Need to add the / at the start to make it absolute
             var path = VirtualPathUtility.ToAbsolute("~/") + FindFilePath(_cssPile, fileChangedEvent.Pile, fileChangedEvent.File);
-            var id = path.Replace("/", "-").Trim('-');
+            var id = (VirtualPathUtility.ToAbsolute("~/") + FindFilePath(_cssPile, fileChangedEvent.Pile, fileChangedEvent.File, true)).Replace("/", "-").Trim('-');
             BroadcastCssChange(id, path);
         }
 

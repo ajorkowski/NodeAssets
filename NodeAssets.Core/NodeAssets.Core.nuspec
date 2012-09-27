@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/ajorkowski/NodeAssets</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Added less compiler for node and added it to default configuration</releaseNotes>
+    <releaseNotes>Added support for multiple files to be named the same thing in the same pile</releaseNotes>
     <copyright>Copyright 2012</copyright>
     <tags>Asset Manager .NET MVC3 MVC4 NodeJS</tags>
   </metadata>

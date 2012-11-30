@@ -89,6 +89,7 @@
     <Compile Include="Compilers\PassthroughCompiler.cs" />
     <Compile Include="Compilers\StylusCompiler.cs" />
     <Compile Include="Compilers\UglifyJSCompiler.cs" />
+    <Compile Include="FileExtensions.cs" />
     <Compile Include="ISourceManagerConfiguration.cs" />
     <Compile Include="SourceManagerConfiguration.cs" />
     <Compile Include="SourceManager\DefaultSourceCompiler.cs" />

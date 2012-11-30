@@ -16,15 +16,15 @@ namespace NodeAssets
             var sassCompiler = new SassCompiler();
 
             return compilerConfig
-                .CompilerFor(".coffee", new CoffeeSharpCompiler())
-                .CompilerFor(".js", passthrough)
-                .CompilerFor(".sass", sassCompiler)
-                .CompilerFor(".scss", sassCompiler)
-                .CompilerFor(".css", passthrough)
-                .CompilerFor(".min.js.min", passthrough) // ignore .min.js files (they are already minified or want to ignore)
-                .CompilerFor(".min.css.min", passthrough) // ignore .min.css files (they are already minified or want to ignore)
-                .CompilerFor(".js.min", new JsMinifyCompiler())
-                .CompilerFor(".css.min", new CssMinifyCompiler());
+                .CompilerFor(FileExtensions.Coffee, new CoffeeSharpCompiler())
+                .CompilerFor(FileExtensions.Js, passthrough)
+                .CompilerFor(FileExtensions.Sass, sassCompiler)
+                .CompilerFor(FileExtensions.Scss, sassCompiler)
+                .CompilerFor(FileExtensions.Css, passthrough)
+                .CompilerFor(FileExtensions.MinJsMin, passthrough) // ignore .min.js files (they are already minified or want to ignore)
+                .CompilerFor(FileExtensions.MinCssMin, passthrough) // ignore .min.css files (they are already minified or want to ignore)
+                .CompilerFor(FileExtensions.JsMin, new JsMinifyCompiler())
+                .CompilerFor(FileExtensions.CssMin, new CssMinifyCompiler());
         }
 
         /// <summary>
@@ -37,15 +37,15 @@ namespace NodeAssets
             var executor = new NodeExecutor(nodeWorkspacePath);
 
             return compilerConfig
-                .CompilerFor(".coffee", new CoffeeCompiler(executor))
-                .CompilerFor(".js", passthrough)
-                .CompilerFor(".styl", new StylusCompiler(executor, true))
-                .CompilerFor(".less", new LessCompiler(executor))
-                .CompilerFor(".css", passthrough)
-                .CompilerFor(".min.js.min", passthrough) // ignore .min.js files (they are already minified or want to ignore)
-                .CompilerFor(".min.css.min", passthrough) // ignore .min.css files (they are already minified or want to ignore)
-                .CompilerFor(".js.min", new UglifyJSCompiler(executor))
-                .CompilerFor(".css.min", new CssoCompiler(executor));
+                .CompilerFor(FileExtensions.Coffee, new CoffeeCompiler(executor))
+                .CompilerFor(FileExtensions.Js, passthrough)
+                .CompilerFor(FileExtensions.Styl, new StylusCompiler(executor, true))
+                .CompilerFor(FileExtensions.Less, new LessCompiler(executor))
+                .CompilerFor(FileExtensions.Css, passthrough)
+                .CompilerFor(FileExtensions.MinJsMin, passthrough) // ignore .min.js files (they are already minified or want to ignore)
+                .CompilerFor(FileExtensions.MinCssMin, passthrough) // ignore .min.css files (they are already minified or want to ignore)
+                .CompilerFor(FileExtensions.JsMin, new UglifyJSCompiler(executor))
+                .CompilerFor(FileExtensions.CssMin, new CssoCompiler(executor));
         }
     }
 }

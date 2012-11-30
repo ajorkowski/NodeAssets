@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using NodeAssets.Core.Compilers;
 
@@ -41,7 +42,7 @@ namespace NodeAssets.Core.SourceManager
             return Task.Factory.StartNew(() =>
             {
                 // Do the initial compile
-                var fileData = file.Exists ? File.ReadAllText(file.FullName) : string.Empty;
+                var fileData = file.Exists ? AttemptRead(file.FullName) : string.Empty;
                 var result = string.Empty;
                 bool hasErrored = false;
                 if (!string.IsNullOrEmpty(fileData))
@@ -73,6 +74,29 @@ namespace NodeAssets.Core.SourceManager
 
                 return result;
             });
+        }
+
+        private string AttemptRead(string path)
+        {
+            var numTries = 0;
+            string result = null;
+
+            // This is crap but apparently the only consistent way to wait for a lock on a file
+            while (numTries < 10)
+            {
+                try
+                {
+                    result = File.ReadAllText(path);
+                    numTries = 11;
+                }
+                catch (IOException)
+                {
+                    Thread.Sleep(300);
+                    numTries++;
+                }
+            }
+
+            return result;
         }
     }
 }

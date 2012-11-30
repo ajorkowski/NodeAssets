@@ -122,6 +122,15 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>rmdir "$(ProjectDir)package" /s /q
+mkdir "$(ProjectDir)package\lib\Net40"
+Xcopy.exe /Y "$(TargetPath)" "$(ProjectDir)package\lib\Net40"
+Xcopy.exe /Y "$(ProjectDir)NodeAssets.Core.nuspec" "$(ProjectDir)package"
+cd "$(ProjectDir)package"
+"$(SolutionDir).nuget\Nuget.exe" pack NodeAssets.Core.nuspec
+xcopy /Y *.nupkg "$(TargetDir)"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

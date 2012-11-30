@@ -1,11 +1,7 @@
 core:
-	nuget pack NodeAssets.Core/NodeAssets.Core.csproj
-	nuget push NodeAssets.Core.$(v).nupkg
-	rm NodeAssets.Core.$(v).nupkg
+	nuget push NodeAssets.Core\bin\Release\NodeAssets.Core.$(v).nupkg
 
 aspnet:
-	nuget pack NodeAssets.AspNet/NodeAssets.AspNet.csproj
-	nuget push NodeAssets.AspNet.$(v).nupkg
-	rm NodeAssets.AspNet.$(v).nupkg
+	nuget push NodeAssets.AspNet\bin\Release\NodeAssets.AspNet.$(v).nupkg
 
 .PHONY: core aspnet

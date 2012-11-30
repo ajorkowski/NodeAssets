@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
-using NodeAssets.Core.Helpers;
 using System.Threading;
 using System.Text.RegularExpressions;
 
@@ -69,11 +69,16 @@ namespace NodeAssets.Core
             remove { _fileCreated -= value; }
         }
 
-        protected virtual void OnFileDeleted(FileSystemWatcher fsw, string pile, FileInfo info)
+        protected virtual void OnFileDeleted(string pile, FileInfo info)
         {
             try
             {
-                fsw.EnableRaisingEvents = false;
+                // Ignore if we have already handled this event
+                if(_fileHashes.ContainsKey(info.FullName) && _fileHashes[info.FullName] == string.Empty)
+                {
+                    return;
+                }
+
                 _fileHashes[info.FullName] = string.Empty;
 
                 if (_fileDeleted != null)
@@ -85,64 +90,53 @@ namespace NodeAssets.Core
             {
                 // Eat errors here
             }
-            finally
-            {
-                fsw.EnableRaisingEvents = true;
-            }
         }
 
-        protected virtual void OnFileUpdated(FileSystemWatcher fsw, string pile, FileInfo info)
+        protected virtual void OnFileUpdated(string pile, FileInfo info)
         {
             try
             {
-                fsw.EnableRaisingEvents = false;
-                var text = AttemptRead(info.FullName);
-
-                if (text != null)
+                // Ignore if we have already handled this event
+                var currentLastWriteTime = GetFileHash(info);
+                if (_fileHashes.ContainsKey(info.FullName) && _fileHashes[info.FullName] == currentLastWriteTime)
                 {
-                    _fileHashes[info.FullName] = Hash.GetHash(text, Hash.HashType.SHA1);
+                    return;
+                }
 
-                    if (_fileUpdated != null)
-                    {
-                        _fileUpdated(this, new FileChangedEvent(pile, info));
-                    }
+                _fileHashes[info.FullName] = currentLastWriteTime;
+
+                if (_fileUpdated != null)
+                {
+                    _fileUpdated(this, new FileChangedEvent(pile, info));
                 }
             }
             catch
             {
                 // Eat errors here
             }
-            finally
-            {
-                fsw.EnableRaisingEvents = true;
-            }
         }
 
-        protected virtual void OnFileCreated(FileSystemWatcher fsw, string pile, FileInfo info)
+        protected virtual void OnFileCreated(string pile, FileInfo info)
         {
             try
             {
-                fsw.EnableRaisingEvents = false;
-
-                var text = AttemptRead(info.FullName);
-
-                if (text != null)
+                // Ignore if we have already handled this event
+                var currentLastWriteTime = GetFileHash(info);
+                if (_fileHashes.ContainsKey(info.FullName) && _fileHashes[info.FullName] == currentLastWriteTime)
                 {
-                    _fileHashes[info.FullName] = Hash.GetHash(text, Hash.HashType.SHA1);
+                    return;
+                }
 
-                    if (_fileCreated != null)
-                    {
-                        _fileCreated(this, new FileChangedEvent(pile, info));
-                    }
+                _fileHashes[info.FullName] = currentLastWriteTime;
+
+                if (_fileCreated != null)
+                {
+                    _fileCreated(this, new FileChangedEvent(pile, info));
                 }
             }
             catch
             {
                 // Eat errors here
-            }
-            finally
-            {
-                fsw.EnableRaisingEvents = true;
             }
         }
 
@@ -214,30 +208,11 @@ namespace NodeAssets.Core
             {
                 if (File.Exists(file.FullName))
                 {
-                    hash = _fileHashes[file.FullName] = Hash.GetHash(File.ReadAllText(file.FullName), Hash.HashType.SHA1);
+                    hash = _fileHashes[file.FullName] = GetFileHash(file);
                 }
             }
 
             return hash;
-        }
-
-        private void AddDirectory(string pile, DirectoryInfo info, bool recursive, Regex filePattern)
-        {
-            foreach (var fileInfo in info.EnumerateFiles())
-            {
-                if (filePattern == null || filePattern.IsMatch(fileInfo.FullName))
-                {
-                    AddFile(pile, fileInfo);
-                }
-            }
-
-            if(recursive)
-            {
-                foreach (var directoryInfo in info.EnumerateDirectories())
-                {
-                    AddDirectory(pile, directoryInfo, true, filePattern);
-                }
-            }
         }
 
         public IPile AddFile(string fileName)
@@ -277,14 +252,16 @@ namespace NodeAssets.Core
                     Directory.CreateDirectory(info.DirectoryName);
                 }
 
-                var watcher = new FileSystemWatcher();
-                watcher.Path = info.DirectoryName;
-                watcher.Filter = info.Name;
-                watcher.NotifyFilter = NotifyFilters.LastWrite;
+                var watcher = new FileSystemWatcher
+                {
+                    Path = info.DirectoryName,
+                    Filter = info.Name,
+                    NotifyFilter = NotifyFilters.LastWrite
+                };
 
-                watcher.Created += (sender, args) => OnFileCreated(watcher, pile, info);
-                watcher.Changed += (sender, args) => OnFileUpdated(watcher, pile, info);
-                watcher.Deleted += (sender, args) => OnFileDeleted(watcher, pile, info);
+                watcher.Created += (sender, args) => OnFileCreated(pile, info);
+                watcher.Changed += (sender, args) => OnFileUpdated(pile, info);
+                watcher.Deleted += (sender, args) => OnFileDeleted(pile, info);
 
                 watcher.EnableRaisingEvents = true;
             }
@@ -318,27 +295,28 @@ namespace NodeAssets.Core
             return this;
         }
 
-        private string AttemptRead(string path)
+        private string GetFileHash(FileInfo info)
         {
-            var numTries = 0;
-            string result = null;
+            return File.GetLastWriteTimeUtc(info.FullName).Ticks.ToString(CultureInfo.InvariantCulture);
+        }
 
-            // This is crap but apparently the only consistent way to wait for a lock on a file
-            while (numTries < 10)
+        private void AddDirectory(string pile, DirectoryInfo info, bool recursive, Regex filePattern)
+        {
+            foreach (var fileInfo in info.EnumerateFiles())
             {
-                try
+                if (filePattern == null || filePattern.IsMatch(fileInfo.FullName))
                 {
-                    result = File.ReadAllText(path);
-                    numTries = 11;
-                }
-                catch (IOException)
-                {
-                    Thread.Sleep(300);
-                    numTries++;
+                    AddFile(pile, fileInfo);
                 }
             }
 
-            return result;
+            if (recursive)
+            {
+                foreach (var directoryInfo in info.EnumerateDirectories())
+                {
+                    AddDirectory(pile, directoryInfo, true, filePattern);
+                }
+            }
         }
     }
 }

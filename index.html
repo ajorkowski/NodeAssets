@@ -63,13 +63,13 @@
 <p>NodeAssets uses each file's extension to decide how to compile it. Here is an example of an example config: </p>
 
 <pre><code>compilerConfig
-    .CompilerFor(".coffee", new CoffeeCompiler()) // Use your own coffee compiler
-    .CompilerFor(".css", new PassthroughCompiler())
-    .CompilerFor(".js", new PassthroughCompiler())
-    .CompilerFor(".js.min", new JSMinifyCompiler()) // Add the .min extension for minification
+    .CompilerFor(FileExtensions.Coffee, new CoffeeCompiler()) // Use your own coffee compiler
+    .CompilerFor(FileExtensions.Css, new PassthroughCompiler())
+    .CompilerFor(FileExtensions.Js, new PassthroughCompiler())
+    .CompilerFor(FileExtensions.JsMin, new JSMinifyCompiler()) // Add the .min extension for minification
 </code></pre>
 
-<p>Currently there are two flavours of defaults in NodeAssets, see the 'more info' section for details</p>
+<p>As of v0.0.9 the compilers are moved out into their own packages, search for NodeAssets.Compilers to find them</p>
 
 <p>Minification is turned on/off depending on the source configuration</p>
 
@@ -78,7 +78,7 @@
 
 <h3>Compilation using .NET</h3>
 
-<p>As of v0.0.4 the core library wraps a number of packages available on nuget so you can get your awesome asset management without having to include NodeJS</p>
+<p>As of v0.0.4 a number of compilers wrap up packages available on nuget so you can get your awesome asset management without having to include NodeJS</p>
 
 <ul>
 <li>
@@ -86,10 +86,13 @@
 <li>
 <a href="https://github.com/xpaulbettsx/SassAndCoffee">SassAndCoffee.Ruby</a> (.sass/.scss)</li>
 <li>
-<a href="http://www.nuget.org/packages/Microsoft.Web.Optimization">JsMinify</a> (minifies .js files)</li>
+<a href="http://yuicompressor.codeplex.com/">JsMinify</a> (minifies .js files)</li>
 <li>
-<a href="http://www.nuget.org/packages/Microsoft.Web.Optimization">CssMinify</a> (minifies .css files)</li>
+<a href="http://yuicompressor.codeplex.com/">CssMinify</a> (minifies .css files)</li>
 </ul>
+
+<p>Note that the Js/Css minify libs use YUI compressor for .NET and not the Microsoft Optimization libs, the reason for this is that I have found that
+a number of CSS3 properties cannot be properly minified - frankly I no longer trust the optimization libs!</p>
 
 <h3>Compilation using NodeJS</h3>
 
@@ -113,6 +116,10 @@
 
 <p>This will grab all the required modules and enable them in your nodejs backed builds!</p>
 
+<h3>Typescript compilation</h3>
+
+<p>If you have installed <a href="http://www.typescriptlang.org/#Download">typescript</a> we also support compiling that directly</p>
+
 <h2>Combination</h2>
 
 <p>If the combination setting is turned on each pile will be combined into one file to be served up to your web application. Note that the compilation and minification occurs before this step. Recommended for production environments to reduce the number of requests that a browser has to make. Compilation is turned on/off via the source configuration</p>
@@ -129,7 +136,9 @@
 
 <h2>Caching</h2>
 
-<p>If caching is enabled NodeAssets uses an aggressive caching mechanism. Assets are versioned using a SHA-1 hash and set to be cached for the maximum time of a year. This is perfect for production environments as browsers will not even make a request for an asset that is has loaded before which means a MUCH faster site. However if your files have changed then the hash will change and browsers will be forced to grab the latest version of the asset. Your tags in your production environment will look a lot like</p>
+<p>If caching is enabled NodeAssets uses an aggressive caching mechanism. Assets are versioned using their last modified timestamp and set to be cached for the maximum time of a year. This is perfect for production environments as browsers will not even make a request for an asset that is has loaded before which means a MUCH faster site. 
+However if your files have changed then the hash will change and browsers will be forced to grab the latest version of the asset. Your tags in your production environment
+will look a lot like</p>
 
 <pre><code>&lt;link href="assets/global/global.css?v=1e0479d3ee71d58c33f82ebf68e1669653b8eb9e" rel="stylesheet" type="text/css" /&gt;
 &lt;script type="text/javascript" src="assets/global/global.js?v=b1dda81e543867fba59c07e0fb48f31529e01f81"&gt;&lt;/script&gt;

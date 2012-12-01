@@ -89,17 +89,18 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Compilers\TypescriptCompilerTest.cs" />
     <Compile Include="Core\CompilerConfigurationTest.cs" />
     <Compile Include="Core\Commands\NodeExecutorTest.cs" />
-    <Compile Include="Core\Compilers\CoffeeCompilerTest.cs" />
-    <Compile Include="Core\Compilers\CoffeeSharpCompilerTest.cs" />
-    <Compile Include="Core\Compilers\LessCompilerTest.cs" />
-    <Compile Include="Core\Compilers\SassCompilerTest.cs" />
-    <Compile Include="Core\Compilers\CssMinifyCompilerTest.cs" />
-    <Compile Include="Core\Compilers\JsMinifyCompilerTest.cs" />
-    <Compile Include="Core\Compilers\CssoCompilerTest.cs" />
-    <Compile Include="Core\Compilers\UglifyJSCompilerTest.cs" />
-    <Compile Include="Core\Compilers\StylusCompilerTest.cs" />
+    <Compile Include="Compilers\CoffeeCompilerTest.cs" />
+    <Compile Include="Compilers\CoffeeSharpCompilerTest.cs" />
+    <Compile Include="Compilers\LessCompilerTest.cs" />
+    <Compile Include="Compilers\SassCompilerTest.cs" />
+    <Compile Include="Compilers\CssMinifyCompilerTest.cs" />
+    <Compile Include="Compilers\JsMinifyCompilerTest.cs" />
+    <Compile Include="Compilers\CssoCompilerTest.cs" />
+    <Compile Include="Compilers\UglifyJSCompilerTest.cs" />
+    <Compile Include="Compilers\StylusCompilerTest.cs" />
     <Compile Include="Core\SourceManager\DefaultSourceManagerTest.cs" />
     <Compile Include="Core\SourceManager\DefaultSourceCompilerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -121,12 +122,19 @@
       <Project>{2fd43281-fa1e-4438-939c-7ea84fb32a0c}</Project>
       <Name>NodeAssets.Compilers.Sass</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NodeAssets.Compilers.Typescript\NodeAssets.Compilers.Typescript.csproj">
+      <Project>{8df5e868-787d-45ec-a805-213abeb3e06d}</Project>
+      <Name>NodeAssets.Compilers.Typescript</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NodeAssets.Core\NodeAssets.Core.csproj">
       <Project>{09D9E3D0-8F44-4390-AE17-0ABEEE704FF6}</Project>
       <Name>NodeAssets.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Data\examplets.js.map">
+      <DependentUpon>examplets.ts</DependentUpon>
+    </None>
     <None Include="Data\invalidLess.less" />
     <None Include="Data\exampleLess.less" />
     <None Include="Data\invalidSass.sass" />
@@ -147,6 +155,10 @@
     <Content Include="Data\emptyJS.min.js" />
     <Content Include="Data\emptyJS.js" />
     <Content Include="Data\exampleCss.css" />
+    <TypeScriptCompile Include="Data\examplets.ts" />
+    <Content Include="Data\examplets.js">
+      <DependentUpon>examplets.ts</DependentUpon>
+    </Content>
     <Content Include="Data\invalidCss.css" />
     <Content Include="Data\invalidJS.js" />
     <Content Include="Data\jquery-1.6.4.js" />

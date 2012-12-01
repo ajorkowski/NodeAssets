@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NUnit.Framework;
+using NodeAssets.Compilers;
 using NodeAssets.Core.Commands;
 using System.IO;
-using NodeAssets.Core.Compilers;
 using System.Runtime.InteropServices;
 
 namespace NodeAssets.Test.Core.Compilers

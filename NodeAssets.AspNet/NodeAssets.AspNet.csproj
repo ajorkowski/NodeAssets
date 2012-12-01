@@ -80,14 +80,10 @@
     <None Include="NodeAssets.AspNet.nuspec">
       <SubType>Designer</SubType>
     </None>
-    <Content Include="Node\package.json" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Scripts\cssLive.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Node\readme.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NodeAssets.Core\NodeAssets.Core.csproj">

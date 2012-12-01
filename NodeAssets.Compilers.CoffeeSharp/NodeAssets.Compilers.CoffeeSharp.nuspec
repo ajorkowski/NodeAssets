@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>NodeAssets.Compilers.CoffeeSharp</id>
+    <version>0.0.9.0</version>
+    <authors>Felix Jorkowski (jorkowski.com)</authors>
+    <owners>Felix Jorkowski (jorkowski.com)</owners>
+    <licenseUrl>http://www.opensource.org/licenses/MIT</licenseUrl>
+    <projectUrl>https://github.com/ajorkowski/NodeAssets</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>.NET based coffeescript compiler based on CoffeeSharp for Node Assets</description>
+    <releaseNotes>Moved out into it's own package</releaseNotes>
+    <copyright>Copyright 2012</copyright>
+    <tags>Asset Manager .NET MVC3 MVC4 NodeJS</tags>
+    <dependencies>
+      <dependency id="NodeAssets.Core" version="0.0.9" />
+      <dependency id="CoffeeSharp" version="0.5" />
+    </dependencies>
+  </metadata>
+</package>

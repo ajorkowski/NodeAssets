@@ -105,6 +105,22 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NodeAssets.Compilers.CoffeeSharp\NodeAssets.Compilers.CoffeeSharp.csproj">
+      <Project>{d3bb10b8-5bb9-4919-a47e-d186fa14237d}</Project>
+      <Name>NodeAssets.Compilers.CoffeeSharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NodeAssets.Compilers.Minify\NodeAssets.Compilers.Minify.csproj">
+      <Project>{e091e3b9-f755-4a69-98a2-65bf80ca4bd5}</Project>
+      <Name>NodeAssets.Compilers.Minify</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NodeAssets.Compilers.Node\NodeAssets.Compilers.Node.csproj">
+      <Project>{f95aaf00-16a0-4394-a583-d11dc0bbe70c}</Project>
+      <Name>NodeAssets.Compilers.Node</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NodeAssets.Compilers.Sass\NodeAssets.Compilers.Sass.csproj">
+      <Project>{2fd43281-fa1e-4438-939c-7ea84fb32a0c}</Project>
+      <Name>NodeAssets.Compilers.Sass</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NodeAssets.Core\NodeAssets.Core.csproj">
       <Project>{09D9E3D0-8F44-4390-AE17-0ABEEE704FF6}</Project>
       <Name>NodeAssets.Core</Name>

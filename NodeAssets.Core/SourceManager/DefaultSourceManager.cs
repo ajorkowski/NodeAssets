@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using NodeAssets.Core.Compilers;
 
 namespace NodeAssets.Core.SourceManager
 {
@@ -102,7 +101,7 @@ namespace NodeAssets.Core.SourceManager
                         foreach (var file in _pile.FindFiles(pile))
                         {
                             var dirPath = Path.Combine(_compilationDirectory.FullName, pile);
-                            var filePath = Path.Combine(dirPath, Path.GetFileNameWithoutExtension(file.Name) + count.ToString() + _compileExtension);
+                            var filePath = Path.Combine(dirPath, Path.GetFileNameWithoutExtension(file.Name) + count + _compileExtension);
 
                             newPile.AddFile(pile, filePath);
                             count++;
@@ -124,15 +123,7 @@ namespace NodeAssets.Core.SourceManager
             }
             else
             {
-                int count = 0;
-                foreach (var file in _pile.FindFiles(fileChangedEvent.Pile))
-                {
-                    if (file.FullName == fileChangedEvent.File.FullName)
-                    {
-                        break;
-                    }
-                    count++;
-                }
+                int count = _pile.FindFiles(fileChangedEvent.Pile).TakeWhile(file => file.FullName != fileChangedEvent.File.FullName).Count();
                 CompileFile(fileChangedEvent.Pile, fileChangedEvent.File, count);
             }
         }
@@ -161,12 +152,10 @@ namespace NodeAssets.Core.SourceManager
             // We just create a task as a hook so that you can do things when a compile finishes
             if (tasks.Any())
             {
-                return Task.Factory.ContinueWhenAll(tasks.ToArray(), (taskList) => { });
+                return Task.Factory.ContinueWhenAll(tasks.ToArray(), taskList => { });
             }
-            else
-            {
-                return Task.Factory.StartNew(() => { });
-            }
+                
+            return Task.Factory.StartNew(() => { });
         }
 
         private Task CompileFile(string pile, FileInfo file, int count)
@@ -174,7 +163,7 @@ namespace NodeAssets.Core.SourceManager
             // Here we are keeping the files seperate... so just compile the single file
             // However the file will live in a subDirectory
             var dirPath = Path.Combine(_compilationDirectory.FullName, pile);
-            var filePath = Path.Combine(dirPath, Path.GetFileNameWithoutExtension(file.Name) + count.ToString() + _compileExtension);
+            var filePath = Path.Combine(dirPath, Path.GetFileNameWithoutExtension(file.Name) + count + _compileExtension);
 
             // Compile/minimise and write to file
             return _compiler.CompileFile(file, _compilerManager).ContinueWith(task => AttemptWrite(filePath, task.Result));
@@ -202,10 +191,8 @@ namespace NodeAssets.Core.SourceManager
                     AttemptWrite(filePath, builder.ToString());
                 });
             }
-            else
-            {
-                return Task.Factory.StartNew(() => { });
-            }
+                
+            return Task.Factory.StartNew(() => { });
         }
 
         private void AttemptWrite(string path, string text)

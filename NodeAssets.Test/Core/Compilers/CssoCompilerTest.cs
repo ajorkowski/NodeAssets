@@ -1,7 +1,6 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
+using NodeAssets.Compilers;
 using NodeAssets.Core.Commands;
-using NodeAssets.Core.Compilers;
 using NUnit.Framework;
 
 namespace NodeAssets.Test.Core.Compilers

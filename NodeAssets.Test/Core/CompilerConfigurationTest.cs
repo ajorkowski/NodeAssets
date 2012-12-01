@@ -1,5 +1,5 @@
-﻿using NodeAssets.Core;
-using NodeAssets.Core.Compilers;
+﻿using NodeAssets.Compilers;
+using NodeAssets.Core;
 using NUnit.Framework;
 
 namespace NodeAssets.Test.Core

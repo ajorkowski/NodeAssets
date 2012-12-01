@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NodeAssets.Core.Compilers;
+using NodeAssets.Compilers;
 
 namespace NodeAssets.Core
 {

@@ -1,4 +1,4 @@
-﻿using NodeAssets.Core.Compilers;
+﻿using NodeAssets.Compilers;
 
 namespace NodeAssets.Core
 {

@@ -2,4 +2,4 @@
     console.log("Hello World");
 };
 
-helloWorld();
+helloWorld()

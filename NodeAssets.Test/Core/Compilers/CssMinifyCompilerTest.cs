@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using NodeAssets.Core.Compilers;
+using NodeAssets.Compilers;
 using NUnit.Framework;
 
 namespace NodeAssets.Test.Core.Compilers

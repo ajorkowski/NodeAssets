@@ -1,0 +1,15 @@
+{
+  "name": "NodeAssets.Deps",
+  "description": "Dependencies for node assets",
+  "private": true,
+  "author": { "name": "Felix Jorkowski (http://jorkowski.com)" },
+  "version": "1.0.0",
+  "dependencies": {
+    "coffee-script": "*",
+	"stylus": "*",
+	"nib": "*",
+	"uglify-js": "*",
+	"csso": "*",
+	"less": "*"
+  }
+}

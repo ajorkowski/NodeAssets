@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using NodeAssets.Core.Compilers;
+using NodeAssets.Compilers;
 using NUnit.Framework;
 
 namespace NodeAssets.Test.Core.Compilers

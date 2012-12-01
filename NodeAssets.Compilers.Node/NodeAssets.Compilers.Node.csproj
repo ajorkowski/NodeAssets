@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F95AAF00-16A0-4394-A583-D11DC0BBE70C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NodeAssets.Compilers.Node</RootNamespace>
+    <AssemblyName>NodeAssets.Compilers.Node</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CoffeeCompiler.cs" />
+    <Compile Include="Commands\CommandResult.cs" />
+    <Compile Include="Commands\INodeExecutor.cs" />
+    <Compile Include="Commands\NodeExecutor.cs" />
+    <Compile Include="CompilerConfigurationExtensions.cs" />
+    <Compile Include="CssoCompiler.cs" />
+    <Compile Include="LessCompiler.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScriptFinder.cs" />
+    <Compile Include="StylusCompiler.cs" />
+    <Compile Include="UglifyJSCompiler.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Node\package.json" />
+    <Content Include="Node\readme.txt" />
+    <EmbeddedResource Include="Scripts\uglify.js" />
+    <EmbeddedResource Include="Scripts\stylus.js" />
+    <EmbeddedResource Include="Scripts\less.js" />
+    <EmbeddedResource Include="Scripts\csso.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NodeAssets.Core\NodeAssets.Core.csproj">
+      <Project>{09d9e3d0-8f44-4390-ae17-0abeee704ff6}</Project>
+      <Name>NodeAssets.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="NodeAssets.Compilers.Node.nuspec">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>rmdir "$(ProjectDir)package" /s /q
+mkdir "$(ProjectDir)package\lib\Net40"
+Xcopy.exe /Y "$(TargetPath)" "$(ProjectDir)package\lib\Net40"
+Xcopy.exe /Y "$(ProjectDir)Node\*" "$(ProjectDir)package\content\Node" /s /i
+Xcopy.exe /Y "$(ProjectDir)NodeAssets.Compilers.Node.nuspec" "$(ProjectDir)package"
+cd "$(ProjectDir)package"
+"$(SolutionDir).nuget\Nuget.exe" pack NodeAssets.Compilers.Node.nuspec
+xcopy /Y *.nupkg "$(TargetDir)"</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

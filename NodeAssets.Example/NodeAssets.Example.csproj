@@ -163,6 +163,10 @@
       <Project>{E29C18E8-B574-4B0D-A210-90C7622CBD87}</Project>
       <Name>NodeAssets.AspNet</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NodeAssets.Compilers.Node\NodeAssets.Compilers.Node.csproj">
+      <Project>{f95aaf00-16a0-4394-a583-d11dc0bbe70c}</Project>
+      <Name>NodeAssets.Compilers.Node</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NodeAssets.Core\NodeAssets.Core.csproj">
       <Project>{09D9E3D0-8F44-4390-AE17-0ABEEE704FF6}</Project>
       <Name>NodeAssets.Core</Name>

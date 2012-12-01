@@ -13,6 +13,7 @@
     <copyright>Copyright 2012</copyright>
     <tags>Asset Manager .NET MVC3 MVC4 NodeJS</tags>
     <dependencies>
+      <dependency id="NodeAssets.Core" version="0.0.9" />
       <dependency id="SignalR.Hosting.AspNet" version="0.5.2" />
     </dependencies>
   </metadata>

@@ -28,19 +28,14 @@ namespace NodeAssets.Example
         {
             AreaRegistration.RegisterAllAreas();
 
-#if DEBUG
-            bool isProd = false;
-#else
-            bool isProd = true;
-#endif
+            bool isProd = !HttpContext.Current.IsDebuggingEnabled;
 
             Assets
                 .Initialise(config => config
                     .ConfigureCompilers(
                         compilers => compilers.WithDefaultNodeConfiguration(Server.MapPath("~/Node")))
                     .ConfigureSourceManager(
-                        source =>
-                        source.UseDefaultConfiguration(Server.MapPath("~/built"), isProd))
+                        source => source.UseDefaultConfiguration(Server.MapPath("~/built"), isProd))
                     .Cache(isProd)
                     .Compress(isProd)
                     .LiveCss(!isProd))
@@ -50,11 +45,11 @@ namespace NodeAssets.Example
                     .AddDirectory("Styles", Server.MapPath("~/Content"), true, new Regex("(?<!.min).css$")))
                 .SetupJavascriptPile(pile =>
                 {
-                    pile.AddFile(Server.MapPath("~/Scripts/jquery-1.7.2.js"));
+                    pile.AddFile(Server.MapPath("~/Scripts/jquery-1.9.0.js"));
 
                     if (!isProd)
                     {
-                        pile.AddFile(Server.MapPath("~/Scripts/jquery.signalR-0.5.1.js"));
+                        pile.AddFile(Server.MapPath("~/Scripts/jquery.signalR-1.0.0-rc2.js"));
                     }
 
                     return pile;

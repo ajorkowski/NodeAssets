@@ -1,9 +1,9 @@
-﻿using NodeAssets.AspNet;
+﻿using Microsoft.AspNet.SignalR;
+using NodeAssets.AspNet;
 using NodeAssets.AspNet.Routes;
 using NodeAssets.AspNet.Scripts;
 using NodeAssets.Core;
 using NodeAssets.Core.SourceManager;
-using SignalR;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -177,7 +177,7 @@ namespace NodeAssets
         {
             if (_config.IsLiveCss)
             {
-                routes.MapConnection<LiveCssConnection>(_config.Namespace, _config.Namespace + "/{*operation}");
+                routes.MapConnection<LiveCssConnection>(_config.Namespace, "/" + _config.Namespace);
             }
 
             // Add js routes

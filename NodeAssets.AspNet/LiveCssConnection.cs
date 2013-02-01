@@ -1,4 +1,4 @@
-﻿using SignalR;
+﻿using Microsoft.AspNet.SignalR;
 
 namespace NodeAssets.AspNet
 {

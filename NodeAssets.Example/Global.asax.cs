@@ -45,11 +45,11 @@ namespace NodeAssets.Example
                     .AddDirectory("Styles", Server.MapPath("~/Content"), true, new Regex("(?<!.min).css$")))
                 .SetupJavascriptPile(pile =>
                 {
-                    pile.AddFile(Server.MapPath("~/Scripts/jquery-1.9.0.js"));
+                    pile.AddFile(Server.MapPath("~/Scripts/jquery-1.9.1.js"));
 
                     if (!isProd)
                     {
-                        pile.AddFile(Server.MapPath("~/Scripts/jquery.signalR-1.0.0-rc2.js"));
+                        pile.AddFile(Server.MapPath("~/Scripts/jquery.signalR-1.0.0.js"));
                     }
 
                     return pile;

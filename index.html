@@ -33,7 +33,7 @@
       <section id="main_content" class="inner">
         <h2>Get it using Nuget</h2>
 
-<p>Currently supports Asp.Net/Asp.Net MVC sites.</p>
+<p>Built on top of OWIN.</p>
 
 <pre><code>Install-Package NodeAssets.AspNet
 </code></pre>
@@ -116,6 +116,8 @@ a number of CSS3 properties cannot be properly minified - frankly I no longer tr
 
 <p>This will grab all the required modules and enable them in your nodejs backed builds!</p>
 
+<p>As of v2.0.0 you can specify the location of the node.exe binary, this makes it possible to deploy node in your binary</p> 
+
 <h3>Typescript compilation</h3>
 
 <p>If you have installed <a href="http://www.typescriptlang.org/#Download">typescript</a> we also support compiling that directly</p>
@@ -158,7 +160,7 @@ will look a lot like</p>
 
 <p>There is a dependence on the SignalR client side libraries in this case so make sure to add them in by getting the SignalR nuget package</p>
 
-<pre><code>Install-Package SignalR
+<pre><code>Install-Package Microsoft.AspNet.SignalR
 </code></pre>
 
 <p>And add the added javascript file to your assets.</p>
@@ -175,36 +177,54 @@ your javascript all you have to do is manually reset the browser to instantly se
 
 <h2>Put it all together</h2>
 
-<pre><code>#if DEBUG
-    bool isProd = false;
-#else
-    bool isProd = true;
-#endif
+<pre><code>[assembly: OwinStartup(typeof(NodeAssets.Example.Startup1))]
 
-    Assets
-        .Initialise(assetsConfig =&gt; assetsConfig
-            .ConfigureCompilers(compilerConfig =&gt; 
-                compilerConfig.WithDefaultNodeConfiguration(Server.MapPath("~/Node")))
-            .ConfigureSourceManager(sourceConfig =&gt; 
-                sourceConfig.UseDefaultConfiguration(Server.MapPath("~/built"), isProd))
-            .Cache(isProd)
-            .Compress(isProd)
-            .LiveCss(!isProd))
-        .SetupCssPile(pile =&gt; pile
-            .AddFile(Server.MapPath("~/Content/Site.css")))
-        .SetupJavascriptPile(pile =&gt;
+namespace NodeAssets.Example
+{
+    public class Startup1
+    {
+        public void Configuration(IAppBuilder app)
         {
-            pile.AddFile(Server.MapPath("~/Scripts/jquery-1.6.4.js"));
+            #if DEBUG
+                bool isProd = false;
+            #else
+                bool isProd = true;
+            #endif
 
-            if (!isProd)
-            {
-                pile.AddFile(Server.MapPath("~/Scripts/jquery.signalR.js"));
-            }
+            var assets = Assets
+                .Initialise(config =&gt; config
+                    .ConfigureCompilers(
+                        compilers =&gt; compilers.WithDefaultNodeConfiguration(MapPath("~/Node"), MapPath("~/Node/node.exe")))
+                    .ConfigureSourceManager(
+                        source =&gt; source.UseDefaultConfiguration(MapPath("~/built"), isProd))
+                    .Cache(isProd)
+                    .Compress(isProd)
+                    .LiveCss(!isProd))
+                .SetupCssPile(pile =&gt; pile
+                    // An Example regex where you will add files ending in .css
+                    // but NOT files ending in .min.css
+                    .AddDirectory("Styles", MapPath("~/Content"), true, new Regex("(?<!.min).css$")))
+                .SetupJavascriptPile(pile =&gt;
+                {
+                    pile.AddFile(MapPath("~/Scripts/jquery-2.0.3.js"));
 
-            return pile;
-        })
-        .PrepareRoutes(RouteTable.Routes);
-</code></pre>
+                    if (!isProd)
+                    {
+                        pile.AddFile(MapPath("~/Scripts/jquery.signalR-2.0.0.js"));
+                    }
+
+                    return pile;
+                });
+
+            app.MapNodeAssets(assets);
+        }
+
+        private string MapPath(string basePath)
+        {
+            return HostingEnvironment.MapPath(basePath);
+        }
+    }
+}</code></pre>
 
 <h2>More info?</h2>
 

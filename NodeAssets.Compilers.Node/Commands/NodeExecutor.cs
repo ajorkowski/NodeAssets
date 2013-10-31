@@ -8,17 +8,19 @@ namespace NodeAssets.Core.Commands
 {
     public sealed class NodeExecutor : INodeExecutor
     {
-        private const string Node = "node.exe";
         private const string CoffeeScriptPath = "\\node_modules\\coffee-script\\bin\\coffee";
         private readonly DirectoryInfo _workspace;
+        private readonly string _nodeExePath;
 
-        public NodeExecutor(string nodeWorkspace)
+        public NodeExecutor(string nodeWorkspace, string nodeExePath = null)
         {
             // Allow for a null workspace
             if (!string.IsNullOrEmpty(nodeWorkspace))
             {
                 _workspace = new DirectoryInfo(nodeWorkspace);
             }
+
+            _nodeExePath = nodeExePath ?? "node.exe";
         }
 
         public Task<string> CoffeeScript(string coffee)
@@ -125,7 +127,7 @@ namespace NodeAssets.Core.Commands
             // /c directive tells cmd to close when it is done
             var procStartInfo = new ProcessStartInfo()
             {
-                FileName = Node,
+                FileName = _nodeExePath,
                 Arguments = args,
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,

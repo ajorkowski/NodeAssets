@@ -2,19 +2,19 @@
 <package >
   <metadata>
     <id>NodeAssets.Compilers.Sass</id>
-    <version>0.0.9.0</version>
+    <version>2.0.0</version>
     <authors>Felix Jorkowski (jorkowski.com)</authors>
     <owners>Felix Jorkowski (jorkowski.com)</owners>
     <licenseUrl>http://www.opensource.org/licenses/MIT</licenseUrl>
     <projectUrl>https://github.com/ajorkowski/NodeAssets</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>.NET based minification compilers for sass/scss based on the SassAndCoffee ruby compiler for Node Assets</description>
-    <releaseNotes>Moved out into it's own package</releaseNotes>
-    <copyright>Copyright 2012</copyright>
-    <tags>Asset Manager .NET MVC3 MVC4 NodeJS</tags>
+    <releaseNotes>Updated dependencies</releaseNotes>
+    <copyright>Copyright 2013</copyright>
+    <tags>Asset Manager OWIN NodeJS</tags>
     <dependencies>
-      <dependency id="NodeAssets.Core" version="0.0.9" />
-      <dependency id="SassAndCoffee.Ruby" version="2.0.2.0" />
+      <dependency id="NodeAssets.Core" version="2.0.0" />
+      <dependency id="SassAndCoffee.Ruby" version="2.1.1.0" />
     </dependencies>
   </metadata>
 </package>

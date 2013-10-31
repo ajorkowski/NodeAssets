@@ -2,18 +2,18 @@
 <package >
   <metadata>
     <id>NodeAssets.AspNet</id>
-    <version>1.0.0</version>
+    <version>2.0.0</version>
     <authors>Felix Jorkowski (jorkowski.com)</authors>
     <owners>Felix Jorkowski (jorkowski.com)</owners>
     <licenseUrl>http://www.opensource.org/licenses/MIT</licenseUrl>
     <projectUrl>https://github.com/ajorkowski/NodeAssets</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>The Asp.Net component of node assests, provides a complete assest manager solution including compilation from coffee/styles, minification, combination, compression, and also a refresh-on-change css live updater</description>
-    <releaseNotes>Updated to use SignalR 1.0.0, starting proper versioning</releaseNotes>
+    <releaseNotes>Updated to use SignalR 2.0.0 and Owin</releaseNotes>
     <copyright>Copyright 2013</copyright>
-    <tags>Asset Manager .NET MVC3 MVC4 NodeJS</tags>
+    <tags>Asset Manager OWIN NodeJS</tags>
     <dependencies>
-      <dependency id="NodeAssets.Core" version="0.0.9" />
+      <dependency id="NodeAssets.Core" version="2.0.0" />
       <dependency id="Microsoft.AspNet.SignalR.SystemWeb" version="1.0.0" />
     </dependencies>
   </metadata>

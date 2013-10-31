@@ -1,16 +1,18 @@
 ﻿using Microsoft.AspNet.SignalR;
+using Microsoft.Owin;
 using NodeAssets.AspNet;
 using NodeAssets.AspNet.Routes;
 using NodeAssets.AspNet.Scripts;
 using NodeAssets.Core;
 using NodeAssets.Core.SourceManager;
+using Owin;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web;
-using System.Web.Routing;
 
 namespace NodeAssets
 {
@@ -38,19 +40,12 @@ namespace NodeAssets
             return _assets.FindCssAssets(includeGlobal, otherAssets);
         }
 
-        public static void SetupRoutes(RouteCollection routes)
-        {
-            if (_assets == null) { throw new InvalidOperationException("You must initialise your assests first"); }
-
-            _assets.PrepareRoutes(routes);
-        }
-
         private const string Global = "global";
 
         private readonly IAssetsConfiguration _config;
         private readonly ISourceManager _jsManager;
         private readonly ISourceManager _cssManager;
-        private readonly Func<string, FileInfo, IRouteHandler> _routeHandler;
+        private readonly Func<string, FileInfo, Func<IOwinContext, Task>> _routeHandler;
 
         private IPile _jsPile;
         private IPile _cssPile;
@@ -66,7 +61,7 @@ namespace NodeAssets
 
             if(config.RouteHandlerFunction == null)
             {
-                _routeHandler = (pile, file) => new DefaultRouteHandler(pile, file, config);
+                _routeHandler = (pile, file) => new DefaultHandler(file, config).Execute;
             }
             else
             {
@@ -173,26 +168,33 @@ namespace NodeAssets
             return builder.ToString();
         }
 
-        public void PrepareRoutes(RouteCollection routes)
+        public IAppBuilder MapNodeAssets(IAppBuilder appBuilder, ConnectionConfiguration configuration = null)
         {
+            // NOTE: All the routes are based off 'Map' so we dont have to use middleware etc
             if (_config.IsLiveCss)
             {
-                routes.MapConnection<LiveCssConnection>(_config.Namespace, "/" + _config.Namespace);
+                var config = configuration ?? new ConnectionConfiguration();
+                appBuilder.Map("/" + _config.Namespace, map =>
+                {
+                    map.RunSignalR<LiveCssConnection>(config);
+                });
             }
 
             // Add js routes
             if (_jsManager != null && _jsPile != null)
             {
                 var pileManager = _jsManager.FindDestinationPile();
-                HandleRoutes(pileManager, routes);
+                HandleRoutes(pileManager, appBuilder);
             }
 
             // Add css routes
             if (_cssManager != null && _cssPile != null)
             {
                 var pileManager = _cssManager.FindDestinationPile();
-                HandleRoutes(pileManager, routes);
+                HandleRoutes(pileManager, appBuilder);
             }
+
+            return appBuilder;
         }
 
         private IEnumerable<string> CombineUrls(IPile piles, bool global, IEnumerable<string> other)
@@ -259,8 +261,9 @@ namespace NodeAssets
             return "<link id=\"" + id + "\" href=\"" + src + "\" rel=\"stylesheet\" type=\"text/css\" />";
         }
 
-        private void HandleRoutes(IPile destPile, RouteCollection routes)
+        private void HandleRoutes(IPile destPile, IAppBuilder appBuilder)
         {
+            var pathDict = new List<string>();
             foreach (var pile in destPile.FindAllPiles())
             {
                 var files = destPile.FindFiles(pile).ToList();
@@ -268,8 +271,14 @@ namespace NodeAssets
 
                 foreach (var file in files)
                 {
-                    // multiple routes for the same pile
-                    routes.Add(new MvcIgnoredRoute(FindFilePath(destPile, pile, file, true), _routeHandler(pile, file)));
+                    // Avoid doubling up on paths (Can happen when combining)
+                    var path = "/" + FindFilePath(destPile, pile, file, true);
+                    if (!pathDict.Contains(path))
+                    {
+                        var runFunc = _routeHandler(pile, file);
+                        appBuilder.Map(path, map => map.Run(runFunc));
+                        pathDict.Add(path);
+                    }
                 }
             }
         }

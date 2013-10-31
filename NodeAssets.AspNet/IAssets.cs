@@ -1,6 +1,7 @@
-﻿using System;
-using System.Web.Routing;
+﻿using Microsoft.AspNet.SignalR;
 using NodeAssets.Core;
+using Owin;
+using System;
 
 namespace NodeAssets
 {
@@ -12,6 +13,6 @@ namespace NodeAssets
         string FindJsAssets(bool includeGlobal, params string[] piles);
         string FindCssAssets(bool includeGlobal, params string[] piles);
 
-        void PrepareRoutes(RouteCollection routes);
+        IAppBuilder MapNodeAssets(IAppBuilder appBuilder, ConnectionConfiguration configuration = null);
     }
 }

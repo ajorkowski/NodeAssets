@@ -15,7 +15,7 @@ namespace NodeAssets.Test.Core.Compilers
         [SetUp]
         public void Init()
         {
-            _compiler = new UglifyJSCompiler(new NodeExecutor("../../Node"));
+            _compiler = new UglifyJSCompiler(new NodeExecutor("../../Node", "../../Node/node.exe"));
         }
 
         [Test]

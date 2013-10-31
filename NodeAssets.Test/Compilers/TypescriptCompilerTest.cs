@@ -12,7 +12,7 @@ namespace NodeAssets.Test.Core.Compilers
         [SetUp]
         public void Init()
         {
-            _compiler = new TypescriptCompiler();
+            _compiler = new TypescriptCompiler("C:/Program Files (x86)/Microsoft SDKs/TypeScript/tsc.exe");
         }
 
         [Test]
@@ -23,21 +23,28 @@ namespace NodeAssets.Test.Core.Compilers
 
             var output = _compiler.Compile(ts, file).Result;
 
-            Assert.AreEqual(@"var Shapes;
+            Assert.AreEqual(@"// Module
+var Shapes;
 (function (Shapes) {
+    // Class
     var Point = (function () {
+        // Constructor
         function Point(x, y) {
             this.x = x;
             this.y = y;
         }
+        // Instance member
         Point.prototype.getDist = function () {
             return Math.sqrt(this.x * this.x + this.y * this.y);
         };
+
         Point.origin = new Point(0, 0);
         return Point;
     })();
-    Shapes.Point = Point;    
+    Shapes.Point = Point;
 })(Shapes || (Shapes = {}));
+
+// Local variables
 var p = new Shapes.Point(3, 4);
 var dist = p.getDist();
 ", output);

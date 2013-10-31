@@ -255,7 +255,7 @@ namespace NodeAssets.Core
                 {
                     Path = info.DirectoryName,
                     Filter = info.Name,
-                    NotifyFilter = NotifyFilters.LastWrite
+                    NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.CreationTime
                 };
 
                 watcher.Created += (sender, args) => OnFileCreated(pile, info);

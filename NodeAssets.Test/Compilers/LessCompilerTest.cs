@@ -15,7 +15,7 @@ namespace NodeAssets.Test.Core.Compilers
         [SetUp]
         public void Init()
         {
-            _executor = new NodeExecutor("../../Node");
+            _executor = new NodeExecutor("../../Node", "../../Node/node.exe");
         }
 
         [Test]

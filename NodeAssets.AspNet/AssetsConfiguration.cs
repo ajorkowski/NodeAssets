@@ -1,7 +1,8 @@
-﻿using System;
-using System.IO;
-using System.Web.Routing;
+﻿using Microsoft.Owin;
 using NodeAssets.Core;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace NodeAssets.AspNet
 {
@@ -38,7 +39,7 @@ namespace NodeAssets.AspNet
             return this;
         }
 
-        public IAssetsConfiguration SetRouteHandlerFunction(Func<string, FileInfo, IAssetsConfiguration, IRouteHandler> routeHandler)
+        public IAssetsConfiguration SetRouteHandlerFunction(Func<string, FileInfo, IAssetsConfiguration, Func<IOwinContext, Task>> routeHandler)
         {
             RouteHandlerFunction = routeHandler;
             return this;
@@ -50,6 +51,6 @@ namespace NodeAssets.AspNet
         public string Namespace { get; private set; }
         public ICompilerConfiguration CompilerConfiguration { get; private set; }
         public ISourceManagerConfiguration SourceConfiguration { get; private set; }
-        public Func<string, FileInfo, IAssetsConfiguration, IRouteHandler> RouteHandlerFunction { get; private set; }
+        public Func<string, FileInfo, IAssetsConfiguration, Func<IOwinContext, Task>> RouteHandlerFunction { get; private set; }
     }
 }

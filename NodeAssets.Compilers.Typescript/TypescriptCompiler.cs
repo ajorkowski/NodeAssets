@@ -6,8 +6,13 @@ namespace NodeAssets.Compilers
 {
     public sealed class TypescriptCompiler : ICompiler
     {
-        private const string Tsc = "tsc.exe";
+        private readonly string _tscPath;
         private const string JsExt = ".js";
+
+        public TypescriptCompiler(string tscPath = null)
+        {
+            _tscPath = tscPath ?? "tsc.exe";
+        }
 
         public Task<string> Compile(string initial, FileInfo originalFile)
         {
@@ -25,7 +30,7 @@ namespace NodeAssets.Compilers
             // /c directive tells cmd to close when it is done
             var procStartInfo = new ProcessStartInfo()
             {
-                FileName = Tsc,
+                FileName = _tscPath,
                 Arguments = args,
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,

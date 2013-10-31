@@ -13,7 +13,7 @@ namespace NodeAssets.Test.Core.Compilers
         [SetUp]
         public void Init()
         {
-            _compiler = new CssoCompiler(new NodeExecutor("../../Node"));
+            _compiler = new CssoCompiler(new NodeExecutor("../../Node", "../../Node/node.exe"));
         }
 
         [Test]

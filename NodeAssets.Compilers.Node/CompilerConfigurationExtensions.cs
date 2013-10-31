@@ -10,10 +10,10 @@ namespace NodeAssets
         /// Default Node compiler configuration, uses nodejs libraries to compile
         /// </summary>
         /// <param name="nodeWorkspacePath">Path to directory where node_modules are installed</param>
-        public static ICompilerConfiguration WithDefaultNodeConfiguration(this ICompilerConfiguration compilerConfig, string nodeWorkspacePath)
+        public static ICompilerConfiguration WithDefaultNodeConfiguration(this ICompilerConfiguration compilerConfig, string nodeWorkspacePath, string nodeExePath = null)
         {
             var passthrough = new PassthroughCompiler();
-            var executor = new NodeExecutor(nodeWorkspacePath);
+            var executor = new NodeExecutor(nodeWorkspacePath, nodeExePath);
 
             return compilerConfig
                 .CompilerFor(FileExtensions.Coffee, new CoffeeCompiler(executor))

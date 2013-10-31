@@ -116,7 +116,7 @@ a number of CSS3 properties cannot be properly minified - frankly I no longer tr
 
 <p>This will grab all the required modules and enable them in your nodejs backed builds!</p>
 
-<p>As of v2.0.0 you can specify the location of the node.exe binary, this makes it possible to deploy node in your binary</p> 
+<p>As of v2.0.0 you can specify the location of the node.exe binary, this makes it possible to deploy node using your deployment packages</p> 
 
 <h3>Typescript compilation</h3>
 
@@ -203,7 +203,7 @@ namespace NodeAssets.Example
                 .SetupCssPile(pile =&gt; pile
                     // An Example regex where you will add files ending in .css
                     // but NOT files ending in .min.css
-                    .AddDirectory("Styles", MapPath("~/Content"), true, new Regex("(?<!.min).css$")))
+                    .AddDirectory("Styles", MapPath("~/Content"), true, new Regex("(?&lt;!.min).css$")))
                 .SetupJavascriptPile(pile =&gt;
                 {
                     pile.AddFile(MapPath("~/Scripts/jquery-2.0.3.js"));

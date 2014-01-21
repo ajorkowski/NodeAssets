@@ -7,11 +7,11 @@ namespace NodeAssets.Compilers
 {
     public sealed class SassCompiler : ICompiler
     {
-        private readonly SassAndCoffee.Ruby.Sass.SassCompiler _compiler;
+        private readonly NSass.SassCompiler _compiler;
 
         public SassCompiler()
         {
-            _compiler = new SassAndCoffee.Ruby.Sass.SassCompiler();
+            _compiler = new NSass.SassCompiler();
         }
 
         public Task<string> Compile(string initial, FileInfo originalFile)
@@ -20,7 +20,7 @@ namespace NodeAssets.Compilers
             {
                 try
                 {
-                    return _compiler.Compile(originalFile.FullName, false, null);
+                    return _compiler.Compile(initial, NSass.OutputStyle.Nested, true, new [] { originalFile.DirectoryName });
                 }
                 catch (Exception e)
                 {

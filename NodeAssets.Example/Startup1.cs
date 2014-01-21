@@ -33,7 +33,7 @@ namespace NodeAssets.Example
 
                     if (!isProd)
                     {
-                        pile.AddFile(MapPath("~/Scripts/jquery.signalR-2.0.0.js"));
+                        pile.AddFile(MapPath("~/Scripts/jquery.signalR-2.0.1.js"));
                     }
 
                     return pile;

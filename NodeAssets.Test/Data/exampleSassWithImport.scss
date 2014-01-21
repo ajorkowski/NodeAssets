@@ -1,0 +1,8 @@
+﻿// Importing
+
+@import 'exampleSassImport';
+
+.base {
+	border-color: #ccc;
+	@include imported();
+}

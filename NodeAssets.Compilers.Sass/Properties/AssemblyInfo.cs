@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("NodeAssets.Compilers.Sass")]
-[assembly: AssemblyDescription(".NET based minification compilers for sass/scss based on the SassAndCoffee ruby compiler for Node Assets")]
+[assembly: AssemblyDescription(".NET based minification compilers for scss based on the NSass/libsass projects")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Felix Jorkowski (jorkowski.com)")]
 [assembly: AssemblyProduct("NodeAssets.Compilers.Sass")]
-[assembly: AssemblyCopyright("Copyright ©  2012")]
+[assembly: AssemblyCopyright("Copyright © 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -21,4 +21,4 @@ using System.Runtime.InteropServices;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("4cd38bfa-3807-4197-9387-3a130e9bb4ea")]
 
-[assembly: AssemblyVersion("0.0.*")]
+[assembly: AssemblyVersion("2.0.1.*")]

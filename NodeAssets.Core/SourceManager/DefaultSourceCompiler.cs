@@ -1,8 +1,8 @@
-﻿using System;
+﻿using NodeAssets.Compilers;
+using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using NodeAssets.Compilers;
 
 namespace NodeAssets.Core.SourceManager
 {
@@ -53,7 +53,7 @@ namespace NodeAssets.Core.SourceManager
                     }
                     catch (Exception e)
                     {
-                        result = "An error occurred during initial compilation: \r\n" + e.Message;
+                        result = "An error occurred during initial compilation: \r\n" + e.GetBaseException().Message;
                         hasErrored = true;
                     }
                 }
@@ -67,7 +67,7 @@ namespace NodeAssets.Core.SourceManager
                     }
                     catch (Exception e)
                     {
-                        result = "An error occurred during minification: \r\n" + e.Message;
+                        result = "An error occurred during minification: \r\n" + e.GetBaseException().Message;
                     }
 
                 }

@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Felix Jorkowski (jorkowski.com)")]
 [assembly: AssemblyProduct("NodeAssets.Core")]
-[assembly: AssemblyCopyright("Copyright ©  2012")]
+[assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -21,4 +21,4 @@ using System.Runtime.InteropServices;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("8094492a-cbbf-4e70-8bc4-eed9a438d489")]
 
-[assembly: AssemblyVersion("0.0.*")]
+[assembly: AssemblyVersion("2.0.1.*")]

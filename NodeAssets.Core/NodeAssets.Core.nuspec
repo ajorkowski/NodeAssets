@@ -2,15 +2,15 @@
 <package >
   <metadata>
     <id>NodeAssets.Core</id>
-    <version>2.0.0</version>
+    <version>2.0.1</version>
     <authors>Felix Jorkowski (jorkowski.com)</authors>
     <owners>Felix Jorkowski (jorkowski.com)</owners>
     <licenseUrl>http://www.opensource.org/licenses/MIT</licenseUrl>
     <projectUrl>https://github.com/ajorkowski/NodeAssets</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>The Core lib that handles watching your files.</description>
-    <releaseNotes>Updated to .NET 4.5</releaseNotes>
-    <copyright>Copyright 2013</copyright>
+    <releaseNotes>Properly shows underlying exceptions when error occurs</releaseNotes>
+    <copyright>Copyright 2014</copyright>
     <tags>Asset Manager OWIN NodeJS</tags>
   </metadata>
 </package>

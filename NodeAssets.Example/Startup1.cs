@@ -29,11 +29,11 @@ namespace NodeAssets.Example
                     .AddDirectory("Styles", MapPath("~/Content"), true, new Regex("(?<!.min).css$")))
                 .SetupJavascriptPile(pile =>
                 {
-                    pile.AddFile(MapPath("~/Scripts/jquery-2.0.3.js"));
+                    pile.AddFile(MapPath("~/Scripts/jquery-2.1.0.js"));
 
                     if (!isProd)
                     {
-                        pile.AddFile(MapPath("~/Scripts/jquery.signalR-2.0.1.js"));
+                        pile.AddFile(MapPath("~/Scripts/jquery.signalR-2.0.3.js"));
                     }
 
                     return pile;

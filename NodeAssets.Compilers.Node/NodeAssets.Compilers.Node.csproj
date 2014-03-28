@@ -81,7 +81,7 @@ Xcopy.exe /Y "$(TargetPath)" "$(ProjectDir)package\lib\Net40"
 Xcopy.exe /Y "$(ProjectDir)Node\*" "$(ProjectDir)package\content\Node" /s /i
 Xcopy.exe /Y "$(ProjectDir)NodeAssets.Compilers.Node.nuspec" "$(ProjectDir)package"
 cd "$(ProjectDir)package"
-"$(SolutionDir).nuget\Nuget.exe" pack NodeAssets.Compilers.Node.nuspec
+"$(SolutionDir)Nuget.exe" pack NodeAssets.Compilers.Node.nuspec
 xcopy /Y *.nupkg "$(TargetDir)"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

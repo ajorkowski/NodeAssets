@@ -2,7 +2,7 @@
 
 namespace NodeAssets.AspNet
 {
-    internal class LiveCssConnection : PersistentConnection
+    public class LiveCssConnection : PersistentConnection
     {
     }
 }

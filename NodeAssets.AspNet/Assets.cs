@@ -308,9 +308,14 @@ namespace NodeAssets
         private void CssOnFileUpdated(object sender, FileChangedEvent fileChangedEvent)
         {
             // Need to add the / at the start to make it absolute
-            var path = VirtualPathUtility.ToAbsolute("~/") + FindFilePath(_cssPile, fileChangedEvent.Pile, fileChangedEvent.File);
-            var id = (VirtualPathUtility.ToAbsolute("~/") + FindFilePath(_cssPile, fileChangedEvent.Pile, fileChangedEvent.File, true)).Replace("/", "-").Trim('-');
-            BroadcastCssChange(id, path);
+            // Catch any exceptions as the virtualpathutility may not be initialised so do not need to broadcast
+            try
+            {
+                var path = VirtualPathUtility.ToAbsolute("~/") + FindFilePath(_cssPile, fileChangedEvent.Pile, fileChangedEvent.File);
+                var id = (VirtualPathUtility.ToAbsolute("~/") + FindFilePath(_cssPile, fileChangedEvent.Pile, fileChangedEvent.File, true)).Replace("/", "-").Trim('-');
+                BroadcastCssChange(id, path);
+            }
+            catch (Exception) { }
         }
 
         private static void BroadcastCssChange(string id, string css)

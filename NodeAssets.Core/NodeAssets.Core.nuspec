@@ -2,14 +2,14 @@
 <package >
   <metadata>
     <id>NodeAssets.Core</id>
-    <version>2.0.1</version>
+    <version>2.0.2</version>
     <authors>Felix Jorkowski (jorkowski.com)</authors>
     <owners>Felix Jorkowski (jorkowski.com)</owners>
     <licenseUrl>http://www.opensource.org/licenses/MIT</licenseUrl>
     <projectUrl>https://github.com/ajorkowski/NodeAssets</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>The Core lib that handles watching your files.</description>
-    <releaseNotes>Properly shows underlying exceptions when error occurs</releaseNotes>
+    <releaseNotes>Watch for the renamed event when watching a file, handles special VS saves better</releaseNotes>
     <copyright>Copyright 2014</copyright>
     <tags>Asset Manager OWIN NodeJS</tags>
   </metadata>

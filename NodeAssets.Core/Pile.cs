@@ -260,6 +260,7 @@ namespace NodeAssets.Core
 
                 watcher.Created += (sender, args) => OnFileCreated(pile, info);
                 watcher.Changed += (sender, args) => OnFileUpdated(pile, info);
+                watcher.Renamed += (sender, args) => OnFileUpdated(pile, info);
                 watcher.Deleted += (sender, args) => OnFileDeleted(pile, info);
 
                 watcher.EnableRaisingEvents = true;

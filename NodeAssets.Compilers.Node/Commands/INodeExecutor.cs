@@ -20,7 +20,7 @@ namespace NodeAssets.Core.Commands
         CommandResult ExecuteCoffeeFile(FileInfo file);
 
         // For more advanced users
-        string RunCommand(CommandResult result);
+        Task<string> RunCommand(CommandResult result);
         CommandResult ExecuteNodeCommand(string args);
         CommandResult ExecuteCoffeeCommand(string args);
     }

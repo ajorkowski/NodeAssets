@@ -25,27 +25,27 @@ namespace NodeAssets.Core.Commands
 
         public Task<string> CoffeeScript(string coffee)
         {
-            return Task.Factory.StartNew(() => RunCommand(ExecuteCoffeeScript(coffee)));
+            return RunCommand(ExecuteCoffeeScript(coffee));
         }
 
         public Task<string> JsScript(string javascript)
         {
-            return Task.Factory.StartNew(() => RunCommand(ExecuteJsScript(javascript)));
+            return RunCommand(ExecuteJsScript(javascript));
         }
 
         public Task<string> File(FileInfo file)
         {
-            return Task.Factory.StartNew(() => RunCommand(ExecuteFile(file)));
+            return RunCommand(ExecuteFile(file));
         }
 
         public Task<string> JsFile(FileInfo file)
         {
-            return Task.Factory.StartNew(() => RunCommand(ExecuteJsFile(file)));
+            return RunCommand(ExecuteJsFile(file));
         }
 
         public Task<string> CoffeeFile(FileInfo file)
         {
-            return Task.Factory.StartNew(() => RunCommand(ExecuteCoffeeFile(file)));
+            return RunCommand(ExecuteCoffeeFile(file));
         }
 
         public CommandResult ExecuteCoffeeScript(string coffee)
@@ -98,14 +98,15 @@ namespace NodeAssets.Core.Commands
             return ExecuteCoffeeCommand(file.FullName);
         }
 
-        public string RunCommand(CommandResult result)
+        public async Task<string> RunCommand(CommandResult result)
         {
-            var stdOut = result.StdOut.ReadToEnd();
-            result.RunningTask.Wait();
+            var stdOut = await result.StdOut.ReadToEndAsync().ConfigureAwait(false);
+            var code = await result.RunningTask.ConfigureAwait(false);
 
-            if (result.RunningTask.Result != 0)
+            if (code != 0)
             {
-                throw new COMException("The execution of the command failed: \r\n" + result.StdErr.ReadToEnd(), result.RunningTask.Result);
+                var error = await result.StdErr.ReadToEndAsync().ConfigureAwait(false);
+                throw new COMException("The execution of the command failed: \r\n" + error, code);
             }
 
             return stdOut;
@@ -144,19 +145,21 @@ namespace NodeAssets.Core.Commands
             // Now we create a process, assign its ProcessStartInfo and start it
             var proc = new Process { StartInfo = procStartInfo };
             proc.Start();
-
-            var task = Task.Factory.StartNew(() =>
-            {
-                proc.WaitForExit();
-                return proc.ExitCode;
-            });
-
-            return new CommandResult(task, proc.StandardOutput, proc.StandardError, proc.StandardInput);
+            
+            return new CommandResult(WaitForExitAsync(proc), proc.StandardOutput, proc.StandardError, proc.StandardInput);
         }
 
         private string EscapeScript(string script)
         {
             return script.Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\\\\r", "\\r").Replace("\\\\n", "\\n");
+        }
+
+        public static Task<int> WaitForExitAsync(Process process)
+        {
+            var tcs = new TaskCompletionSource<int>();
+            process.EnableRaisingEvents = true;
+            process.Exited += (sender, args) => tcs.TrySetResult(process.ExitCode);
+            return tcs.Task;
         }
     }
 }

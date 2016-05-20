@@ -17,7 +17,7 @@ namespace NodeAssets.Core.SourceManager
             _compileExtension = compileExtension;
         }
 
-        public Task<string> CompileFile(FileInfo file, ICompilerConfiguration compilerConfig)
+        public async Task<string> CompileFile(FileInfo file, ICompilerConfiguration compilerConfig)
         {
             if (file == null) { throw new ArgumentNullException("file"); }
             if (compilerConfig == null) { throw new ArgumentNullException("compilerConfig"); }
@@ -39,41 +39,38 @@ namespace NodeAssets.Core.SourceManager
             }
 
             // First step is grab the file contents, then continue
-            return Task.Factory.StartNew(() =>
+            // Do the initial compile
+            var fileData = file.Exists ? AttemptRead(file.FullName) : string.Empty;
+            var result = string.Empty;
+            bool hasErrored = false;
+            if (!string.IsNullOrEmpty(fileData))
             {
-                // Do the initial compile
-                var fileData = file.Exists ? AttemptRead(file.FullName) : string.Empty;
-                var result = string.Empty;
-                bool hasErrored = false;
-                if (!string.IsNullOrEmpty(fileData))
+                try
                 {
-                    try
-                    {
-                        result = compiler.Compile(fileData, file).Result;
-                    }
-                    catch (Exception e)
-                    {
-                        result = "An error occurred during initial compilation: \r\n" + e.GetBaseException().Message;
-                        hasErrored = true;
-                    }
+                    result = await compiler.Compile(fileData, file).ConfigureAwait(false);
+                }
+                catch (Exception e)
+                {
+                    result = "An error occurred during initial compilation: \r\n" + e.GetBaseException().Message;
+                    hasErrored = true;
+                }
+            }
+
+            // Do the minimisation if it has been selected
+            if (!hasErrored && _minimise && !string.IsNullOrEmpty(result))
+            {
+                try
+                {
+                    result = await minCompiler.Compile(result, null).ConfigureAwait(false);
+                }
+                catch (Exception e)
+                {
+                    result = "An error occurred during minification: \r\n" + e.GetBaseException().Message;
                 }
 
-                // Do the minimisation if it has been selected
-                if (!hasErrored && _minimise && !string.IsNullOrEmpty(result))
-                {
-                    try
-                    {
-                        result = minCompiler.Compile(result, null).Result;
-                    }
-                    catch (Exception e)
-                    {
-                        result = "An error occurred during minification: \r\n" + e.GetBaseException().Message;
-                    }
+            }
 
-                }
-
-                return result;
-            });
+            return result;
         }
 
         private string AttemptRead(string path)

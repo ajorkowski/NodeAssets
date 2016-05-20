@@ -7,7 +7,7 @@ namespace NodeAssets.Compilers
     {
         public Task<string> Compile(string initial, FileInfo originalFile)
         {
-            return Task.Factory.StartNew(() => initial);
+            return Task.FromResult(initial);
         }
     }
 }

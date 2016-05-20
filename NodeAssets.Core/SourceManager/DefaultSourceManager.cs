@@ -115,16 +115,16 @@ namespace NodeAssets.Core.SourceManager
             return _dest;
         }
 
-        private void PileOnFileUpdated(object sender, FileChangedEvent fileChangedEvent)
+        private async void PileOnFileUpdated(object sender, FileChangedEvent fileChangedEvent)
         {
             if (_combine)
             {
-                CompilePile(fileChangedEvent.Pile);
+                await CompilePile(fileChangedEvent.Pile).ConfigureAwait(false);
             }
             else
             {
                 int count = _pile.FindFiles(fileChangedEvent.Pile).TakeWhile(file => file.FullName != fileChangedEvent.File.FullName).Count();
-                CompileFile(fileChangedEvent.Pile, fileChangedEvent.File, count);
+                await CompileFile(fileChangedEvent.Pile, fileChangedEvent.File, count).ConfigureAwait(false);
             }
         }
 
@@ -150,15 +150,10 @@ namespace NodeAssets.Core.SourceManager
             }
 
             // We just create a task as a hook so that you can do things when a compile finishes
-            if (tasks.Any())
-            {
-                return Task.Factory.ContinueWhenAll(tasks.ToArray(), taskList => { });
-            }
-                
-            return Task.Factory.StartNew(() => { });
+            return Task.WhenAll(tasks);
         }
 
-        private Task CompileFile(string pile, FileInfo file, int count)
+        private async Task CompileFile(string pile, FileInfo file, int count)
         {
             // Here we are keeping the files seperate... so just compile the single file
             // However the file will live in a subDirectory
@@ -166,33 +161,30 @@ namespace NodeAssets.Core.SourceManager
             var filePath = Path.Combine(dirPath, Path.GetFileNameWithoutExtension(file.Name) + count + _compileExtension);
 
             // Compile/minimise and write to file
-            return _compiler.CompileFile(file, _compilerManager).ContinueWith(task => AttemptWrite(filePath, task.Result));
+            var fileData = await _compiler.CompileFile(file, _compilerManager).ConfigureAwait(false);
+            AttemptWrite(filePath, fileData);
         }
 
-        private Task CompilePile(string pile)
+        private async Task CompilePile(string pile)
         {
             // Here we are combining all files
             // If one file in a pile changes... all the rest have to too
             var filePath = Path.Combine(_compilationDirectory.FullName, pile + _compileExtension);
 
-            var tasks = _pile.FindFiles(pile).Select(file => _compiler.CompileFile(file, _compilerManager)).ToArray();
+            var tasks = _pile.FindFiles(pile).Select(file => _compiler.CompileFile(file, _compilerManager));
 
             if (tasks.Any())
             {
-                return Task.Factory.ContinueWhenAll(tasks, t =>
+                var compiledFiles = await Task.WhenAll(tasks).ConfigureAwait(false);
+                var builder = new StringBuilder();
+
+                foreach (var compiledFile in compiledFiles)
                 {
-                    var builder = new StringBuilder();
+                    builder.Append(compiledFile);
+                }
 
-                    foreach (var task in t)
-                    {
-                        builder.Append(task.Result);
-                    }
-
-                    AttemptWrite(filePath, builder.ToString());
-                });
+                AttemptWrite(filePath, builder.ToString());
             }
-                
-            return Task.Factory.StartNew(() => { });
         }
 
         private void AttemptWrite(string path, string text)

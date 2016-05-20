@@ -17,17 +17,14 @@ namespace NodeAssets.Compilers
 
         public Task<string> Compile(string initial, FileInfo originalFile)
         {
-            return Task.Factory.StartNew(() =>
+            try
             {
-                try
-                {
-                    return _compiler.Compile(initial);
-                }
-                catch (JavaScriptException e)
-                {
-                    throw new COMException(e.Message);
-                }
-            });
+                return Task.FromResult(_compiler.Compile(initial));
+            }
+            catch (JavaScriptException e)
+            {
+                throw new COMException(e.Message);
+            }
         }
     }
 }

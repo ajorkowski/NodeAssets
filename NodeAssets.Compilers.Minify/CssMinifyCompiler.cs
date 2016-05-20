@@ -15,7 +15,7 @@ namespace NodeAssets.Compilers
 
         public Task<string> Compile(string initial, FileInfo originalFile)
         {
-            return Task.Factory.StartNew(() => _compiler.Compress(initial));
+            return Task.FromResult(_compiler.Compress(initial));
         }
     }
 }

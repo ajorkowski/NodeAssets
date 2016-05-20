@@ -32,7 +32,7 @@ namespace NodeAssets.Compilers
             command.StdIn.Flush();
             command.StdIn.Close();
 
-            return Task.Factory.StartNew(() => _executor.RunCommand(command));
+            return _executor.RunCommand(command);
         }
     }
 }

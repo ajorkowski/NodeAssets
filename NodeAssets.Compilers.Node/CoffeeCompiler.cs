@@ -16,10 +16,8 @@ namespace NodeAssets.Compilers
         public Task<string> Compile(string initial, FileInfo originalFile)
         {
             // Do not use the original file
-
             var command = _executor.ExecuteCoffeeCommand("-c -e \"" + initial.Replace("\"", "\\\"") + "\"");
-
-            return Task.Factory.StartNew(() => _executor.RunCommand(command));
+            return _executor.RunCommand(command);
         }
     }
 }

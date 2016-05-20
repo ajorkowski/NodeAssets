@@ -16,17 +16,15 @@ namespace NodeAssets.Compilers
 
         public Task<string> Compile(string initial, FileInfo originalFile)
         {
-            return Task.Factory.StartNew(() =>
+            try
             {
-                try
-                {
-                    return _compiler.Compile(initial, NSass.OutputStyle.Nested, true, new [] { originalFile.DirectoryName });
-                }
-                catch (Exception e)
-                {
-                    throw new COMException(e.Message, e.InnerException);
-                }
-            });
+                var compiled = _compiler.Compile(initial, NSass.OutputStyle.Nested, true, new [] { originalFile.DirectoryName });
+                return Task.FromResult(compiled);
+            }
+            catch (Exception e)
+            {
+                throw new COMException(e.Message, e.InnerException);
+            }
         }
     }
 }

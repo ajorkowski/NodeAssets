@@ -1,6 +1,6 @@
-﻿using System.IO;
+﻿using NodeAssets.Core.Commands;
+using System.IO;
 using System.Threading.Tasks;
-using NodeAssets.Core.Commands;
 
 namespace NodeAssets.Compilers
 {
@@ -26,7 +26,7 @@ namespace NodeAssets.Compilers
             command.StdIn.Flush();
             command.StdIn.Close();
 
-            return Task.Factory.StartNew(() => _executor.RunCommand(command));
+            return _executor.RunCommand(command);
         }
     }
 }

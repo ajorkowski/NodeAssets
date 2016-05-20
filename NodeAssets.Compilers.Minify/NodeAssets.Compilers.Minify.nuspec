@@ -14,7 +14,7 @@
     <tags>Asset Manager OWIN NodeJS</tags>
     <dependencies>
       <dependency id="NodeAssets.Core" version="2.0.0" />
-      <dependency id="YUICompressor.NET" version="2.3.0.0" />
+      <dependency id="YUICompressor.NET" version="2.7.0.0" />
     </dependencies>
   </metadata>
 </package>

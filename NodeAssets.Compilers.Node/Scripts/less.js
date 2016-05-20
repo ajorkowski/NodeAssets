@@ -19,6 +19,6 @@ stdin.on('data', function (chunk) {
 stdin.on('end', function () {
     less.render(styl, function (e, css) {
         if (e) throw e;
-        console.log(css);
+        console.log(css.css);
     });
 });

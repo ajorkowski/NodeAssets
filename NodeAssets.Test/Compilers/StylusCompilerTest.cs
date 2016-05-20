@@ -15,33 +15,28 @@ namespace NodeAssets.Test.Core.Compilers
         [SetUp]
         public void Init()
         {
-            _executor = new NodeExecutor("../../Node", "../../Node/node.exe");
+            _executor = new NodeExecutor(TestContext.CurrentContext.TestDirectory + "/../../Node", TestContext.CurrentContext.TestDirectory + "/../../Node/node.exe");
         }
 
         [Test]
-        [ExpectedException(typeof(COMException))]
         public void Compile_InvalidStylusFile_Exception()
         {
-            var file = new FileInfo("../../Data/invalidStylus.styl");
-            var styl = File.ReadAllText("../../Data/invalidStylus.styl");
+            var file = new FileInfo(TestContext.CurrentContext.TestDirectory + "/../../Data/invalidStylus.styl");
+            var styl = File.ReadAllText(TestContext.CurrentContext.TestDirectory + "/../../Data/invalidStylus.styl");
             var compiler = new StylusCompiler(_executor, false);
 
-            try
+            Assert.ThrowsAsync(typeof(COMException), async () =>
             {
-                var output = compiler.Compile(styl, file).Result;
-            }
-            catch (AggregateException e)
-            {
-                throw e.InnerException;
-            }
+                await compiler.Compile(styl, file).ConfigureAwait(false);
+            });
         }
 
         [Test]
         public void Compile_ValidStylusNoNib_Compiles()
         {
-            var file = new FileInfo("../../Data/exampleStylus.styl");
+            var file = new FileInfo(TestContext.CurrentContext.TestDirectory + "/../../Data/exampleStylus.styl");
             var compiler = new StylusCompiler(_executor, false);
-            var styl = File.ReadAllText("../../Data/exampleStylus.styl");
+            var styl = File.ReadAllText(TestContext.CurrentContext.TestDirectory + "/../../Data/exampleStylus.styl");
 
             var output = compiler.Compile(styl, file).Result;
 
@@ -51,9 +46,9 @@ namespace NodeAssets.Test.Core.Compilers
         [Test]
         public void Compile_ValidStylusWithNib_Compiles()
         {
-            var file = new FileInfo("../../Data/exampleStylusWithNib.styl");
+            var file = new FileInfo(TestContext.CurrentContext.TestDirectory + "/../../Data/exampleStylusWithNib.styl");
             var compiler = new StylusCompiler(_executor, true);
-            var styl = File.ReadAllText("../../Data/exampleStylusWithNib.styl");
+            var styl = File.ReadAllText(TestContext.CurrentContext.TestDirectory + "/../../Data/exampleStylusWithNib.styl");
 
             var output = compiler.Compile(styl, file).Result;
 
@@ -63,9 +58,9 @@ namespace NodeAssets.Test.Core.Compilers
         [Test]
         public void Compile_ValidStylusWithImport_Compiles()
         {
-            var file = new FileInfo("../../Data/exampleStylusWithImport.styl");
+            var file = new FileInfo(TestContext.CurrentContext.TestDirectory + "/../../Data/exampleStylusWithImport.styl");
             var compiler = new StylusCompiler(_executor, true);
-            var styl = File.ReadAllText("../../Data/exampleStylusWithImport.styl");
+            var styl = File.ReadAllText(TestContext.CurrentContext.TestDirectory + "/../../Data/exampleStylusWithImport.styl");
 
             var output = compiler.Compile(styl, file).Result;
 

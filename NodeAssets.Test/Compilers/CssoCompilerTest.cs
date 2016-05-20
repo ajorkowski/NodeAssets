@@ -13,13 +13,13 @@ namespace NodeAssets.Test.Core.Compilers
         [SetUp]
         public void Init()
         {
-            _compiler = new CssoCompiler(new NodeExecutor("../../Node", "../../Node/node.exe"));
+            _compiler = new CssoCompiler(new NodeExecutor(TestContext.CurrentContext.TestDirectory + "/../../Node", TestContext.CurrentContext.TestDirectory + "/../../Node/node.exe"));
         }
 
         [Test]
         public void Compile_ValidCSSFile_Compiles()
         {
-            var css = File.ReadAllText("../../Data/exampleCss.css");
+            var css = File.ReadAllText(TestContext.CurrentContext.TestDirectory + "/../../Data/exampleCss.css");
 
             var result = _compiler.Compile(css, null).Result;
 

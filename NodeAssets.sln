@@ -1,14 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30110.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D4E86B50-2A45-49AD-9AAA-D864CCF03395}"
 	ProjectSection(SolutionItems) = preProject
-		Local.testsettings = Local.testsettings
 		Makefile = Makefile
-		NodeAssets.vsmdi = NodeAssets.vsmdi
-		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NodeAssets.Core", "NodeAssets.Core\NodeAssets.Core.csproj", "{09D9E3D0-8F44-4390-AE17-0ABEEE704FF6}"
@@ -26,8 +23,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NodeAssets.Compilers.Sass", "NodeAssets.Compilers.Sass\NodeAssets.Compilers.Sass.csproj", "{2FD43281-FA1E-4438-939C-7EA84FB32A0C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NodeAssets.Compilers.Minify", "NodeAssets.Compilers.Minify\NodeAssets.Compilers.Minify.csproj", "{E091E3B9-F755-4A69-98A2-65BF80CA4BD5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NodeAssets.Compilers.Typescript", "NodeAssets.Compilers.Typescript\NodeAssets.Compilers.Typescript.csproj", "{8DF5E868-787D-45EC-A805-213ABEB3E06D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,10 +62,6 @@ Global
 		{E091E3B9-F755-4A69-98A2-65BF80CA4BD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E091E3B9-F755-4A69-98A2-65BF80CA4BD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E091E3B9-F755-4A69-98A2-65BF80CA4BD5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8DF5E868-787D-45EC-A805-213ABEB3E06D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8DF5E868-787D-45EC-A805-213ABEB3E06D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8DF5E868-787D-45EC-A805-213ABEB3E06D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8DF5E868-787D-45EC-A805-213ABEB3E06D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

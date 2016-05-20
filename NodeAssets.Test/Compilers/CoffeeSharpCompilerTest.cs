@@ -18,24 +18,19 @@ namespace NodeAssets.Test.Core.Compilers
         }
 
         [Test]
-        [ExpectedException(typeof(COMException))]
         public void Compile_InvalidCoffeeFile_Exception()
         {
-            try
+            Assert.ThrowsAsync(typeof(COMException), async () =>
             {
-                var coffee = File.ReadAllText("../../Data/invalidCoffee.coffee");
-                var output = _compiler.Compile(coffee, null).Result;
-            }
-            catch (AggregateException e)
-            {
-                throw e.InnerException;
-            }
+                var coffee = File.ReadAllText(TestContext.CurrentContext.TestDirectory + "/../../Data/invalidCoffee.coffee");
+                var output = await _compiler.Compile(coffee, null).ConfigureAwait(false);
+            });
         }
 
         [Test]
         public void Compile_ValidCoffeeFile_Compiles()
         {
-            var coffee = File.ReadAllText("../../Data/exampleCoffee.coffee");
+            var coffee = File.ReadAllText(TestContext.CurrentContext.TestDirectory + "/../../Data/exampleCoffee.coffee");
 
             var output = _compiler.Compile(coffee, null).Result;
 

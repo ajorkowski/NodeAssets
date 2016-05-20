@@ -1,41 +1,32 @@
 ﻿using CSharpVitamins;
 using Microsoft.Owin;
+using System;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 namespace NodeAssets.AspNet.Routes
 {
     public sealed class DefaultHandler
     {
-        private readonly FileInfo _file;
         private readonly IAssetsConfiguration _config;
+        private readonly Lazy<Task<AssetData>> _asset;
 
         public DefaultHandler(FileInfo info, IAssetsConfiguration config)
         {
-            _file = info;
+            _asset = new Lazy<Task<AssetData>>(() => CreateAssetData(info), true);
             _config = config;
         }
 
         public async Task Execute(IOwinContext context)
         {
             var response = context.Response;
-            if (File.Exists(_file.FullName))
+            var asset = await _asset.Value.ConfigureAwait(false);
+            if (asset != null)
             {
-                // Set the correct type
-                switch (_file.Extension)
-                {
-                    case ".js":
-                        response.ContentType = "application/javascript";
-                        break;
-                    case ".css":
-                        response.ContentType = "text/css";
-                        break;
-                    default:
-                        response.ContentType = "text/plain";
-                        break;
-                }
+                response.ContentType = asset.ContentType;
 
                 // If caching we set the cache for a year (the recommended 'forever' cache amount)
                 if (_config.UseCache)
@@ -43,16 +34,32 @@ namespace NodeAssets.AspNet.Routes
                     response.Headers.Add("Cache-Control", new [] { "max-age=31556926" });
                 }
 
-                // If we are compressing make sure to add the zip header
-                // Only compress if they allow gzip encoding
-                var bytes = File.ReadAllBytes(_file.FullName);
-                if (_config.UseCompress)
+                // We can safely use ETags/LastModified
+                context.Response.Headers.Add("ETag", new[] { asset.Hash });
+                context.Response.Headers.Add("Last-Modified", new[] { asset.LastModified.ToString("R") });
+
+                DateTime modifiedSince;
+                bool has304Header = context.Request.Headers.ContainsKey("If-None-Match") || context.Request.Headers.ContainsKey("If-Modified-Since");
+                if (has304Header
+                    && (!context.Request.Headers.ContainsKey("If-None-Match") || context.Request.Headers["If-None-Match"] == asset.Hash)
+                    && (!context.Request.Headers.ContainsKey("If-Modified-Since") || (DateTime.TryParse(context.Request.Headers["If-Modified-Since"], out modifiedSince) && modifiedSince.ToUniversalTime() >= asset.LastModified)))
                 {
-                    await AddCompressionFilter(context.Request, response, bytes);
+                    // Not modified response
+                    context.Response.StatusCode = 304;
                 }
                 else
                 {
-                    await context.Response.WriteAsync(bytes);
+                    // If we are compressing make sure to add the zip header
+                    // Only compress if they allow gzip encoding
+                    if (_config.UseCompress)
+                    {
+                        await AddCompressionFilter(context.Request, response, asset).ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        response.ContentLength = asset.Data.Length;
+                        await context.Response.WriteAsync(asset.Data).ConfigureAwait(false);
+                    }
                 }
             }
             else
@@ -60,7 +67,8 @@ namespace NodeAssets.AspNet.Routes
                 response.StatusCode = (int)HttpStatusCode.NotFound;
             }
         }
-        private static async Task AddCompressionFilter(IOwinRequest request, IOwinResponse response, byte[] data)
+
+        private static async Task AddCompressionFilter(IOwinRequest request, IOwinResponse response, AssetData data)
         {
             // load encodings from header
             QValueList encodings = new QValueList(request.Headers["Accept-Encoding"]);
@@ -80,27 +88,101 @@ namespace NodeAssets.AspNet.Routes
             // handle the preferred encoding
             switch (preferred.Name)
             {
-                case "gzip":
-                    response.Headers.Add("Content-Encoding", new [] { "gzip" });
-                    using (var zipStream = new GZipStream(response.Body, CompressionMode.Compress, true))
-                    {
-                        await zipStream.WriteAsync(data, 0, data.Length).ConfigureAwait(false);
-                        await zipStream.FlushAsync();
-                    }
-                    break;
                 case "deflate":
+                    response.ContentLength = data.DeflateData.Length;
                     response.Headers.Add("Content-Encoding", new[] { "deflate" });
-                    using (var defStream = new DeflateStream(response.Body, CompressionMode.Compress, true))
-                    {
-                        await defStream.WriteAsync(data, 0, data.Length).ConfigureAwait(false);
-                        await defStream.FlushAsync();
-                    }
+                    await response.WriteAsync(data.DeflateData).ConfigureAwait(false);
                     break;
-                case "identity":
+                case "gzip":
+                    response.ContentLength = data.ZipData.Length;
+                    response.Headers.Add("Content-Encoding", new[] { "gzip" });
+                    await response.WriteAsync(data.ZipData).ConfigureAwait(false);
+                    break;
                 default:
-                    await response.WriteAsync(data);
+                    response.ContentLength = data.Data.Length;
+                    await response.WriteAsync(data.Data).ConfigureAwait(false);
                     break;
             }
+        }
+
+        private async Task<AssetData> CreateAssetData(FileInfo file)
+        {
+            if (!file.Exists) { return null; }
+
+            byte[] data;
+            byte[] defData;
+            byte[] zipData;
+            using (var ms = new MemoryStream())
+            {
+                using (var fs = file.OpenRead())
+                {
+                    await fs.CopyToAsync(ms).ConfigureAwait(false);
+                }
+
+                data = ms.ToArray();
+                ms.Position = 0;
+
+                using (var saveMs = new MemoryStream())
+                {
+                    using (var defStream = new DeflateStream(saveMs, CompressionMode.Compress, true))
+                    {
+                        await ms.CopyToAsync(defStream).ConfigureAwait(false);
+                    }
+                    defData = saveMs.ToArray();
+                    saveMs.SetLength(0);
+                    ms.Position = 0;
+
+                    using (var zipStream = new GZipStream(saveMs, CompressionMode.Compress, true))
+                    {
+                        await ms.CopyToAsync(zipStream).ConfigureAwait(false);
+                    }
+                    zipData = saveMs.ToArray();
+                }
+            }
+
+            string hash;
+            using (var hasher = MD5.Create())
+            {
+                hash = Convert.ToBase64String(hasher.ComputeHash(data));
+            }
+
+            // Set the correct type
+            string extension = file.Extension;
+            string contentType;
+            switch (file.Extension)
+            {
+                case ".js":
+                    contentType = "application/javascript";
+                    break;
+                case ".css":
+                    contentType = "text/css";
+                    break;
+                default:
+                    contentType = "text/plain";
+                    break;
+            }
+
+            return new AssetData
+            {
+                Extension = extension,
+                ContentType = contentType,
+                Hash = hash,
+                Data = data,
+                ZipData = zipData,
+                DeflateData = defData,
+                LastModified = DateTime.Parse(file.LastWriteTimeUtc.ToString("R")).ToUniversalTime()
+            };
+        }
+
+        private class AssetData
+        {
+            public string Extension { get; set; }
+            public string ContentType { get; set; }
+            public string Hash { get; set; }
+            public byte[] Data { get; set; }
+            public byte[] ZipData { get; set; }
+            public byte[] DeflateData { get; set; }
+            public DateTime LastModified { get; set; }
         }
     }
 }

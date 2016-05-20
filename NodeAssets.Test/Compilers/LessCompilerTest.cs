@@ -15,33 +15,28 @@ namespace NodeAssets.Test.Core.Compilers
         [SetUp]
         public void Init()
         {
-            _executor = new NodeExecutor("../../Node", "../../Node/node.exe");
+            _executor = new NodeExecutor(TestContext.CurrentContext.TestDirectory + "/../../Node", TestContext.CurrentContext.TestDirectory + "/../../Node/node.exe");
         }
 
         [Test]
-        [ExpectedException(typeof(COMException))]
         public void Compile_InvalidLessFile_Exception()
         {
-            var file = new FileInfo("../../Data/invalidLess.less");
-            var styl = File.ReadAllText("../../Data/invalidLess.less");
+            var file = new FileInfo(TestContext.CurrentContext.TestDirectory + "/../../Data/invalidLess.less");
+            var styl = File.ReadAllText(TestContext.CurrentContext.TestDirectory + "/../../Data/invalidLess.less");
             var compiler = new LessCompiler(_executor);
 
-            try
+            Assert.ThrowsAsync(typeof(COMException), async () =>
             {
-                var output = compiler.Compile(styl, file).Result;
-            }
-            catch (AggregateException e)
-            {
-                throw e.InnerException;
-            }
+                await compiler.Compile(styl, file).ConfigureAwait(false);
+            });
         }
 
         [Test]
         public void Compile_ValidLess_Compiles()
         {
-            var file = new FileInfo("../../Data/exampleLess.less");
+            var file = new FileInfo(TestContext.CurrentContext.TestDirectory + "/../../Data/exampleLess.less");
             var compiler = new LessCompiler(_executor);
-            var styl = File.ReadAllText("../../Data/exampleLess.less");
+            var styl = File.ReadAllText(TestContext.CurrentContext.TestDirectory + "/../../Data/exampleLess.less");
 
             var output = compiler.Compile(styl, file).Result;
 

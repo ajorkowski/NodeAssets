@@ -9,7 +9,7 @@ stdin.on('data', function (chunk) {
 });
 
 stdin.on('end', function () {
-    var extract = csso.justDoIt(css);
+    var extract = csso.minify(css).css;
 
     console.log(extract);
 });

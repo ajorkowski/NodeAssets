@@ -14,7 +14,7 @@ namespace NodeAssets.Test.Core.Commands
         [SetUp]
         public void Init()
         {
-            _executor = new NodeExecutor("../../Node", "../../Node/node.exe");
+            _executor = new NodeExecutor(TestContext.CurrentContext.TestDirectory + "/../../Node", TestContext.CurrentContext.TestDirectory + "/../../Node/node.exe");
         }
 
         [Test]
@@ -38,18 +38,12 @@ namespace NodeAssets.Test.Core.Commands
         }
 
         [Test]
-        [ExpectedException(typeof(COMException))]
         public void JsScript_InvalidJS_ThrowsException()
         {
-            try
+            Assert.ThrowsAsync(typeof(COMException), async () =>
             {
-                var task = _executor.JsScript("kdjfhdskjhsd");
-                task.Wait();
-            }
-            catch (Exception e)
-            {
-                throw e.InnerException;
-            }
+                await _executor.JsScript("kdjfhdskjhsd").ConfigureAwait(false);
+            });
         }
 
         [Test]
@@ -69,39 +63,27 @@ namespace NodeAssets.Test.Core.Commands
         }
 
         [Test]
-        [ExpectedException(typeof(COMException))]
         public void CoffeeScript_InvalidCoffee_ThrowsException()
         {
-            try
+            Assert.ThrowsAsync(typeof(COMException), async () =>
             {
-                var task = _executor.CoffeeScript("kdjfh dskjh sd");
-                task.Wait();
-            }
-            catch (Exception e)
-            {
-                throw e.InnerException;
-            }
+                await _executor.CoffeeScript("kdjfh dskjh sd").ConfigureAwait(false);
+            });
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         public void File_FileDoesNotExist_Exception()
         {
-            try
+            Assert.ThrowsAsync(typeof(ArgumentException), async () =>
             {
-                var task = _executor.File(new FileInfo("someFile.txt"));
-                task.Wait();
-            }
-            catch (Exception e)
-            {
-                throw e.InnerException;
-            }
+                await _executor.File(new FileInfo("someFile.txt")).ConfigureAwait(false);
+            });
         }
 
         [Test]
         public void File_ValidJs_Executes()
         {
-            var output = _executor.File(new FileInfo("../../Data/normalJavascript.js")).Result;
+            var output = _executor.File(new FileInfo(TestContext.CurrentContext.TestDirectory + "/../../Data/normalJavascript.js")).Result;
 
             Assert.AreEqual("Hello World\n", output);
         }
@@ -109,7 +91,7 @@ namespace NodeAssets.Test.Core.Commands
         [Test]
         public void File_ValidCoffeeScript_Executes()
         {
-            var output = _executor.File(new FileInfo("../../Data/exampleCoffee.coffee")).Result;
+            var output = _executor.File(new FileInfo(TestContext.CurrentContext.TestDirectory + "/../../Data/exampleCoffee.coffee")).Result;
 
             Assert.AreEqual("Hello World!\n", output);
         }

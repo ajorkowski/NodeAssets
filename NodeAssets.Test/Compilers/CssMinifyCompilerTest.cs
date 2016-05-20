@@ -18,7 +18,7 @@ namespace NodeAssets.Test.Core.Compilers
         [Test]
         public void Compile_ValidCSSFile_Compiles()
         {
-            var css = File.ReadAllText("../../Data/exampleCss.css");
+            var css = File.ReadAllText(TestContext.CurrentContext.TestDirectory + "/../../Data/exampleCss.css");
 
             var result = _compiler.Compile(css, null).Result;
 

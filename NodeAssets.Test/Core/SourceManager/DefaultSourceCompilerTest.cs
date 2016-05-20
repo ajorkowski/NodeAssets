@@ -24,23 +24,27 @@ namespace NodeAssets.Test.Core.SourceManager
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void CompileFile_NoCompilerForFile_ThrowsException()
         {
             var compiler = new DefaultSourceCompiler(false, ".js");
 
-            compiler.CompileFile(new FileInfo("blah.coffee"), new CompilerConfiguration()).Wait();
+            Assert.ThrowsAsync(typeof(InvalidOperationException), async () =>
+            {
+                await compiler.CompileFile(new FileInfo("blah.coffee"), new CompilerConfiguration()).ConfigureAwait(false);
+            });
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void CompileFile_NoCompilerForMinification_ThrowsException()
         {
             var compiler = new DefaultSourceCompiler(true, ".js");
 
             var config = new CompilerConfiguration().CompilerFor(".js", new PassthroughCompiler());
 
-            compiler.CompileFile(new FileInfo("blah.js"), config);
+            Assert.ThrowsAsync(typeof(InvalidOperationException), async () =>
+            {
+                await compiler.CompileFile(new FileInfo("blah.js"), config).ConfigureAwait(false);
+            });
         }
 
         [Test]
@@ -48,7 +52,7 @@ namespace NodeAssets.Test.Core.SourceManager
         {
             var compiler = new DefaultSourceCompiler(false, ".js");
 
-            var file = new FileInfo("../../Data/emptyJS.js");
+            var file = new FileInfo(TestContext.CurrentContext.TestDirectory + "/../../Data/emptyJS.js");
 
             var jsCompiler = Substitute.For<ICompiler>();
             jsCompiler.Compile(";", file).Returns(Task.Factory.StartNew(() => ";"));
@@ -66,10 +70,10 @@ namespace NodeAssets.Test.Core.SourceManager
         {
             var compiler = new DefaultSourceCompiler(false, ".js");
 
-            var file = new FileInfo("../../Data/emptyJS.js");
+            var file = new FileInfo(TestContext.CurrentContext.TestDirectory + "/../../Data/emptyJS.js");
 
             var jsCompiler = Substitute.For<ICompiler>();
-            jsCompiler.Compile(";", file).Returns(info => { throw new COMException("Error"); });
+            jsCompiler.Compile(";", file).Returns<string>(info => { throw new COMException("Error"); });
 
             var config = new CompilerConfiguration().CompilerFor(".js", jsCompiler).CompilerFor(".other", null);
 
@@ -84,7 +88,7 @@ namespace NodeAssets.Test.Core.SourceManager
         {
             var compiler = new DefaultSourceCompiler(true, ".js");
 
-            var file = new FileInfo("../../Data/emptyJS.js");
+            var file = new FileInfo(TestContext.CurrentContext.TestDirectory + "/../../Data/emptyJS.js");
 
             var minCompiler = Substitute.For<ICompiler>();
             minCompiler.Compile(";", null).Returns(Task.Factory.StartNew(() => ";"));
@@ -102,10 +106,10 @@ namespace NodeAssets.Test.Core.SourceManager
         {
             var compiler = new DefaultSourceCompiler(true, ".js");
 
-            var file = new FileInfo("../../Data/emptyJS.js");
+            var file = new FileInfo(TestContext.CurrentContext.TestDirectory + "/../../Data/emptyJS.js");
 
             var minCompiler = Substitute.For<ICompiler>();
-            minCompiler.Compile(";", null).Returns(info => { throw new COMException("Error"); });
+            minCompiler.Compile(";", null).Returns<string>(info => { throw new COMException("Error"); });
 
             var config = new CompilerConfiguration().CompilerFor(".js", new PassthroughCompiler()).CompilerFor(".js.min", minCompiler);
 
@@ -120,7 +124,7 @@ namespace NodeAssets.Test.Core.SourceManager
         {
             var compiler = new DefaultSourceCompiler(true, ".js");
 
-            var file = new FileInfo("../../Data/emptyJS.min.js");
+            var file = new FileInfo(TestContext.CurrentContext.TestDirectory + "/../../Data/emptyJS.min.js");
 
             var rightCompiler = Substitute.For<ICompiler>();
             rightCompiler.Compile(";", null).Returns(Task.Factory.StartNew(() => "Right"));

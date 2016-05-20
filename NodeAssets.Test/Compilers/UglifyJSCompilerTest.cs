@@ -15,27 +15,22 @@ namespace NodeAssets.Test.Core.Compilers
         [SetUp]
         public void Init()
         {
-            _compiler = new UglifyJSCompiler(new NodeExecutor("../../Node", "../../Node/node.exe"));
+            _compiler = new UglifyJSCompiler(new NodeExecutor(TestContext.CurrentContext.TestDirectory + "/../../Node", TestContext.CurrentContext.TestDirectory + "/../../Node/node.exe"));
         }
 
         [Test]
-        [ExpectedException(typeof(COMException))]
         public void Compile_InvalidUglifyJSFile_Exception()
         {
-            try
+            Assert.ThrowsAsync(typeof(COMException), async () =>
             {
-                var output = _compiler.Compile(File.ReadAllText("../../Data/invalidJS.js"), null).Result;
-            }
-            catch (AggregateException e)
-            {
-                throw e.InnerException;
-            }
+                await _compiler.Compile(File.ReadAllText(TestContext.CurrentContext.TestDirectory + "/../../Data/invalidJS.js"), null).ConfigureAwait(false);
+            });
         }
 
         [Test]
         public void Compile_ValidUglifyJSFile_Compiles()
         {
-            var js = File.ReadAllText("../../Data/normalJavascript.js");
+            var js = File.ReadAllText(TestContext.CurrentContext.TestDirectory + "/../../Data/normalJavascript.js");
 
             var output = _compiler.Compile(js, null).Result;
 
@@ -45,7 +40,7 @@ namespace NodeAssets.Test.Core.Compilers
         [Test]
         public void Compile_BigFile_Compiles()
         {
-            var js = File.ReadAllText("../../Data/jquery-1.6.4.js");
+            var js = File.ReadAllText(TestContext.CurrentContext.TestDirectory + "/../../Data/jquery-1.6.4.js");
 
             var output = _compiler.Compile(js, null).Result;
 

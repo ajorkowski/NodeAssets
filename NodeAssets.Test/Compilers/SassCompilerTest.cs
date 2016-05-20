@@ -1,6 +1,5 @@
 ﻿using NodeAssets.Compilers;
 using NUnit.Framework;
-using System;
 using System.IO;
 using System.Runtime.InteropServices;
 
@@ -18,26 +17,21 @@ namespace NodeAssets.Test.Core.Compilers
         }
 
         [Test]
-        [ExpectedException(typeof(COMException))]
         public void Compile_InvalidSassFile_Exception()
         {
-            var file = new FileInfo("../../Data/invalidSass.scss");
+            var file = new FileInfo(TestContext.CurrentContext.TestDirectory + "/../../Data/invalidSass.scss");
             var sass = File.ReadAllText(file.FullName);
 
-            try
+            Assert.ThrowsAsync(typeof(COMException), async () =>
             {
-                var output = _compiler.Compile(sass, file).Result;
-            }
-            catch (AggregateException e)
-            {
-                throw e.InnerException;
-            }
+                await _compiler.Compile(sass, file).ConfigureAwait(false);
+            });
         }
 
         [Test]
         public void Compile_ValidSass_Compiles()
         {
-            var file = new FileInfo("../../Data/exampleSass.scss");
+            var file = new FileInfo(TestContext.CurrentContext.TestDirectory + "/../../Data/exampleSass.scss");
             var sass = File.ReadAllText(file.FullName);
 
             var output = _compiler.Compile(sass, file).Result;
@@ -48,7 +42,7 @@ namespace NodeAssets.Test.Core.Compilers
         [Test]
         public void Compile_ValidSassWithImport_Compiles()
         {
-            var file = new FileInfo("../../Data/exampleSassWithImport.scss");
+            var file = new FileInfo(TestContext.CurrentContext.TestDirectory + "/../../Data/exampleSassWithImport.scss");
             var styl = File.ReadAllText(file.FullName);
 
             var output = _compiler.Compile(styl, file).Result;

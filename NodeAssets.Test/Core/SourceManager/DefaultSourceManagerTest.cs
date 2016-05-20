@@ -37,7 +37,6 @@ namespace NodeAssets.Test.Core.SourceManager
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void SetPileAsSource_AddTwice_ExpectException()
         {
             var pile = Substitute.For<IPile>();
@@ -46,7 +45,11 @@ namespace NodeAssets.Test.Core.SourceManager
             var config = Substitute.For<ICompilerConfiguration>();
 
             _manager.SetPileAsSource(pile, config).Wait();
-            _manager.SetPileAsSource(pile, config).Wait();
+
+            Assert.ThrowsAsync(typeof(InvalidOperationException), async () =>
+            {
+                await _manager.SetPileAsSource(pile, config).ConfigureAwait(false);
+            });
         }
 
         [Test]
@@ -100,10 +103,12 @@ namespace NodeAssets.Test.Core.SourceManager
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void FindDestinationPile_WithoutAddingSource_ExpectException()
         {
-            _manager.FindDestinationPile();
+            Assert.Throws(typeof(InvalidOperationException), () =>
+            {
+                _manager.FindDestinationPile();
+            });
         }
 
         [Test]

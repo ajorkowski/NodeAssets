@@ -8,7 +8,10 @@
             url = url + '?v=' + sequence;
             sequence++;
         }
-        document.getElementById(data.id).href = url;
+        var el = document.getElementById(data.id);
+        if (el) {
+            el.href = url;
+        }
     });
 
     connection.start();

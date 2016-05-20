@@ -16,7 +16,4 @@ sass:
 node:
 	nuget push NodeAssets.Compilers.Node\package\NodeAssets.Compilers.Node.$(v).nupkg
 
-typescript:
-	nuget push NodeAssets.Compilers.Typescript\package\NodeAssets.Compilers.Typescript.$(v).nupkg
-
 .PHONY: core aspnet coffee minify sass node

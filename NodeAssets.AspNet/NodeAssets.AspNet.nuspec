@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>NodeAssets.AspNet</id>
-    <version>3.0.0</version>
+    <version>3.0.1</version>
     <authors>Felix Jorkowski (jorkowski.com)</authors>
     <owners>Felix Jorkowski (jorkowski.com)</owners>
     <licenseUrl>http://www.opensource.org/licenses/MIT</licenseUrl>
@@ -13,6 +13,7 @@
 - memory cache all assets (unless LiveCss is enabled)
 - properly implement ETag and LastModified semantics
 - simplified interface for configuration so only fluent methods exposed
+- Added new 'CdnBasePath' option where you can specify an alternative base path for CDN purposes
 - BUG FIX: check to see if live css element exists before setting attr (prevent null exceptions in js)</releaseNotes>
     <copyright>Copyright 2016</copyright>
     <tags>Asset Manager OWIN NodeJS</tags>

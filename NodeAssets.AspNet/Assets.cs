@@ -162,7 +162,9 @@ namespace NodeAssets
             // Then files
             foreach (var file in CombineFiles(destPile, includeGlobal, otherAssets))
             {
-                builder.Append(WrapInCssTag(file, file.Replace("/","-").Trim('-')));
+                var id = string.IsNullOrWhiteSpace(_config.CdnPath) ? file : file.Replace(_config.CdnPath, string.Empty);
+                id = id.Replace("/", "-").Trim('-');
+                builder.Append(WrapInCssTag(file, id));
             }
 
             return builder.ToString();
@@ -221,6 +223,7 @@ namespace NodeAssets
 
         private IEnumerable<string> CombineFiles(IPile piles, bool global, IEnumerable<string> other)
         {
+            var basePath = string.IsNullOrWhiteSpace(_config.CdnPath) ? VirtualPathUtility.ToAbsolute("~/") : _config.CdnPath.TrimEnd('/', '\\') + VirtualPathUtility.ToAbsolute("~/");
             if (global)
             {
                 var files = piles.FindFiles(Global).ToList();
@@ -230,7 +233,7 @@ namespace NodeAssets
                     {
                         // multiple routes for the same pile
                         // Add the '/' at the start to make it absolute
-                        yield return VirtualPathUtility.ToAbsolute("~/") + FindFilePath(piles, Global, file);
+                        yield return basePath + FindFilePath(piles, Global, file);
                     }
                 }
             }
@@ -245,7 +248,7 @@ namespace NodeAssets
                     foreach (var file in files)
                     {
                         // multiple routes for the same pile
-                        yield return VirtualPathUtility.ToAbsolute("~/") + FindFilePath(piles, pile, file);
+                        yield return basePath + FindFilePath(piles, pile, file);
                     }
                 }
             }
@@ -311,7 +314,8 @@ namespace NodeAssets
             // Catch any exceptions as the virtualpathutility may not be initialised so do not need to broadcast
             try
             {
-                var path = VirtualPathUtility.ToAbsolute("~/") + FindFilePath(_cssPile, fileChangedEvent.Pile, fileChangedEvent.File);
+                var basePath = string.IsNullOrWhiteSpace(_config.CdnPath) ? VirtualPathUtility.ToAbsolute("~/") : _config.CdnPath.TrimEnd('/', '\\') + VirtualPathUtility.ToAbsolute("~/");
+                var path = basePath + FindFilePath(_cssPile, fileChangedEvent.Pile, fileChangedEvent.File);
                 var id = (VirtualPathUtility.ToAbsolute("~/") + FindFilePath(_cssPile, fileChangedEvent.Pile, fileChangedEvent.File, true)).Replace("/", "-").Trim('-');
                 BroadcastCssChange(id, path);
             }

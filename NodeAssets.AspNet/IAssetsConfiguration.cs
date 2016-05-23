@@ -13,6 +13,7 @@ namespace NodeAssets.AspNet
         IAssetsConfiguration LiveCss(bool live = true, string signalRNamespace = "nodeassets");
         IAssetsConfiguration Cache(bool cache = true);
         IAssetsConfiguration Compress(bool compress = true);
+        IAssetsConfiguration CdnBasePath(string path);
         IAssetsConfiguration SetRouteHandlerFunction(Func<string, FileInfo, IAssetsConfiguration, Func<IOwinContext, Task>> routeHandler);
     }
 }

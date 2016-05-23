@@ -25,7 +25,8 @@ namespace NodeAssets.Example
                         source => source.UseDefaultConfiguration(MapPath("~/built"), isProd))
                     .Cache(isProd)
                     .Compress(isProd)
-                    .LiveCss(!isProd))
+                    .LiveCss(!isProd)
+                    .CdnBasePath("https://kalixtest.azureedge.net"))
                 .SetupCssPile(pile => pile
                     // An Example regex where you will add files ending in .scss
                     // but NOT files ending in .min.scss

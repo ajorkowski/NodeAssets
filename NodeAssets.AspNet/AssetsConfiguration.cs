@@ -39,6 +39,12 @@ namespace NodeAssets.AspNet
             return this;
         }
 
+        public IAssetsConfiguration CdnBasePath(string path)
+        {
+            CdnPath = path;
+            return this;
+        }
+
         public IAssetsConfiguration SetRouteHandlerFunction(Func<string, FileInfo, IAssetsConfiguration, Func<IOwinContext, Task>> routeHandler)
         {
             RouteHandlerFunction = routeHandler;
@@ -49,6 +55,7 @@ namespace NodeAssets.AspNet
         public bool UseCompress { get; private set; }
         public bool IsLiveCss { get; private set; }
         public string Namespace { get; private set; }
+        public string CdnPath { get; private set; }
         public CompilerConfiguration CompilerConfiguration { get; private set; }
         public ISourceManagerConfiguration SourceConfiguration { get; private set; }
         public Func<string, FileInfo, IAssetsConfiguration, Func<IOwinContext, Task>> RouteHandlerFunction { get; private set; }

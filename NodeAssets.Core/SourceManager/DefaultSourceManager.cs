@@ -198,7 +198,9 @@ namespace NodeAssets.Core.SourceManager
             // If one file in a pile changes... all the rest have to too
             var filePath = Path.Combine(_compilationDirectory.FullName, pile + _compileExtension);
 
-            var tasks = _pile.FindFiles(pile).Select(async file => Tuple.Create(await _compiler.CompileFile(file, _compilerManager).ConfigureAwait(false), file));
+            var tasks = _pile.FindFiles(pile)
+                .Select(async file => Tuple.Create(await _compiler.CompileFile(file, _compilerManager).ConfigureAwait(false), file))
+                .ToList();
 
             if (tasks.Any())
             {

@@ -5,6 +5,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Diagnostics;
 
 namespace NodeAssets.Core.SourceManager
 {
@@ -31,9 +32,11 @@ namespace NodeAssets.Core.SourceManager
             }
 
             ICompiler minCompiler = null;
+            string minFileName = null;
             if (_minimise)
             {
-                minCompiler = compilerConfig.GetCompiler(Path.GetFileNameWithoutExtension(file.Name) + _compileExtension + ".min");
+                minFileName = Path.GetFileNameWithoutExtension(file.Name) + _compileExtension + ".min";
+                minCompiler = compilerConfig.GetCompiler(minFileName);
                 if (minCompiler == null)
                 {
                     throw new InvalidOperationException("Minimising compiler could not be found for '" + _compileExtension + "' type file");
@@ -48,6 +51,8 @@ namespace NodeAssets.Core.SourceManager
             bool hasErrored = false;
             if (!string.IsNullOrEmpty(fileData))
             {
+                var stopwatch = new Stopwatch();
+                stopwatch.Start();
                 try
                 {
                     var compileResult = await compiler.Compile(fileData, file).ConfigureAwait(false);
@@ -60,11 +65,20 @@ namespace NodeAssets.Core.SourceManager
                     hasErrored = true;
                     compilerConfig.HasException(e);
                 }
+                stopwatch.Stop();
+                compilerConfig.HasMeasurement(new CompileMeasurement
+                {
+                    Compiler = compiler.GetType().Name,
+                    File = file.FullName,
+                    CompileTimeMilliseconds = stopwatch.ElapsedMilliseconds
+                });
             }
 
             // Do the minimisation if it has been selected
             if (!hasErrored && _minimise && !string.IsNullOrEmpty(output))
             {
+                var stopwatch = new Stopwatch();
+                stopwatch.Start();
                 try
                 {
                     var minResult = await minCompiler.Compile(output, null).ConfigureAwait(false);
@@ -85,7 +99,13 @@ namespace NodeAssets.Core.SourceManager
                     output = "An error occurred during minification: \r\n" + e.GetBaseException().Message;
                     compilerConfig.HasException(e);
                 }
-
+                stopwatch.Stop();
+                compilerConfig.HasMeasurement(new CompileMeasurement
+                {
+                    Compiler = minCompiler.GetType().Name,
+                    File = minFileName,
+                    CompileTimeMilliseconds = stopwatch.ElapsedMilliseconds
+                });
             }
 
             return new CompileResult

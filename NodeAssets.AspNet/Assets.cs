@@ -78,7 +78,8 @@ namespace NodeAssets
             _jsPile = pileFunc(new Pile(_config.IsLiveCss));
             if (_jsPile != null)
             {
-                _jsManager.SetPileAsSource(_jsPile, _config.CompilerConfiguration);
+                // We run this in new task and wait... this is OK since only called at startup
+                Task.Run(() => _jsManager.SetPileAsSource(_jsPile, _config.CompilerConfiguration)).Wait();
             }
 
             return this;
@@ -92,7 +93,8 @@ namespace NodeAssets
             _cssPile = pileFunc(new Pile(_config.IsLiveCss));
             if (_cssPile != null)
             {
-                _cssManager.SetPileAsSource(_cssPile, _config.CompilerConfiguration);
+                // We run this in new task and wait... this is OK since only called at startup
+                Task.Run(() => _cssManager.SetPileAsSource(_cssPile, _config.CompilerConfiguration)).Wait();
 
                 if(_config.IsLiveCss)
                 {

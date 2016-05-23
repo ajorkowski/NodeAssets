@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>NodeAssets.Core</id>
-    <version>3.0.0</version>
+    <version>3.0.2</version>
     <authors>Felix Jorkowski (jorkowski.com)</authors>
     <owners>Felix Jorkowski (jorkowski.com)</owners>
     <licenseUrl>http://www.opensource.org/licenses/MIT</licenseUrl>
@@ -14,6 +14,7 @@
 - changed compiler interface to allow for included files, these will be watched if watching is enabled
 - added specific compiler exception
 - added 'OnCompilerError' on compiler configuration so can hook into compiler errors
+- added 'OnCompileMeasure' on compiler configuration so can see the time it takes to compile files
 - simplified configuration interfaces by hiding all the non-fluent get calls</releaseNotes>
     <copyright>Copyright 2016</copyright>
     <tags>Asset Manager OWIN NodeJS</tags>

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Owin;
 using NodeAssets.Compilers;
 using Owin;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Web.Hosting;
 
@@ -13,20 +14,24 @@ namespace NodeAssets.Example
         public void Configuration(IAppBuilder app)
         {
             // Switch this to see different modes
-            var isProd = false;
+            var isProd = true;
 
             var assets = Assets
                 .Initialise(config => config
                     .ConfigureCompilers(
                         compilers => compilers
-                            .WithDefaultNodeConfiguration(MapPath("~/Node"), MapPath("~/Node/node.exe"))
-                            .CompilerFor(FileExtensions.Scss, new SassCompiler()))
+                            //.WithDefaultNodeConfiguration(MapPath("~/Node"), MapPath("~/Node/node.exe"))
+                            .CompilerFor(FileExtensions.Js, new PassthroughCompiler())
+                            .CompilerFor(FileExtensions.CssMin, new CssMinifyCompiler())
+                            .CompilerFor(FileExtensions.JsMin, new JsMinifyCompiler())
+                            .CompilerFor(FileExtensions.Scss, new SassCompiler(MapPath("~/bin")))
+                            .OnCompilerError(e => Trace.WriteLine(e.Message))
+                            .OnCompileMeasurement(m => Trace.WriteLine(string.Format("{0} {1}: {2}", m.CompileTimeMilliseconds, m.Compiler, m.File))))
                     .ConfigureSourceManager(
                         source => source.UseDefaultConfiguration(MapPath("~/built"), isProd))
                     .Cache(isProd)
                     .Compress(isProd)
-                    .LiveCss(!isProd)
-                    .CdnBasePath("https://kalixtest.azureedge.net"))
+                    .LiveCss(!isProd))
                 .SetupCssPile(pile => pile
                     // An Example regex where you will add files ending in .scss
                     // but NOT files ending in .min.scss

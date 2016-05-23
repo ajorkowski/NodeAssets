@@ -9,11 +9,13 @@ namespace NodeAssets.Core
     {
         private readonly List<KeyValuePair<string, ICompiler>> _compilers;
         private Action<Exception> _onCompilerError;
+        private Action<CompileMeasurement> _onCompileMeasure;
 
         public CompilerConfiguration()
         {
             _compilers = new List<KeyValuePair<string, ICompiler>>();
             _onCompilerError = null;
+            _onCompileMeasure = null;
         }
 
         public ICompilerConfiguration CompilerFor(string extension, ICompiler compiler)
@@ -41,6 +43,12 @@ namespace NodeAssets.Core
             return this;
         }
 
+        public ICompilerConfiguration OnCompileMeasurement(Action<CompileMeasurement> onMeasure)
+        {
+            _onCompileMeasure = onMeasure;
+            return this;
+        }
+
         public ICompiler GetCompiler(string extension)
         {
             ICompiler result = null;
@@ -62,6 +70,14 @@ namespace NodeAssets.Core
             if (_onCompilerError != null)
             {
                 _onCompilerError(e);
+            }
+        }
+
+        public void HasMeasurement(CompileMeasurement c)
+        {
+            if (_onCompileMeasure != null)
+            {
+                _onCompileMeasure(c);
             }
         }
     }

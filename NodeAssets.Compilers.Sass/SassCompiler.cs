@@ -11,17 +11,19 @@ namespace NodeAssets.Compilers
     {
         private const string LibSassDll = "libsass";
 
-        static SassCompiler()
+        public SassCompiler(string libsassDllDirectory = null)
         {
             // Internally Sass tries to load from the Assembly.Location, but this doesn't seem to work with asp.net
             // Lets try this as a backup
-            try
+            if (!string.IsNullOrWhiteSpace(libsassDllDirectory))
             {
-                var directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase).Replace("file:\\", string.Empty);
-                var loadPath = Path.Combine(directory, (IntPtr.Size == 8 ? @"x64\" : @"x86\") + LibSassDll + ".dll");
-                LoadLibrary(loadPath);
+                try
+                {
+                    var loadPath = Path.Combine(libsassDllDirectory, (IntPtr.Size == 8 ? @"x64\" : @"x86\") + LibSassDll + ".dll");
+                    LoadLibrary(loadPath);
+                }
+                catch (Exception) { }
             }
-            catch (Exception) { }
         }
 
         [DllImport("kernel32", SetLastError = true, CharSet = CharSet.Ansi)]

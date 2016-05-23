@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>NodeAssets.Compilers.Sass</id>
-    <version>3.0.0</version>
+    <version>3.0.1</version>
     <authors>Felix Jorkowski (jorkowski.com)</authors>
     <owners>Felix Jorkowski (jorkowski.com)</owners>
     <licenseUrl>http://www.opensource.org/licenses/MIT</licenseUrl>
@@ -16,7 +16,7 @@
     <tags>Asset Manager OWIN NodeJS</tags>
     <dependencies>
       <dependency id="NodeAssets.Core" version="3.0.0" />
-      <dependency id="libsassnet" version="3.2.5.1" />
+      <dependency id="SharpScss" version="1.0.1" />
     </dependencies>
   </metadata>
 </package>

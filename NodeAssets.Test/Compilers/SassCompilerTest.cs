@@ -1,7 +1,6 @@
 ﻿using NodeAssets.Compilers;
 using NUnit.Framework;
 using System.IO;
-using System.Runtime.InteropServices;
 
 namespace NodeAssets.Test.Core.Compilers
 {
@@ -22,7 +21,7 @@ namespace NodeAssets.Test.Core.Compilers
             var file = new FileInfo(TestContext.CurrentContext.TestDirectory + "/../../Data/invalidSass.scss");
             var sass = File.ReadAllText(file.FullName);
 
-            Assert.ThrowsAsync(typeof(COMException), async () =>
+            Assert.ThrowsAsync(typeof(CompileException), async () =>
             {
                 await _compiler.Compile(sass, file).ConfigureAwait(false);
             });
@@ -32,22 +31,30 @@ namespace NodeAssets.Test.Core.Compilers
         public void Compile_ValidSass_Compiles()
         {
             var file = new FileInfo(TestContext.CurrentContext.TestDirectory + "/../../Data/exampleSass.scss");
+            var filePath = file.FullName.Replace("\\", "/");
             var sass = File.ReadAllText(file.FullName);
 
-            var output = _compiler.Compile(sass, file).Result;
+            var result = _compiler.Compile(sass, file).Result;
 
-            Assert.AreEqual("/* line 1, source string */\n.base {\n  border-color: #cccccc; }\n", output);
+            Assert.AreEqual("/* line 1, " + filePath + " */\n.base {\n  border-color: #ccc; }\n", result.Output);
+            Assert.AreEqual(null, result.AdditionalDependencies);
         }
 
         [Test]
         public void Compile_ValidSassWithImport_Compiles()
         {
             var file = new FileInfo(TestContext.CurrentContext.TestDirectory + "/../../Data/exampleSassWithImport.scss");
+            var filePath = file.FullName.Replace("\\", "/");
             var styl = File.ReadAllText(file.FullName);
 
-            var output = _compiler.Compile(styl, file).Result;
+            var result = _compiler.Compile(styl, file).Result;
 
-            Assert.AreEqual("/* line 5, source string */\n.base {\n  border-color: #cccccc;\n  width: auto; }\n", output);
+            Assert.AreEqual("/* line 5, " + filePath + " */\n.base {\n  border-color: #ccc;\n  width: auto; }\n", result.Output);
+            Assert.AreEqual(1, result.AdditionalDependencies.Count);
+
+            var depFile = new FileInfo(TestContext.CurrentContext.TestDirectory + "/../../Data/exampleSassImport.scss");
+            var depFilePath = depFile.FullName.Replace("\\", "/");
+            Assert.AreEqual(depFilePath, result.AdditionalDependencies[0]);
         }
     }
 }

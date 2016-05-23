@@ -2,18 +2,18 @@
 <package >
   <metadata>
     <id>NodeAssets.Compilers.Minify</id>
-    <version>2.0.0</version>
+    <version>3.0.0</version>
     <authors>Felix Jorkowski (jorkowski.com)</authors>
     <owners>Felix Jorkowski (jorkowski.com)</owners>
     <licenseUrl>http://www.opensource.org/licenses/MIT</licenseUrl>
     <projectUrl>https://github.com/ajorkowski/NodeAssets</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>.NET based minification compilers for js/css based on the YUI compiler for Node Assets</description>
-    <releaseNotes>Update for latest packages</releaseNotes>
-    <copyright>Copyright 2013</copyright>
+    <releaseNotes>Updated to v3 of NodeAssets</releaseNotes>
+    <copyright>Copyright 2016</copyright>
     <tags>Asset Manager OWIN NodeJS</tags>
     <dependencies>
-      <dependency id="NodeAssets.Core" version="2.0.0" />
+      <dependency id="NodeAssets.Core" version="3.0.0" />
       <dependency id="YUICompressor.NET" version="2.7.0.0" />
     </dependencies>
   </metadata>

@@ -1,6 +1,6 @@
-﻿using System.IO;
+﻿using NodeAssets.Core.Commands;
+using System.IO;
 using System.Threading.Tasks;
-using NodeAssets.Core.Commands;
 
 namespace NodeAssets.Compilers
 {
@@ -19,7 +19,7 @@ namespace NodeAssets.Compilers
             _executeScript = ScriptFinder.GetScript(ScriptLocation);
         }
 
-        public Task<string> Compile(string initial, FileInfo originalFile)
+        public async Task<CompileResult> Compile(string initial, FileInfo originalFile)
         {
             initial = initial ?? string.Empty;
 
@@ -32,7 +32,12 @@ namespace NodeAssets.Compilers
             command.StdIn.Flush();
             command.StdIn.Close();
 
-            return _executor.RunCommand(command);
+            var output = await _executor.RunCommand(command).ConfigureAwait(false);
+            return new CompileResult
+            {
+                Output = output
+                // No additional deps detection on stylus for now
+            };
         }
     }
 }

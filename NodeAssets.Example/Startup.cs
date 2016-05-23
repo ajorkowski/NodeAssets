@@ -1,4 +1,5 @@
 ﻿using Microsoft.Owin;
+using NodeAssets.Compilers;
 using Owin;
 using System.Text.RegularExpressions;
 using System.Web.Hosting;
@@ -17,16 +18,18 @@ namespace NodeAssets.Example
             var assets = Assets
                 .Initialise(config => config
                     .ConfigureCompilers(
-                        compilers => compilers.WithDefaultNodeConfiguration(MapPath("~/Node"), MapPath("~/Node/node.exe")))
+                        compilers => compilers
+                            .WithDefaultNodeConfiguration(MapPath("~/Node"), MapPath("~/Node/node.exe"))
+                            .CompilerFor(FileExtensions.Scss, new SassCompiler()))
                     .ConfigureSourceManager(
                         source => source.UseDefaultConfiguration(MapPath("~/built"), isProd))
                     .Cache(isProd)
                     .Compress(isProd)
                     .LiveCss(!isProd))
                 .SetupCssPile(pile => pile
-                    // An Example regex where you will add files ending in .css
-                    // but NOT files ending in .min.css
-                    .AddDirectory("Styles", MapPath("~/Content"), true, new Regex("(?<!.min).css$")))
+                    // An Example regex where you will add files ending in .scss
+                    // but NOT files ending in .min.scss
+                    .AddDirectory("Styles", MapPath("~/Content"), false, new Regex("(?<!.min).scss$")))
                 .SetupJavascriptPile(pile =>
                 {
                     pile.AddFile(MapPath("~/Scripts/jquery-2.2.3.js"));

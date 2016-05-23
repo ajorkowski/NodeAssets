@@ -16,7 +16,7 @@ namespace NodeAssets.Core.SourceManager
         private readonly ISourceCompiler _compiler;
 
         private IPile _pile;
-        private ICompilerConfiguration _compilerManager;
+        private CompilerConfiguration _compilerManager;
 
         public DefaultSourceManager(bool combine, string compileExtension, string compilationDirectory, ISourceCompiler compiler)
         {
@@ -31,7 +31,7 @@ namespace NodeAssets.Core.SourceManager
             _compiler = compiler;
         }
 
-        public Task SetPileAsSource(IPile pile, ICompilerConfiguration compilerManager)
+        public Task SetPileAsSource(IPile pile, CompilerConfiguration compilerManager)
         {
             if (pile == null) { throw new ArgumentNullException("pile"); }
             if (compilerManager == null) { throw new ArgumentNullException("compilerManager"); }
@@ -61,7 +61,7 @@ namespace NodeAssets.Core.SourceManager
                 _pile.FileUpdated += PileOnFileUpdated;
             }
 
-            return CompileAll();
+            return CompileAndSetupWatchers();
         }
 
         private IPile _dest;
@@ -119,16 +119,16 @@ namespace NodeAssets.Core.SourceManager
         {
             if (_combine)
             {
-                await CompilePile(fileChangedEvent.Pile).ConfigureAwait(false);
+                await CompilePile(fileChangedEvent.Pile, false).ConfigureAwait(false);
             }
             else
             {
                 int count = _pile.FindFiles(fileChangedEvent.Pile).TakeWhile(file => file.FullName != fileChangedEvent.File.FullName).Count();
-                await CompileFile(fileChangedEvent.Pile, fileChangedEvent.File, count).ConfigureAwait(false);
+                await CompileFile(fileChangedEvent.Pile, fileChangedEvent.File, count, false).ConfigureAwait(false);
             }
         }
 
-        private Task CompileAll()
+        private Task CompileAndSetupWatchers()
         {
             var tasks = new List<Task>();
 
@@ -136,14 +136,14 @@ namespace NodeAssets.Core.SourceManager
             {
                 if (_combine)
                 {
-                    tasks.Add(CompilePile(pile));
+                    tasks.Add(CompilePile(pile, true));
                 }
                 else
                 {
                     int count = 0;
                     foreach (var file in _pile.FindFiles(pile))
                     {
-                        tasks.Add(CompileFile(pile, file, count));
+                        tasks.Add(CompileFile(pile, file, count, true));
                         count++;
                     }
                 }
@@ -153,7 +153,7 @@ namespace NodeAssets.Core.SourceManager
             return Task.WhenAll(tasks);
         }
 
-        private async Task CompileFile(string pile, FileInfo file, int count)
+        private async Task CompileFile(string pile, FileInfo file, int count, bool setupWatchers)
         {
             // Here we are keeping the files seperate... so just compile the single file
             // However the file will live in a subDirectory
@@ -162,16 +162,43 @@ namespace NodeAssets.Core.SourceManager
 
             // Compile/minimise and write to file
             var fileData = await _compiler.CompileFile(file, _compilerManager).ConfigureAwait(false);
-            AttemptWrite(filePath, fileData);
+
+            // If we are watching, watch the additional deps, but fire the event on the original file
+            if (setupWatchers && _pile.IsWatchingFiles && fileData.AdditionalDependencies.Any())
+            {
+                var changedEvent = new FileChangedEvent(pile, file);
+                foreach (var dep in fileData.AdditionalDependencies)
+                {
+                    var info = new FileInfo(dep);
+                    if (info.Exists)
+                    {
+                        var watcher = new FileSystemWatcher
+                        {
+                            Path = info.DirectoryName,
+                            Filter = info.Name,
+                            NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.CreationTime
+                        };
+
+                        watcher.Created += (sender, args) => PileOnFileUpdated(pile, changedEvent);
+                        watcher.Changed += (sender, args) => PileOnFileUpdated(pile, changedEvent);
+                        watcher.Renamed += (sender, args) => PileOnFileUpdated(pile, changedEvent);
+                        watcher.Deleted += (sender, args) => PileOnFileUpdated(pile, changedEvent);
+
+                        watcher.EnableRaisingEvents = true;
+                    }
+                }
+            }
+
+            AttemptWrite(filePath, fileData.Output);
         }
 
-        private async Task CompilePile(string pile)
+        private async Task CompilePile(string pile, bool setupWatchers)
         {
             // Here we are combining all files
             // If one file in a pile changes... all the rest have to too
             var filePath = Path.Combine(_compilationDirectory.FullName, pile + _compileExtension);
 
-            var tasks = _pile.FindFiles(pile).Select(file => _compiler.CompileFile(file, _compilerManager));
+            var tasks = _pile.FindFiles(pile).Select(async file => Tuple.Create(await _compiler.CompileFile(file, _compilerManager).ConfigureAwait(false), file));
 
             if (tasks.Any())
             {
@@ -180,7 +207,34 @@ namespace NodeAssets.Core.SourceManager
 
                 foreach (var compiledFile in compiledFiles)
                 {
-                    builder.Append(compiledFile);
+                    // Combine all the outputs
+                    builder.Append(compiledFile.Item1.Output);
+
+                    // If we are watching, make sure to watch and compile the original file
+                    if (setupWatchers && _pile.IsWatchingFiles && compiledFile.Item1.AdditionalDependencies.Any())
+                    {
+                        var changedEvent = new FileChangedEvent(pile, compiledFile.Item2);
+                        foreach (var dep in compiledFile.Item1.AdditionalDependencies)
+                        {
+                            var info = new FileInfo(dep);
+                            if (info.Exists)
+                            {
+                                var watcher = new FileSystemWatcher
+                                {
+                                    Path = info.DirectoryName,
+                                    Filter = info.Name,
+                                    NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.CreationTime
+                                };
+
+                                watcher.Created += (sender, args) => PileOnFileUpdated(pile, changedEvent);
+                                watcher.Changed += (sender, args) => PileOnFileUpdated(pile, changedEvent);
+                                watcher.Renamed += (sender, args) => PileOnFileUpdated(pile, changedEvent);
+                                watcher.Deleted += (sender, args) => PileOnFileUpdated(pile, changedEvent);
+
+                                watcher.EnableRaisingEvents = true;
+                            }
+                        }
+                    }
                 }
 
                 AttemptWrite(filePath, builder.ToString());

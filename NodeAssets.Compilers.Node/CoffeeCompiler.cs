@@ -1,6 +1,6 @@
-﻿using System.IO;
+﻿using NodeAssets.Core.Commands;
+using System.IO;
 using System.Threading.Tasks;
-using NodeAssets.Core.Commands;
 
 namespace NodeAssets.Compilers
 {
@@ -13,11 +13,15 @@ namespace NodeAssets.Compilers
             _executor = executor;
         }
 
-        public Task<string> Compile(string initial, FileInfo originalFile)
+        public async Task<CompileResult> Compile(string initial, FileInfo originalFile)
         {
             // Do not use the original file
             var command = _executor.ExecuteCoffeeCommand("-c -e \"" + initial.Replace("\"", "\\\"") + "\"");
-            return _executor.RunCommand(command);
+            var output = await _executor.RunCommand(command).ConfigureAwait(false);
+            return new CompileResult
+            {
+                Output = output
+            };
         }
     }
 }

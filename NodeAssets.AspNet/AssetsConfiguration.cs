@@ -10,7 +10,7 @@ namespace NodeAssets.AspNet
     {
         public IAssetsConfiguration ConfigureCompilers(Func<ICompilerConfiguration, ICompilerConfiguration> compilerManagerFunc)
         {
-            CompilerConfiguration = compilerManagerFunc(new CompilerConfiguration());
+            CompilerConfiguration = compilerManagerFunc(new CompilerConfiguration()) as CompilerConfiguration;
             return this;
         }
 
@@ -49,7 +49,7 @@ namespace NodeAssets.AspNet
         public bool UseCompress { get; private set; }
         public bool IsLiveCss { get; private set; }
         public string Namespace { get; private set; }
-        public ICompilerConfiguration CompilerConfiguration { get; private set; }
+        public CompilerConfiguration CompilerConfiguration { get; private set; }
         public ISourceManagerConfiguration SourceConfiguration { get; private set; }
         public Func<string, FileInfo, IAssetsConfiguration, Func<IOwinContext, Task>> RouteHandlerFunction { get; private set; }
     }

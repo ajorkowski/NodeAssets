@@ -22,7 +22,7 @@ namespace NodeAssets
         public static IAssets Initialise(Func<IAssetsConfiguration, IAssetsConfiguration> configFunc)
         {
             var config = new AssetsConfiguration();
-            _assets = new Assets(configFunc(config));
+            _assets = new Assets(configFunc(config) as AssetsConfiguration);
             return _assets;
         }
 
@@ -42,7 +42,7 @@ namespace NodeAssets
 
         private const string Global = "global";
 
-        private readonly IAssetsConfiguration _config;
+        private readonly AssetsConfiguration _config;
         private readonly ISourceManager _jsManager;
         private readonly ISourceManager _cssManager;
         private readonly Func<string, FileInfo, Func<IOwinContext, Task>> _routeHandler;
@@ -50,7 +50,7 @@ namespace NodeAssets
         private IPile _jsPile;
         private IPile _cssPile;
 
-        public Assets(IAssetsConfiguration config)
+        public Assets(AssetsConfiguration config)
         {
             if (config.CompilerConfiguration == null) { throw new ArgumentException("The compilers were not configured"); }
             if (config.SourceConfiguration == null) { throw new ArgumentException("The sources were not configured"); }

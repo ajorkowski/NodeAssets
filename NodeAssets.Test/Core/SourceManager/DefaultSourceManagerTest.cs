@@ -7,6 +7,7 @@ using NodeAssets.Core.SourceManager;
 using NSubstitute;
 using NUnit.Framework;
 using System.Linq;
+using NodeAssets.Compilers;
 
 namespace NodeAssets.Test.Core.SourceManager
 {
@@ -41,14 +42,12 @@ namespace NodeAssets.Test.Core.SourceManager
         {
             var pile = Substitute.For<IPile>();
             pile.FindAllPiles().Returns(new List<string>());
-
-            var config = Substitute.For<ICompilerConfiguration>();
-
-            _manager.SetPileAsSource(pile, config).Wait();
+            
+            _manager.SetPileAsSource(pile, new CompilerConfiguration()).Wait();
 
             Assert.ThrowsAsync(typeof(InvalidOperationException), async () =>
             {
-                await _manager.SetPileAsSource(pile, config).ConfigureAwait(false);
+                await _manager.SetPileAsSource(pile, new CompilerConfiguration()).ConfigureAwait(false);
             });
         }
 
@@ -58,7 +57,7 @@ namespace NodeAssets.Test.Core.SourceManager
             var pile = Substitute.For<IPile>();
             pile.FindAllPiles().Returns(new List<string> { "global", "other" });
 
-            _manager.SetPileAsSource(pile, Substitute.For<ICompilerConfiguration>()).Wait();
+            _manager.SetPileAsSource(pile, new CompilerConfiguration()).Wait();
 
             Assert.That(Directory.Exists("testCompile/global"));
             Assert.That(Directory.Exists("testCompile/other"));
@@ -68,8 +67,8 @@ namespace NodeAssets.Test.Core.SourceManager
         public void SetPileAsSource_AddPile_DoesInitialCompile()
         {
             var pile = GetWorkingPile(false);
-            var compiler = Substitute.For<ICompilerConfiguration>();
-            _sourceCompiler.CompileFile(Arg.Any<FileInfo>(), compiler).Returns(Task.Factory.StartNew(() => string.Empty));
+            var compiler = new CompilerConfiguration();
+            _sourceCompiler.CompileFile(Arg.Any<FileInfo>(), compiler).Returns(Task.Factory.StartNew(() => new CompileResult { Output = string.Empty }));
 
             _manager.SetPileAsSource(pile, compiler).Wait();
 
@@ -80,8 +79,8 @@ namespace NodeAssets.Test.Core.SourceManager
         public void SetPileAsSource_AddPile_SavesResultOfCompile()
         {
             var pile = GetWorkingPile(false);
-            var compiler = Substitute.For<ICompilerConfiguration>();
-            _sourceCompiler.CompileFile(Arg.Any<FileInfo>(), compiler).Returns(Task.Factory.StartNew(() => "Saved"));
+            var compiler = new CompilerConfiguration();
+            _sourceCompiler.CompileFile(Arg.Any<FileInfo>(), compiler).Returns(Task.Factory.StartNew(() => new CompileResult { Output = "Saved" }));
 
             _manager.SetPileAsSource(pile, compiler).Wait();
 
@@ -94,8 +93,8 @@ namespace NodeAssets.Test.Core.SourceManager
         {
             var manager = new DefaultSourceManager(true, ".js", "testCompile", _sourceCompiler);
             var pile = GetWorkingPile(true);
-            var compiler = Substitute.For<ICompilerConfiguration>();
-            _sourceCompiler.CompileFile(Arg.Any<FileInfo>(), compiler).Returns(Task.Factory.StartNew(() => "Saved"));
+            var compiler = new CompilerConfiguration();
+            _sourceCompiler.CompileFile(Arg.Any<FileInfo>(), compiler).Returns(Task.Factory.StartNew(() => new CompileResult { Output = "Saved" }));
 
             manager.SetPileAsSource(pile, compiler).Wait();
 
@@ -115,8 +114,8 @@ namespace NodeAssets.Test.Core.SourceManager
         public void FindDestinationPile_WithRealPile_ReturnsCorrectSetOfFiles()
         {
             var pile = GetWorkingPile(true);
-            var compiler = Substitute.For<ICompilerConfiguration>();
-            _sourceCompiler.CompileFile(Arg.Any<FileInfo>(), compiler).Returns(Task.Factory.StartNew(() => "Saved"));
+            var compiler = new CompilerConfiguration();
+            _sourceCompiler.CompileFile(Arg.Any<FileInfo>(), compiler).Returns(Task.Factory.StartNew(() => new CompileResult { Output = "Saved" }));
             _manager.SetPileAsSource(pile, compiler).Wait();
 
             var dest = _manager.FindDestinationPile();
@@ -130,8 +129,8 @@ namespace NodeAssets.Test.Core.SourceManager
         {
             var manager = new DefaultSourceManager(true, ".js", "testCompile", _sourceCompiler);
             var pile = GetWorkingPile(true);
-            var compiler = Substitute.For<ICompilerConfiguration>();
-            _sourceCompiler.CompileFile(Arg.Any<FileInfo>(), compiler).Returns(Task.Factory.StartNew(() => "Saved"));
+            var compiler = new CompilerConfiguration();
+            _sourceCompiler.CompileFile(Arg.Any<FileInfo>(), compiler).Returns(Task.Factory.StartNew(() => new CompileResult { Output = "Saved" }));
             manager.SetPileAsSource(pile, compiler).Wait();
 
             var dest = manager.FindDestinationPile();

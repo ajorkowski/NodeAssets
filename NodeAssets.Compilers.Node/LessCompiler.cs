@@ -1,6 +1,10 @@
-﻿using System.IO;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NodeAssets.Core.Commands;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace NodeAssets.Compilers
 {
@@ -16,19 +20,54 @@ namespace NodeAssets.Compilers
             _executeScript = ScriptFinder.GetScript(ScriptLocation);
         }
 
-        public Task<string> Compile(string initial, FileInfo originalFile)
+        public async Task<CompileResult> Compile(string initial, FileInfo originalFile)
         {
             initial = initial ?? string.Empty;
 
+            dynamic options = new JObject();
+            options.dumpLineNumbers = "comments";
+            if (originalFile != null)
+            {
+                options.filename = originalFile.FullName.Replace('\\', '/');
+            }
+
             var script = _executeScript
-                .Replace("{0}", originalFile != null ? originalFile.FullName : string.Empty);
+                .Replace("{0}", JsonConvert.SerializeObject(options));
 
             var command = _executor.ExecuteJsScript(script);
             command.StdIn.Write(initial);
             command.StdIn.Flush();
             command.StdIn.Close();
 
-            return _executor.RunCommand(command);
+            var jsonStr = await _executor.RunCommand(command).ConfigureAwait(false);
+            dynamic resultData;
+            try
+            {
+                resultData = JsonConvert.DeserializeObject(jsonStr);
+            }
+            catch (JsonReaderException)
+            {
+                throw new CompileException(jsonStr);
+            }
+            catch (Exception e)
+            {
+                throw new CompileException(e.Message, e);
+            }
+
+            var deps = new List<string>();
+            if (resultData.imports != null)
+            {
+                foreach(string i in resultData.imports)
+                {
+                    deps.Add(i);
+                }
+            }
+
+            return new CompileResult
+            {
+                Output = (string)resultData.css,
+                AdditionalDependencies = deps
+            };
         }
     }
 }

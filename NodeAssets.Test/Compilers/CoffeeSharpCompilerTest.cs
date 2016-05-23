@@ -1,8 +1,6 @@
-﻿using System;
-using System.IO;
-using System.Runtime.InteropServices;
-using NodeAssets.Compilers;
+﻿using NodeAssets.Compilers;
 using NUnit.Framework;
+using System.IO;
 
 namespace NodeAssets.Test.Core.Compilers
 {
@@ -20,7 +18,7 @@ namespace NodeAssets.Test.Core.Compilers
         [Test]
         public void Compile_InvalidCoffeeFile_Exception()
         {
-            Assert.ThrowsAsync(typeof(COMException), async () =>
+            Assert.ThrowsAsync(typeof(CompileException), async () =>
             {
                 var coffee = File.ReadAllText(TestContext.CurrentContext.TestDirectory + "/../../Data/invalidCoffee.coffee");
                 var output = await _compiler.Compile(coffee, null).ConfigureAwait(false);
@@ -32,7 +30,7 @@ namespace NodeAssets.Test.Core.Compilers
         {
             var coffee = File.ReadAllText(TestContext.CurrentContext.TestDirectory + "/../../Data/exampleCoffee.coffee");
 
-            var output = _compiler.Compile(coffee, null).Result;
+            var output = _compiler.Compile(coffee, null).Result.Output;
 
             Assert.AreEqual("(function() {\n  var helloWorld;\n\n  helloWorld = function() {\n    return console.log('Hello World!');\n  };\n\n  helloWorld();\n\n}).call(this);\n", output);
         }

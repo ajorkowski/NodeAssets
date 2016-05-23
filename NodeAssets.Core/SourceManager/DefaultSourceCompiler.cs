@@ -1,8 +1,10 @@
 ﻿using NodeAssets.Compilers;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace NodeAssets.Core.SourceManager
 {
@@ -17,7 +19,7 @@ namespace NodeAssets.Core.SourceManager
             _compileExtension = compileExtension;
         }
 
-        public async Task<string> CompileFile(FileInfo file, ICompilerConfiguration compilerConfig)
+        public async Task<CompileResult> CompileFile(FileInfo file, CompilerConfiguration compilerConfig)
         {
             if (file == null) { throw new ArgumentNullException("file"); }
             if (compilerConfig == null) { throw new ArgumentNullException("compilerConfig"); }
@@ -41,36 +43,56 @@ namespace NodeAssets.Core.SourceManager
             // First step is grab the file contents, then continue
             // Do the initial compile
             var fileData = file.Exists ? AttemptRead(file.FullName) : string.Empty;
-            var result = string.Empty;
+            var output = string.Empty;
+            var deps = new List<string>();
             bool hasErrored = false;
             if (!string.IsNullOrEmpty(fileData))
             {
                 try
                 {
-                    result = await compiler.Compile(fileData, file).ConfigureAwait(false);
+                    var compileResult = await compiler.Compile(fileData, file).ConfigureAwait(false);
+                    output = compileResult.Output;
+                    deps = compileResult.AdditionalDependencies ?? deps;
                 }
                 catch (Exception e)
                 {
-                    result = "An error occurred during initial compilation: \r\n" + e.GetBaseException().Message;
+                    output = "An error occurred during initial compilation: \r\n" + e.GetBaseException().Message;
                     hasErrored = true;
+                    compilerConfig.HasException(e);
                 }
             }
 
             // Do the minimisation if it has been selected
-            if (!hasErrored && _minimise && !string.IsNullOrEmpty(result))
+            if (!hasErrored && _minimise && !string.IsNullOrEmpty(output))
             {
                 try
                 {
-                    result = await minCompiler.Compile(result, null).ConfigureAwait(false);
+                    var minResult = await minCompiler.Compile(output, null).ConfigureAwait(false);
+                    output = minResult.Output;
+                    if (minResult.AdditionalDependencies != null && minResult.AdditionalDependencies.Any())
+                    {
+                        foreach(var dep in minResult.AdditionalDependencies)
+                        {
+                            if (!deps.Contains(dep))
+                            {
+                                deps.Add(dep);
+                            }
+                        }
+                    }
                 }
                 catch (Exception e)
                 {
-                    result = "An error occurred during minification: \r\n" + e.GetBaseException().Message;
+                    output = "An error occurred during minification: \r\n" + e.GetBaseException().Message;
+                    compilerConfig.HasException(e);
                 }
 
             }
 
-            return result;
+            return new CompileResult
+            {
+                Output = output,
+                AdditionalDependencies = deps
+            };
         }
 
         private string AttemptRead(string path)
@@ -78,7 +100,7 @@ namespace NodeAssets.Core.SourceManager
             var numTries = 0;
             string result = null;
 
-            // This is crap but apparently the only consistent way to wait for a lock on a file
+            // This is lame but apparently the only consistent way to wait for a lock on a file
             while (numTries < 10)
             {
                 try

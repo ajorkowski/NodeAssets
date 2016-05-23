@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
@@ -7,23 +9,51 @@ namespace NodeAssets.Compilers
 {
     public sealed class SassCompiler : ICompiler
     {
-        private readonly NSass.SassCompiler _compiler;
+        private const string LibSassDll = "libsass";
 
-        public SassCompiler()
+        static SassCompiler()
         {
-            _compiler = new NSass.SassCompiler();
+            // Internally Sass tries to load from the Assembly.Location, but this doesn't seem to work with asp.net
+            // Lets try this as a backup
+            try
+            {
+                var directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase).Replace("file:\\", string.Empty);
+                var loadPath = Path.Combine(directory, (IntPtr.Size == 8 ? @"x64\" : @"x86\") + LibSassDll + ".dll");
+                LoadLibrary(loadPath);
+            }
+            catch (Exception) { }
         }
 
-        public Task<string> Compile(string initial, FileInfo originalFile)
+        [DllImport("kernel32", SetLastError = true, CharSet = CharSet.Ansi)]
+        private static extern IntPtr LoadLibrary([MarshalAs(UnmanagedType.LPStr)]string lpFileName);
+
+        public Task<CompileResult> Compile(string initial, FileInfo originalFile)
         {
             try
             {
-                var compiled = _compiler.Compile(initial, NSass.OutputStyle.Nested, true, new [] { originalFile.DirectoryName });
-                return Task.FromResult(compiled);
+                var additionalFiles = new List<string>();
+                var options = new SharpScss.ScssOptions
+                {
+                    SourceComments = true,
+                    GenerateSourceMap = false
+                };
+
+                if (originalFile != null)
+                {
+                    options.InputFile = originalFile.FullName;
+                    options.IncludePaths.Add(originalFile.DirectoryName);
+                }
+
+                var output = SharpScss.Scss.ConvertToCss(initial, options);
+                return Task.FromResult(new CompileResult
+                {
+                    Output = output.Css,
+                    AdditionalDependencies = output.IncludedFiles
+                });
             }
             catch (Exception e)
             {
-                throw new COMException(e.Message, e.InnerException);
+                throw new CompileException(e.Message, e);
             }
         }
     }

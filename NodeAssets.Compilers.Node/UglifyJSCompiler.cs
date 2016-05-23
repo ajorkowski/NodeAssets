@@ -17,7 +17,7 @@ namespace NodeAssets.Compilers
             _executeScript = ScriptFinder.GetScript(ScriptLocation);
         }
 
-        public Task<string> Compile(string initial, FileInfo originalFile)
+        public async Task<CompileResult> Compile(string initial, FileInfo originalFile)
         {
             initial = initial ?? string.Empty;
 
@@ -26,7 +26,12 @@ namespace NodeAssets.Compilers
             command.StdIn.Flush();
             command.StdIn.Close();
 
-            return _executor.RunCommand(command);
+            // Uglifier does not bring in extra files
+            var result = await _executor.RunCommand(command).ConfigureAwait(false);
+            return new CompileResult
+            {
+                Output = result
+            };
         }
     }
 }

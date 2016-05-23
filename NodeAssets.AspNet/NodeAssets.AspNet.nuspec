@@ -2,18 +2,22 @@
 <package >
   <metadata>
     <id>NodeAssets.AspNet</id>
-    <version>2.0.3</version>
+    <version>3.0.0</version>
     <authors>Felix Jorkowski (jorkowski.com)</authors>
     <owners>Felix Jorkowski (jorkowski.com)</owners>
     <licenseUrl>http://www.opensource.org/licenses/MIT</licenseUrl>
     <projectUrl>https://github.com/ajorkowski/NodeAssets</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>The Asp.Net component of node assests, provides a complete assest manager solution including compilation from coffee/styles, minification, combination, compression, and also a refresh-on-change css live updater</description>
-    <releaseNotes>Catch errors on css update for broadcasting. Also bumped deps</releaseNotes>
-    <copyright>Copyright 2014</copyright>
+    <releaseNotes>v3 of NodeAssets:
+- memory cache all assets (unless LiveCss is enabled)
+- properly implement ETag and LastModified semantics
+- simplified interface for configuration so only fluent methods exposed
+- BUG FIX: check to see if live css element exists before setting attr (prevent null exceptions in js)</releaseNotes>
+    <copyright>Copyright 2016</copyright>
     <tags>Asset Manager OWIN NodeJS</tags>
     <dependencies>
-      <dependency id="NodeAssets.Core" version="2.0.0" />
+      <dependency id="NodeAssets.Core" version="3.0.0" />
       <dependency id="Microsoft.AspNet.SignalR.SystemWeb" version="2.2.0" />
     </dependencies>
   </metadata>

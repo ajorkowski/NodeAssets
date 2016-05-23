@@ -1,7 +1,7 @@
-﻿using System;
+﻿using NodeAssets.Compilers;
+using System;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace NodeAssets.Core.Commands
@@ -106,7 +106,7 @@ namespace NodeAssets.Core.Commands
             if (code != 0)
             {
                 var error = await result.StdErr.ReadToEndAsync().ConfigureAwait(false);
-                throw new COMException("The execution of the command failed: \r\n" + error, code);
+                throw new CompileException("The execution of the command failed: \r\n" + error);
             }
 
             return stdOut;

@@ -11,11 +11,13 @@ namespace NodeAssets.AspNet.Routes
 {
     public sealed class DefaultHandler
     {
-        private readonly IAssetsConfiguration _config;
+        private readonly AssetsConfiguration _config;
         private readonly Lazy<Task<AssetData>> _asset;
+        private readonly FileInfo _file;
 
-        public DefaultHandler(FileInfo info, IAssetsConfiguration config)
+        public DefaultHandler(FileInfo info, AssetsConfiguration config)
         {
+            _file = info;
             _asset = new Lazy<Task<AssetData>>(() => CreateAssetData(info), true);
             _config = config;
         }
@@ -23,7 +25,9 @@ namespace NodeAssets.AspNet.Routes
         public async Task Execute(IOwinContext context)
         {
             var response = context.Response;
-            var asset = await _asset.Value.ConfigureAwait(false);
+
+            // If we have live css enabled, load the file every time
+            var asset = await (_config.IsLiveCss ? CreateAssetData(_file) : _asset.Value).ConfigureAwait(false);
             if (asset != null)
             {
                 response.ContentType = asset.ContentType;

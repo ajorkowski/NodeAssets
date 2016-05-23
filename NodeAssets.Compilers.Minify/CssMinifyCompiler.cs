@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Yahoo.Yui.Compressor;
 
@@ -13,9 +14,17 @@ namespace NodeAssets.Compilers
             _compiler = new CssCompressor();
         }
 
-        public Task<string> Compile(string initial, FileInfo originalFile)
+        public Task<CompileResult> Compile(string initial, FileInfo originalFile)
         {
-            return Task.FromResult(_compiler.Compress(initial));
+            try
+            {
+                var output = _compiler.Compress(initial);
+                return Task.FromResult(new CompileResult { Output = output });
+            }
+            catch (Exception e)
+            {
+                throw new CompileException(e.Message, e);
+            }
         }
     }
 }

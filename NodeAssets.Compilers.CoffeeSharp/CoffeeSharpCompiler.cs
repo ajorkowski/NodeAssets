@@ -1,8 +1,7 @@
-﻿using System.IO;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
-using CoffeeSharp;
+﻿using CoffeeSharp;
 using Jurassic;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace NodeAssets.Compilers
 {
@@ -15,15 +14,16 @@ namespace NodeAssets.Compilers
             _compiler = new CoffeeScriptEngine();
         }
 
-        public Task<string> Compile(string initial, FileInfo originalFile)
+        public Task<CompileResult> Compile(string initial, FileInfo originalFile)
         {
             try
             {
-                return Task.FromResult(_compiler.Compile(initial));
+                var output = _compiler.Compile(initial);
+                return Task.FromResult(new CompileResult { Output = output });
             }
             catch (JavaScriptException e)
             {
-                throw new COMException(e.Message);
+                throw new CompileException(e.Message, e);
             }
         }
     }

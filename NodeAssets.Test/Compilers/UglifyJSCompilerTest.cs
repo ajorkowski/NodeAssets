@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.InteropServices;
+
 using NodeAssets.Compilers;
 using NodeAssets.Core.Commands;
 using NUnit.Framework;
@@ -21,7 +21,7 @@ namespace NodeAssets.Test.Core.Compilers
         [Test]
         public void Compile_InvalidUglifyJSFile_Exception()
         {
-            Assert.ThrowsAsync(typeof(COMException), async () =>
+            Assert.ThrowsAsync(typeof(CompileException), async () =>
             {
                 await _compiler.Compile(File.ReadAllText(TestContext.CurrentContext.TestDirectory + "/../../Data/invalidJS.js"), null).ConfigureAwait(false);
             });
@@ -32,7 +32,7 @@ namespace NodeAssets.Test.Core.Compilers
         {
             var js = File.ReadAllText(TestContext.CurrentContext.TestDirectory + "/../../Data/normalJavascript.js");
 
-            var output = _compiler.Compile(js, null).Result;
+            var output = _compiler.Compile(js, null).Result.Output;
 
             Assert.AreEqual("var helloWorld=function(){console.log(\"Hello World\")};helloWorld();\n", output);
         }

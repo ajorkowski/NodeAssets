@@ -2,18 +2,23 @@
 <package >
   <metadata>
     <id>NodeAssets.Compilers.Node</id>
-    <version>2.0.0</version>
+    <version>3.0.0</version>
     <authors>Felix Jorkowski (jorkowski.com)</authors>
     <owners>Felix Jorkowski (jorkowski.com)</owners>
     <licenseUrl>http://www.opensource.org/licenses/MIT</licenseUrl>
     <projectUrl>https://github.com/ajorkowski/NodeAssets</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Node based compilers of all sorts for Node Assets</description>
-    <releaseNotes>Supports node.exe with its own path</releaseNotes>
-    <copyright>Copyright 2013</copyright>
+    <releaseNotes>v3 of NodeAssets:
+- implements async/await correctly
+- less compiler can detect @imported files so that they can be watched
+- stylus compiler does not support @import watching at this time
+- updated scripts to work with latest versions of node compilers</releaseNotes>
+    <copyright>Copyright 2016</copyright>
     <tags>Asset Manager OWIN NodeJS</tags>
     <dependencies>
-      <dependency id="NodeAssets.Core" version="2.0.0" />
+      <dependency id="NodeAssets.Core" version="3.0.0" />
+      <dependency id="Newtonsoft.Json" version="8.0.3" />
     </dependencies>
   </metadata>
 </package>

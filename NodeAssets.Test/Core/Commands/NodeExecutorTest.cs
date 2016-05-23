@@ -1,8 +1,9 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.InteropServices;
+
 using NodeAssets.Core.Commands;
 using NUnit.Framework;
+using NodeAssets.Compilers;
 
 namespace NodeAssets.Test.Core.Commands
 {
@@ -40,7 +41,7 @@ namespace NodeAssets.Test.Core.Commands
         [Test]
         public void JsScript_InvalidJS_ThrowsException()
         {
-            Assert.ThrowsAsync(typeof(COMException), async () =>
+            Assert.ThrowsAsync(typeof(CompileException), async () =>
             {
                 await _executor.JsScript("kdjfhdskjhsd").ConfigureAwait(false);
             });
@@ -65,7 +66,7 @@ namespace NodeAssets.Test.Core.Commands
         [Test]
         public void CoffeeScript_InvalidCoffee_ThrowsException()
         {
-            Assert.ThrowsAsync(typeof(COMException), async () =>
+            Assert.ThrowsAsync(typeof(CompileException), async () =>
             {
                 await _executor.CoffeeScript("kdjfh dskjh sd").ConfigureAwait(false);
             });

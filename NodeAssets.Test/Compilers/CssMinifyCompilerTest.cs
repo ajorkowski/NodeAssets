@@ -1,6 +1,6 @@
-﻿using System.IO;
-using NodeAssets.Compilers;
+﻿using NodeAssets.Compilers;
 using NUnit.Framework;
+using System.IO;
 
 namespace NodeAssets.Test.Core.Compilers
 {
@@ -20,7 +20,7 @@ namespace NodeAssets.Test.Core.Compilers
         {
             var css = File.ReadAllText(TestContext.CurrentContext.TestDirectory + "/../../Data/exampleCss.css");
 
-            var result = _compiler.Compile(css, null).Result;
+            var result = _compiler.Compile(css, null).Result.Output;
 
             Assert.AreEqual(".test,.test{color:aqua;color:#fff}", result);
         }

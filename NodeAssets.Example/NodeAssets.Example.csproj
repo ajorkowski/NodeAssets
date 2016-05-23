@@ -30,6 +30,8 @@
     <MvcProjectUpgradeChecked>true</MvcProjectUpgradeChecked>
     <TargetFrameworkProfile />
     <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -134,7 +136,7 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Shared\Site.css" />
+    <None Include="Content\Shared\Site.scss" />
     <Content Include="Global.asax" />
     <Content Include="Node\node.exe" />
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
@@ -147,7 +149,7 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="Content\Site.css" />
+    <None Include="Content\Site.scss" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Account\ChangePassword.cshtml" />
     <Content Include="Views\Account\ChangePasswordSuccess.cshtml" />
@@ -175,6 +177,10 @@
     <ProjectReference Include="..\NodeAssets.Compilers.Node\NodeAssets.Compilers.Node.csproj">
       <Project>{f95aaf00-16a0-4394-a583-d11dc0bbe70c}</Project>
       <Name>NodeAssets.Compilers.Node</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NodeAssets.Compilers.Sass\NodeAssets.Compilers.Sass.csproj">
+      <Project>{2fd43281-fa1e-4438-939c-7ea84fb32a0c}</Project>
+      <Name>NodeAssets.Compilers.Sass</Name>
     </ProjectReference>
     <ProjectReference Include="..\NodeAssets.Core\NodeAssets.Core.csproj">
       <Project>{09D9E3D0-8F44-4390-AE17-0ABEEE704FF6}</Project>

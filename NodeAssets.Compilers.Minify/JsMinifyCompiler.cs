@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Yahoo.Yui.Compressor;
 
@@ -15,15 +14,16 @@ namespace NodeAssets.Compilers
             _compiler = new JavaScriptCompressor();
         }
 
-        public Task<string> Compile(string initial, FileInfo originalFile)
+        public Task<CompileResult> Compile(string initial, FileInfo originalFile)
         {
             try
             {
-                return Task.FromResult(_compiler.Compress(initial));
+                var output = _compiler.Compress(initial);
+                return Task.FromResult(new CompileResult { Output = output });
             }
             catch(Exception e)
             {
-                throw new COMException(e.Message);
+                throw new CompileException(e.Message, e);
             }
         }
     }

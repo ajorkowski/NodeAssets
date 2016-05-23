@@ -14,6 +14,8 @@
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -35,8 +37,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NSass.Core">
-      <HintPath>..\packages\NSass.Core.0.0.3.0\lib\net40\NSass.Core.dll</HintPath>
+    <Reference Include="SharpScss, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b9d29176e3cc094c, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpScss.1.0.1\lib\net40\SharpScss.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -58,14 +61,6 @@
       <Name>NodeAssets.Core</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="NSass.Wrapper\NSass.Wrapper.x64.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="NSass.Wrapper\NSass.Wrapper.x86.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>rmdir "$(ProjectDir)package" /s /q
@@ -76,6 +71,13 @@ cd "$(ProjectDir)package"
 "$(SolutionDir)Nuget.exe" pack NodeAssets.Compilers.Sass.nuspec
 xcopy /Y *.nupkg "$(TargetDir)"</PostBuildEvent>
   </PropertyGroup>
+  <Import Project="..\packages\SharpScss.1.0.1\build\SharpScss.targets" Condition="Exists('..\packages\SharpScss.1.0.1\build\SharpScss.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\SharpScss.1.0.1\build\SharpScss.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SharpScss.1.0.1\build\SharpScss.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

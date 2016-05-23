@@ -5,9 +5,9 @@ namespace NodeAssets.Compilers
 {
     public sealed class PassthroughCompiler : ICompiler
     {
-        public Task<string> Compile(string initial, FileInfo originalFile)
+        public Task<CompileResult> Compile(string initial, FileInfo originalFile)
         {
-            return Task.FromResult(initial);
+            return Task.FromResult(new CompileResult { Output = initial });
         }
     }
 }

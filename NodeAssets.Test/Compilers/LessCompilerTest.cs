@@ -1,9 +1,7 @@
-﻿using System;
-using NUnit.Framework;
-using NodeAssets.Compilers;
+﻿using NodeAssets.Compilers;
 using NodeAssets.Core.Commands;
+using NUnit.Framework;
 using System.IO;
-using System.Runtime.InteropServices;
 
 namespace NodeAssets.Test.Core.Compilers
 {
@@ -25,7 +23,7 @@ namespace NodeAssets.Test.Core.Compilers
             var styl = File.ReadAllText(TestContext.CurrentContext.TestDirectory + "/../../Data/invalidLess.less");
             var compiler = new LessCompiler(_executor);
 
-            Assert.ThrowsAsync(typeof(COMException), async () =>
+            Assert.ThrowsAsync(typeof(CompileException), async () =>
             {
                 await compiler.Compile(styl, file).ConfigureAwait(false);
             });
@@ -35,12 +33,31 @@ namespace NodeAssets.Test.Core.Compilers
         public void Compile_ValidLess_Compiles()
         {
             var file = new FileInfo(TestContext.CurrentContext.TestDirectory + "/../../Data/exampleLess.less");
-            var compiler = new LessCompiler(_executor);
+            var filePath = file.FullName.Replace('\\', '/');
             var styl = File.ReadAllText(TestContext.CurrentContext.TestDirectory + "/../../Data/exampleLess.less");
 
-            var output = compiler.Compile(styl, file).Result;
+            var compiler = new LessCompiler(_executor);
+            var result = compiler.Compile(styl, file).Result;
 
-            Assert.AreEqual(".base {\n  border-color: #ccc;\n}\n\n", output);
+            Assert.AreEqual("/* line 1, " + filePath + " */\n.base {\n  border-color: #ccc;\n}\n", result.Output);
+            Assert.AreEqual(0, result.AdditionalDependencies.Count);
+        }
+
+        [Test]
+        public void Compile_ValidLessWithImport_Compiles()
+        {
+            var file = new FileInfo(TestContext.CurrentContext.TestDirectory + "/../../Data/exampleLessWithImport.less");
+            var filePath = file.FullName.Replace('\\', '/');
+            var styl = File.ReadAllText(file.FullName);
+
+            var compiler = new LessCompiler(_executor);
+            var result = compiler.Compile(styl, file).Result;
+
+            var depFile = new FileInfo(TestContext.CurrentContext.TestDirectory + "/../../Data/exampleLessImport.less").FullName;
+
+            Assert.AreEqual("/* line 2, " + depFile + " */\n.imported {\n  width: auto;\n}\n/* line 5, " + filePath + " */\n.base {\n  border-color: #ccc;\n  width: auto;\n}\n", result.Output);
+            Assert.AreEqual(1, result.AdditionalDependencies.Count);
+            Assert.AreEqual(depFile, result.AdditionalDependencies[0]);
         }
     }
 }

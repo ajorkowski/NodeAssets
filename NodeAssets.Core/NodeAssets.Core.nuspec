@@ -2,15 +2,20 @@
 <package >
   <metadata>
     <id>NodeAssets.Core</id>
-    <version>2.0.2</version>
+    <version>3.0.0</version>
     <authors>Felix Jorkowski (jorkowski.com)</authors>
     <owners>Felix Jorkowski (jorkowski.com)</owners>
     <licenseUrl>http://www.opensource.org/licenses/MIT</licenseUrl>
     <projectUrl>https://github.com/ajorkowski/NodeAssets</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>The Core lib that handles watching your files.</description>
-    <releaseNotes>Watch for the renamed event when watching a file, handles special VS saves better</releaseNotes>
-    <copyright>Copyright 2014</copyright>
+    <releaseNotes>v3 of NodeAssets:
+- async/await implemented correctly
+- changed compiler interface to allow for included files, these will be watched if watching is enabled
+- added specific compiler exception
+- added 'OnCompilerError' on compiler configuration so can hook into compiler errors
+- simplified configuration interfaces by hiding all the non-fluent get calls</releaseNotes>
+    <copyright>Copyright 2016</copyright>
     <tags>Asset Manager OWIN NodeJS</tags>
   </metadata>
 </package>

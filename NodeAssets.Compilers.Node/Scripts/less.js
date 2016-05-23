@@ -1,12 +1,6 @@
 ﻿var less = require('less');
 
-/*var workingDir = '{0}';
-
-var opt = {};
-if(workingDir != '')
-{
-    opt.filename = workingDir;
-}*/
+var opt = {0};
 
 var stdin = process.openStdin();
 stdin.setEncoding('utf8');
@@ -17,8 +11,8 @@ stdin.on('data', function (chunk) {
 });
 
 stdin.on('end', function () {
-    less.render(styl, function (e, css) {
-        if (e) throw e;
-        console.log(css.css);
+    less.render(styl, opt, function (e, css) {
+        if (e) { console.log(e); return; }
+        console.log(JSON.stringify(css));
     });
 });

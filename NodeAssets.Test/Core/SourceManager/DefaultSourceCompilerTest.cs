@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.InteropServices;
+
 using System.Threading.Tasks;
 using NodeAssets.Compilers;
 using NodeAssets.Core;
@@ -18,7 +18,7 @@ namespace NodeAssets.Test.Core.SourceManager
         {
             var compiler = new DefaultSourceCompiler(false, ".js");
 
-            var result = compiler.CompileFile(new FileInfo("blah.coffee"), GetNodeDefConfig()).Result;
+            var result = compiler.CompileFile(new FileInfo("blah.coffee"), GetNodeDefConfig()).Result.Output;
 
             Assert.AreEqual(string.Empty, result);
         }
@@ -39,7 +39,7 @@ namespace NodeAssets.Test.Core.SourceManager
         {
             var compiler = new DefaultSourceCompiler(true, ".js");
 
-            var config = new CompilerConfiguration().CompilerFor(".js", new PassthroughCompiler());
+            var config = new CompilerConfiguration().CompilerFor(".js", new PassthroughCompiler()) as CompilerConfiguration;
 
             Assert.ThrowsAsync(typeof(InvalidOperationException), async () =>
             {
@@ -55,11 +55,11 @@ namespace NodeAssets.Test.Core.SourceManager
             var file = new FileInfo(TestContext.CurrentContext.TestDirectory + "/../../Data/emptyJS.js");
 
             var jsCompiler = Substitute.For<ICompiler>();
-            jsCompiler.Compile(";", file).Returns(Task.Factory.StartNew(() => ";"));
+            jsCompiler.Compile(";", file).Returns(Task.Factory.StartNew(() => new CompileResult { Output = ";" }));
 
-            var config = new CompilerConfiguration().CompilerFor(".js", jsCompiler).CompilerFor(".other", null);
+            var config = new CompilerConfiguration().CompilerFor(".js", jsCompiler).CompilerFor(".other", null) as CompilerConfiguration;
 
-            var result = compiler.CompileFile(file, config).Result;
+            var result = compiler.CompileFile(file, config).Result.Output;
 
             jsCompiler.Received().Compile(";", file);
             Assert.AreEqual(";", result);
@@ -73,11 +73,11 @@ namespace NodeAssets.Test.Core.SourceManager
             var file = new FileInfo(TestContext.CurrentContext.TestDirectory + "/../../Data/emptyJS.js");
 
             var jsCompiler = Substitute.For<ICompiler>();
-            jsCompiler.Compile(";", file).Returns<string>(info => { throw new COMException("Error"); });
+            jsCompiler.Compile(";", file).Returns<CompileResult>(info => { throw new CompileException("Error"); });
 
-            var config = new CompilerConfiguration().CompilerFor(".js", jsCompiler).CompilerFor(".other", null);
+            var config = new CompilerConfiguration().CompilerFor(".js", jsCompiler).CompilerFor(".other", null) as CompilerConfiguration;
 
-            var result = compiler.CompileFile(file, config).Result;
+            var result = compiler.CompileFile(file, config).Result.Output;
 
             jsCompiler.Received().Compile(";", file);
             Assert.AreEqual("An error occurred during initial compilation: \r\nError", result);
@@ -91,11 +91,11 @@ namespace NodeAssets.Test.Core.SourceManager
             var file = new FileInfo(TestContext.CurrentContext.TestDirectory + "/../../Data/emptyJS.js");
 
             var minCompiler = Substitute.For<ICompiler>();
-            minCompiler.Compile(";", null).Returns(Task.Factory.StartNew(() => ";"));
+            minCompiler.Compile(";", null).Returns(Task.Factory.StartNew(() => new CompileResult { Output = ";" }));
 
-            var config = new CompilerConfiguration().CompilerFor(".js", new PassthroughCompiler()).CompilerFor(".js.min", minCompiler);
+            var config = new CompilerConfiguration().CompilerFor(".js", new PassthroughCompiler()).CompilerFor(".js.min", minCompiler) as CompilerConfiguration;
 
-            var result = compiler.CompileFile(file, config).Result;
+            var result = compiler.CompileFile(file, config).Result.Output;
 
             minCompiler.Received().Compile(";", null);
             Assert.AreEqual(";", result);
@@ -109,11 +109,11 @@ namespace NodeAssets.Test.Core.SourceManager
             var file = new FileInfo(TestContext.CurrentContext.TestDirectory + "/../../Data/emptyJS.js");
 
             var minCompiler = Substitute.For<ICompiler>();
-            minCompiler.Compile(";", null).Returns<string>(info => { throw new COMException("Error"); });
+            minCompiler.Compile(";", null).Returns<CompileResult>(info => { throw new CompileException("Error"); });
 
-            var config = new CompilerConfiguration().CompilerFor(".js", new PassthroughCompiler()).CompilerFor(".js.min", minCompiler);
+            var config = new CompilerConfiguration().CompilerFor(".js", new PassthroughCompiler()).CompilerFor(".js.min", minCompiler) as CompilerConfiguration;
 
-            var result = compiler.CompileFile(file, config).Result;
+            var result = compiler.CompileFile(file, config).Result.Output;
 
             minCompiler.Received().Compile(";", null);
             Assert.AreEqual("An error occurred during minification: \r\nError", result);
@@ -127,24 +127,24 @@ namespace NodeAssets.Test.Core.SourceManager
             var file = new FileInfo(TestContext.CurrentContext.TestDirectory + "/../../Data/emptyJS.min.js");
 
             var rightCompiler = Substitute.For<ICompiler>();
-            rightCompiler.Compile(";", null).Returns(Task.Factory.StartNew(() => "Right"));
+            rightCompiler.Compile(";", null).Returns(Task.Factory.StartNew(() => new CompileResult { Output = "Right" }));
 
             var wrongCompiler = Substitute.For<ICompiler>();
-            wrongCompiler.Compile(";", null).Returns(Task.Factory.StartNew(() => "Wrong"));
+            wrongCompiler.Compile(";", null).Returns(Task.Factory.StartNew(() => new CompileResult { Output = "Wrong" }));
 
             var config = new CompilerConfiguration()
                 .CompilerFor(".js", new PassthroughCompiler())
                 .CompilerFor(".min.js.min", rightCompiler)
-                .CompilerFor(".js.min", wrongCompiler);
+                .CompilerFor(".js.min", wrongCompiler) as CompilerConfiguration;
 
-            var result = compiler.CompileFile(file, config).Result;
+            var result = compiler.CompileFile(file, config).Result.Output;
 
             Assert.AreEqual("Right", result);
         }
 
-        private ICompilerConfiguration GetNodeDefConfig()
+        private CompilerConfiguration GetNodeDefConfig()
         {
-            return new CompilerConfiguration().WithDefaultNodeConfiguration("Node");
+            return new CompilerConfiguration().WithDefaultNodeConfiguration("Node") as CompilerConfiguration;
         }
     }
 }

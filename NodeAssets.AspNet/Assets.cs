@@ -260,8 +260,8 @@ namespace NodeAssets
         {
             builder.Append("<script ");
 
-            // In JS land we need to enable cross origin for headers
-            if (_config.CORSEnabled)
+            // In JS land we need to enable cross origin for headers, only for file imports
+            if (_config.CORSEnabled && !isUrl)
             {
                 builder.Append("crossOrigin=\"Anonymous\" ");
             }

@@ -121,13 +121,13 @@ namespace NodeAssets
             // Do urls first
             foreach (var url in CombineUrls(destPile, includeGlobal, otherAssets))
             {
-                builder.Append(WrapInJsTag(url));
+                WrapInJsTag(url, builder, true);
             }
 
             // Then files
             foreach (var file in CombineFiles(destPile, includeGlobal, otherAssets))
             {
-                builder.Append(WrapInJsTag(file));
+                WrapInJsTag(file, builder, false);
             }
 
             // Insert Css live script if applicable
@@ -157,7 +157,7 @@ namespace NodeAssets
             int count = 0;
             foreach (var url in CombineUrls(destPile, includeGlobal, otherAssets))
             {
-                builder.Append(WrapInCssTag(url, "url" + count));
+                WrapInCssTag(url, "url" + count, builder);
                 count++;
             }
 
@@ -166,7 +166,7 @@ namespace NodeAssets
             {
                 var id = string.IsNullOrWhiteSpace(_config.CdnPath) ? file : file.Replace(_config.CdnPath, string.Empty);
                 id = id.Replace("/", "-").Trim('-');
-                builder.Append(WrapInCssTag(file, id));
+                WrapInCssTag(file, id, builder);
             }
 
             return builder.ToString();
@@ -256,14 +256,28 @@ namespace NodeAssets
             }
         }
 
-        private string WrapInJsTag(string src)
+        private void WrapInJsTag(string src, StringBuilder builder, bool isUrl)
         {
-            return "<script type=\"text/javascript\" src=\"" + src + "\"></script>";
+            builder.Append("<script ");
+
+            // In JS land we need to enable cross origin for headers
+            if (_config.CORSEnabled)
+            {
+                builder.Append("crossOrigin=\"Anonymous\" ");
+            }
+
+            builder.Append(" type=\"text/javascript\" src=\"");
+            builder.Append(src);
+            builder.AppendLine("\"></script>");
         }
 
-        private string WrapInCssTag(string src, string id)
+        private void WrapInCssTag(string src, string id, StringBuilder builder)
         {
-            return "<link id=\"" + id + "\" href=\"" + src + "\" rel=\"stylesheet\" type=\"text/css\" />";
+            builder.Append("<link id=\"");
+            builder.Append(id);
+            builder.Append("\" href=\"");
+            builder.Append(src);
+            builder.AppendLine("\" rel=\"stylesheet\" type=\"text/css\" />");
         }
 
         private void HandleRoutes(IPile destPile, IAppBuilder appBuilder)

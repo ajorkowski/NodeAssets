@@ -161,6 +161,7 @@
     <Content Include="Views\Shared\_LogOnPartial.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
+    <Content Include="Scripts\throwErrorScript.coffee" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

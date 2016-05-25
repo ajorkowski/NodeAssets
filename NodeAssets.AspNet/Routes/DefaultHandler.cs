@@ -38,6 +38,42 @@ namespace NodeAssets.AspNet.Routes
                     response.Headers.Add("Cache-Control", new [] { "max-age=31556926" });
                 }
 
+                // CORS headers
+                if (_config.CORSEnabled && asset.ShouldEnableCORS)
+                {
+                    string corsValue = null;
+                    if (_config.CORSWildcard)
+                    {
+                        corsValue = "*";
+                    }
+                    else
+                    {
+                        if(_config.CORSDomains.Count == 1)
+                        {
+                            corsValue = _config.CORSDomains[0];
+                        }
+                        else
+                        {
+                            // If we have multiple domains, need to react to the origin value
+                            var origin = context.Request.Headers.Get("Origin");
+                            if (!string.IsNullOrEmpty(origin) && _config.CORSDomains.Contains(origin))
+                            {
+                                corsValue = origin;
+                                if (_config.CORSVaryOriginHeader)
+                                {
+                                    response.Headers.Add("Vary", new[] { "Origin" });
+                                }
+                            }
+                        }
+                    }
+
+                    if (corsValue != null)
+                    {
+                        response.Headers.Add("Access-Control-Allow-Origin", new[] { corsValue });
+                        response.Headers.Add("Access-Control-Allow-Methods", new[] { "GET" }); // Only allow get for scripts etc
+                    }
+                }
+
                 // We can safely use ETags/LastModified
                 context.Response.Headers.Add("ETag", new[] { asset.Hash });
                 context.Response.Headers.Add("Last-Modified", new[] { asset.LastModified.ToString("R") });
@@ -153,10 +189,12 @@ namespace NodeAssets.AspNet.Routes
             // Set the correct type
             string extension = file.Extension;
             string contentType;
+            bool shouldEnableCORS = false;
             switch (file.Extension)
             {
                 case ".js":
                     contentType = "application/javascript";
+                    shouldEnableCORS = true; // Only CORS for JS at the moment
                     break;
                 case ".css":
                     contentType = "text/css";
@@ -170,6 +208,7 @@ namespace NodeAssets.AspNet.Routes
             {
                 Extension = extension,
                 ContentType = contentType,
+                ShouldEnableCORS = shouldEnableCORS,
                 Hash = hash,
                 Data = data,
                 ZipData = zipData,
@@ -182,6 +221,7 @@ namespace NodeAssets.AspNet.Routes
         {
             public string Extension { get; set; }
             public string ContentType { get; set; }
+            public bool ShouldEnableCORS { get; set; }
             public string Hash { get; set; }
             public byte[] Data { get; set; }
             public byte[] ZipData { get; set; }

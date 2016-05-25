@@ -9,6 +9,14 @@
     <meta name="description" content="Example NodeAssets webpage" />
 
     <title>@ViewBag.Title</title>
+
+    @*<script type="text/javascript">
+        // Use this to illustrate cross domain error catching
+        window.onerror = function (msg, url, lineNo, columnNo, error) {
+            alert("Found error: " + msg + ". Stack: " + (error ? error.stack : 'none'));
+        };
+    </script>*@
+
     @Html.Raw(Assets.Css(true, "Styles"))
     @Html.Raw(Assets.Js(true))
 </head>

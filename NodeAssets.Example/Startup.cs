@@ -14,16 +14,17 @@ namespace NodeAssets.Example
         public void Configuration(IAppBuilder app)
         {
             // Switch this to see different modes
-            var isProd = true;
+            var isProd = false;
 
             var assets = Assets
                 .Initialise(config => config
                     .ConfigureCompilers(
                         compilers => compilers
-                            //.WithDefaultNodeConfiguration(MapPath("~/Node"), MapPath("~/Node/node.exe"))
+                            .WithDefaultNodeConfiguration(MapPath("~/Node"), MapPath("~/Node/node.exe"))
                             .CompilerFor(FileExtensions.Js, new PassthroughCompiler())
-                            .CompilerFor(FileExtensions.CssMin, new CssMinifyCompiler())
-                            .CompilerFor(FileExtensions.JsMin, new JsMinifyCompiler())
+                            // Example using .NET minifiers
+                            //.CompilerFor(FileExtensions.CssMin, new CssMinifyCompiler())
+                            //.CompilerFor(FileExtensions.JsMin, new JsMinifyCompiler())
                             .CompilerFor(FileExtensions.Scss, new SassCompiler(MapPath("~/bin")))
                             .OnCompilerError(e => Trace.WriteLine(e.Message))
                             .OnCompileMeasurement(m => Trace.WriteLine(string.Format("{0} {1}: {2}", m.CompileTimeMilliseconds, m.Compiler, m.File))))
@@ -31,7 +32,11 @@ namespace NodeAssets.Example
                         source => source.UseDefaultConfiguration(MapPath("~/built"), isProd))
                     .Cache(isProd)
                     .Compress(isProd)
-                    .LiveCss(!isProd))
+                    .LiveCss(!isProd)
+                    // Example Cross domain configuration
+                    //.CdnBasePath("http://localhost:8001")
+                    //.EnableCORSForJS(false, new[] { "http://localhost:53260" })
+                    )
                 .SetupCssPile(pile => pile
                     // An Example regex where you will add files ending in .scss
                     // but NOT files ending in .min.scss
@@ -44,6 +49,9 @@ namespace NodeAssets.Example
                     {
                         pile.AddFile(MapPath("~/Scripts/jquery.signalR-2.2.0.js"));
                     }
+
+                    // Enable to illustrate cross domain errors
+                    //pile.AddFile(MapPath("~/Scripts/throwErrorScript.coffee"));
 
                     return pile;
                 });
